@@ -32,7 +32,10 @@ syntax-c: $(YFILE)
 -include $(patsubst %.o, %.d, $(OBJS))
 
 tryF: 
-	@flex lexical.l && g++ lex.yy.c -lfl -o lex && ./lex test.txt
+	@flex lexicalTry.l && g++ lex.yy.c -lfl -o lex && ./lex test.txt
+
+tryB:
+	flex -o lexTry.yy.c lexicalTry.l && bison -d -t syntax.y && gcc syntax.tab.c -lfl -ly -o parser && ./parser test.txt
 
 # 定义的一些伪目标
 .PHONY: clean test

@@ -1,7 +1,1 @@
-int main(){
-	int a1;
-	le(1)
-	float a2;
-	a2 == 3.125;
-	return 0;   
-}
+5*(46-+7)
