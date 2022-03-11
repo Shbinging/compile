@@ -24,6 +24,7 @@ int yycolumn = 1;
     yycolumn += yyleng;
 
 extern int getNum(char ch);
+extern void errorHandle();
 %}
 
 letter [a-zA-Z]

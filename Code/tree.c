@@ -2,6 +2,7 @@
 #include <stdarg.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 
 TreeNode* make_tree(enum nodeType type, char* name, int lineNo, int num, ...){

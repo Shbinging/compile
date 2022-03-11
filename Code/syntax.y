@@ -13,10 +13,9 @@
 %token<node_type> TYPE STRUCT IF ELSE RETURN WHILE RELOP
 %token<node_type> PLUS MINUS STAR DIV ASSIGNOP AND OR NOT
 %token<node_type> SEMI COMMA LP RP LB RB LC RC DOT
-%token<node_type> ERR OTHER
 %type <node_type> Program ExtDefList ExtDef Specifier ExtDecList FunDec CompSt
 %type <node_type> VarDec StructSpecifier OptTag Tag DefList Def VarList ParamDec StmtList
-%type <node_type> Stmt Exp DecList Dec  Args
+%type <node_type> Stmt Exp DecList Dec  Args error
 %right ASSIGNOP
 %left OR
 %left AND
