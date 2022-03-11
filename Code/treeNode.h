@@ -1,6 +1,7 @@
 #ifndef __tree__node
 #define __tree__node
 #define makeType(type) node##type
+
 enum nodeType{
     makeType(YFNULL),
     makeType(YFFULL),
@@ -23,6 +24,8 @@ typedef struct TreeNode{
     struct TreeNode* son;
     struct TreeNode* bro;
 } TreeNode;
-
+extern int parseOK;
+extern void printTree(TreeNode*, int);
+extern TreeNode* parseTreeRoot;
 extern TreeNode* make_tree(enum nodeType type, char* name, int lineNo, int num, ...);
 #endif

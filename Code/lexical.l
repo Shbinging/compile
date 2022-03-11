@@ -78,5 +78,5 @@ while {OUT(KEY, WHILE)}
 \} {OUT(KEY, RC)}
 \n {yycolumn = 1;}
 [\t\r ] {}
-. {printf("type A wrong! %s\n", yytext);}
+. {parseOK = 0; printf("Error type A at Line %d: Mysterious character \"%s\".\n", yylineno, yytext);}
 %%

@@ -31,7 +31,7 @@
 %nonassoc ELSE
 
 %%
-Program: ExtDefList {$$ = make_tree(makeType(YFFULL), "Program",  @$.first_line, 1, $1); printTree($$, 0);}
+Program: ExtDefList {$$ = make_tree(makeType(YFFULL), "Program",  @$.first_line, 1, $1); parseTreeRoot = $$;}
 ;
 
 ExtDefList: ExtDef ExtDefList {$$ = make_tree(makeType(YFFULL), "ExtDefList",  @$.first_line, 2, $1, $2);}
@@ -42,7 +42,7 @@ ExtDef : Specifier ExtDecList SEMI  {$$ = make_tree(makeType(YFFULL), "ExtDef", 
 | Specifier SEMI {$$ = make_tree(makeType(YFFULL), "ExtDef",  @$.first_line, 2, $1, $2);}
 | Specifier FunDec CompSt {$$ = make_tree(makeType(YFFULL), "ExtDef",  @$.first_line, 3, $1, $2, $3);}
 | error SEMI
-| Specifier error SEMI
+| Specifier error SEMI 
 ;
 
 ExtDecList: VarDec {$$ = make_tree(makeType(YFFULL), "ExtDecList",  @$.first_line, 1, $1);}
@@ -145,7 +145,10 @@ Args: Exp COMMA  Args {$$ = make_tree(makeType(YFFULL), "Args",  @$.first_line, 
 %%
 
 int yyerror(char* msg) {
-    fprintf(stderr, "error: %s line:%d\n", msg, yylineno);
+    parseOK = 0;
+    msg = msg + 14;
+    printf("Error type B at Line %d: %s.\n", yylineno, msg);
+    //fprintf(stderr, "error: %s line:%d\n", msg, yylineno);
 }
 
 

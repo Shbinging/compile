@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdlib.h>
 
+
 TreeNode* make_tree(enum nodeType type, char* name, int lineNo, int num, ...){
     va_list valist;
     va_start(valist, num);
@@ -21,6 +22,7 @@ TreeNode* make_tree(enum nodeType type, char* name, int lineNo, int num, ...){
     }
     return rt;
 }
+
 
 void print(TreeNode* rt, int depth){
     if (rt->type == makeType(YFNULL)) return;
