@@ -22,15 +22,42 @@ int yycolumn = 1;
     yylloc.first_column = yycolumn; \
     yylloc.last_column = yycolumn + yyleng - 1; \
     yycolumn += yyleng;
+
+extern int getNum(char ch);
 %}
 
 letter [a-zA-Z]
 num [0-9]
 %%
 ({num}+|0[xX][0-9A-Fa-f]+) {make_node(yylval.node_type, makeType(INT), "INT")
-    yylval.node_type->info.val_int = atoi(yytext);
-    return INT;
+    if (strlen(yytext) > 0 && yytext[0] == '0'){
+        int ans = 0;
+        if (yytext[1] == 'x' || yytext[1] == 'X'){//16
+            int n = strlen(yytext);
+            for(int i = 2; i < n; i++){
+                ans = ans * 16 + getNum(yytext[i]);
+            }
+        }else{//8
+            int n = strlen(yytext);
+            for(int i = 1; i < n; i++){
+                if (getNum(yytext[i]) > 7){
+                    errorHandle();
+                    break;
+                }else{
+                    ans = ans * 8 + getNum(yytext[i]);
+                }
+            }
+        }
+        yylval.node_type->info.val_int = ans;
+        return INT;
+    }else{
+        //10
+        yylval.node_type->info.val_int = atoi(yytext);
+        return INT;
+    }
 } //INT
+
+
 ({num}*\.{num}+|{num}+\.)([Ee][+-]?{num}+)? {make_node(yylval.node_type, makeType(FLOAT), "FLOAT")
     yylval.node_type->info.val_float = atof(yytext);
     return FLOAT;
@@ -78,5 +105,15 @@ while {OUT(KEY, WHILE)}
 \} {OUT(KEY, RC)}
 \n {yycolumn = 1;}
 [\t\r ] {}
-. {parseOK = 0; printf("Error type A at Line %d: Mysterious character \"%s\".\n", yylineno, yytext);}
+. {errorHandle();}
 %%
+void errorHandle(){
+    parseOK = 0; 
+    printf("Error type A at Line %d: Mysterious character \"%s\".\n", yylineno, yytext);
+}
+
+int getNum(char ch){
+    if ('a' <= ch && ch <= 'z') return ch - 'a' + 10;
+    if ('A' <= ch && ch <= 'Z') return ch - 'A' + 10;
+    if ('0' <= ch && ch <= '9') return ch - '0';
+}
