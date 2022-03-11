@@ -106,6 +106,23 @@ while {OUT(KEY, WHILE)}
 \n {yycolumn = 1;}
 [\t\r ] {}
 . {errorHandle();}
+
+\/\/ {
+    char ch = input();
+    while(ch != '\n') ch = input();
+}
+\/\* {
+    char pre = 0;
+    while(1){
+        char cur = input();
+        if (pre == '/' && cur == '*'){
+            
+        }
+        if (pre == '*' && cur == '/') break;
+        pre = cur;
+        if (cur == -1) break;
+    }
+}
 %%
 void errorHandle(){
     parseOK = 0; 
