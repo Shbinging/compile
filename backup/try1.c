@@ -1,6 +1,6 @@
 #include<stdio.h>
 int main(){
-	int a = 1*-2*3
+	int a = --2;
     printf("%d\n", a);
 	return 0;
 }

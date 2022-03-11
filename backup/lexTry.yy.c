@@ -485,12 +485,12 @@ goto find_rule; \
 char *yytext;
 #line 1 "lexicalTry.l"
 #line 2 "lexicalTry.l"
-#define OUT(type) printf(#type":%s len:%d\n", yytext, (int)strlen(yytext));\
-    preType = getType(type);\
+//#define OUT(type) printf(#type":%s len:%d\n", yytext, (int)strlen(yytext));
+#define OUT(type)   preType = getType(type);\
     lastCh = yytext[strlen(yytext) - 1];\
     return type;
 #include <string.h>
-#include "syntax.tab.h"
+#include "syntax1.tab.h"
 #define getType(type) type##_use
 enum typeList{
     getType(NULL),

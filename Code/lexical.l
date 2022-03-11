@@ -1,12 +1,23 @@
+%option yylineno
 %{
-#define OUT(type) printf(#type":%s len:%d\n", yytext, (int)strlen(yytext));
+//#define OUT(type) printf(#type":%s len:%d\n", yytext, (int)strlen(yytext));
+//#define OUT(type) printf(#type":%s len:%d\n", yytext, (int)strlen(yytext));
+#define OUT(type) return type;
 #include <string.h>
+#include "syntax.tab.h"
+
+int yycolumn = 1;
+#define YY_USER_ACTION \
+    yylloc.first_line = yylloc.last_line = yylineno; \
+    yylloc.first_column = yycolumn; \
+    yylloc.last_column = yycolumn + yyleng - 1; \
+    yycolumn += yyleng;
 %}
 letter [a-zA-Z]
 num [0-9]
 %%
-[+-]?({num}+|0[xX][0-9A-Fa-f]+) {OUT(INT)} //INT
-[+-]?({num}*\.{num}+|{num}+\.)([Ee][+-]?{num}+)? {OUT(FLOAT)}//float
+({num}+|0[xX][0-9A-Fa-f]+) {OUT(INT)} //INT
+({num}*\.{num}+|{num}+\.)([Ee][+-]?{num}+)? {OUT(FLOAT)}//float
 int|float {OUT(TYPE)}
 struct {OUT(STRUCT)}
 return {OUT(RETURN)}
@@ -32,16 +43,7 @@ while {OUT(WHILE)}
 \] {OUT(RB)}
 \{ {OUT(LC)}
 \} {OUT(RC)}
-[\n\t ] {}
+\n {yycolumn = 1;}
+[\t ] {}
 . {OUT(OTHER)}
 %%
-int main(int argc, char** argv) {
-    if (argc > 1) {
-        if (!(yyin = fopen(argv[1], "r"))) {
-            perror(argv[1]);
-        return 1;
-        }
-    }
-    yylex();
-    return 0;
-}

@@ -27,7 +27,7 @@ lexical: $(LFILE)
 	$(FLEX) -o $(LFC) $(LFILE)
 
 syntax-c: $(YFILE)
-	$(BISON) -o $(YFC) -d -v $(YFILE)
+	$(BISON) -o $(YFC) -d -v -t $(YFILE)
 
 -include $(patsubst %.o, %.d, $(OBJS))
 
@@ -35,12 +35,15 @@ tryF:
 	@flex lexicalTry.l && g++ lex.yy.c -lfl -o lex && ./lex test.txt
 
 tryB:
-	flex -o lexTry.yy.c lexicalTry.l && bison -d -t syntax.y && gcc syntax.tab.c -lfl -ly -o parser && ./parser test.txt
+	cd ../backup && flex -o lexTry.yy.c lexicalTry.l && bison -d -t syntax1.y && gcc syntax1.tab.c -lfl -ly -o parser && ./parser ../Code/test.txt
 
+testB:
+	./parser test.txt
 # 定义的一些伪目标
-.PHONY: clean test
+.PHONY: clean test  
+
 test:
-	./parser ../Test/test1.cmm
+	./parser ../Test/test1.cmm 
 clean:
 	rm -f parser lex.yy.c syntax.tab.c syntax.tab.h syntax.output
 	rm -f $(OBJS) $(OBJS:.o=.d)
