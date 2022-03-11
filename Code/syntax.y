@@ -1,34 +1,12 @@
-%locations
 %{
 #include <stdio.h>
-int s = 0;
-
+#include "treeNode.h"
 #include "lex.yy.c"
 #define YYERROR_VERBOSE 1
-
-#define makeType(type) node##type
-#include <stdarg.h>
-#include <string.h>
-enum nodeType{
-    makeType(YFNULL),
-    makeType(YFFULL),
-    makeType(ID),
-    makeType(TYPE),
-    makeType(INT),
-    makeType(FLOAT)
-};
-struct TreeNode{
-    enum nodeType type;
-    char* name;
-    void* extraInfo;
-    struct TreeNode* son;
-    struct TreeNode* bro;
-};
-
-extern struct TreeNode* make_tree(enum nodeType type, char* name, int lineNo, int num, ...);
 %}
+%locations
 %union{
-    struct  TreeNode *node_type;
+   struct TreeNode* node_type;
 }
 /* declared tokens */
 %token<node_type> INT ID FLOAT
@@ -53,7 +31,7 @@ extern struct TreeNode* make_tree(enum nodeType type, char* name, int lineNo, in
 %nonassoc ELSE
 
 %%
-Program: ExtDefList {$$ = make_tree(makeType(YFFULL), "Program",  @$.first_line, 1, $1);}
+Program: ExtDefList {$$ = make_tree(makeType(YFFULL), "Program",  @$.first_line, 1, $1); printTree($$, 0);}
 ;
 
 ExtDefList: ExtDef ExtDefList {$$ = make_tree(makeType(YFFULL), "ExtDefList",  @$.first_line, 2, $1, $2);}
@@ -71,7 +49,7 @@ ExtDecList: VarDec {$$ = make_tree(makeType(YFFULL), "ExtDecList",  @$.first_lin
 | VarDec COMMA ExtDecList {{$$ = make_tree(makeType(YFFULL), "ExtDecList",  @$.first_line, 3, $1, $2, $3);}}
 ;
 
-Specifier: TYPE {$$ = make_tree(makeType(YFFULL), "Specifiert",  @$.first_line, 1, $1);}
+Specifier: TYPE {$$ = make_tree(makeType(YFFULL), "Specifier",  @$.first_line, 1, $1);}
 |StructSpecifier{$$ = make_tree(makeType(YFFULL), "Specifier",  @$.first_line, 1, $1);}
 ;
 
@@ -110,7 +88,7 @@ CompSt: LC DefList StmtList RC {$$ = make_tree(makeType(YFFULL), "CompSt",  @$.f
 ;
 
 StmtList: Stmt StmtList {$$ = make_tree(makeType(YFFULL), "StmtList",  @$.first_line, 2, $1, $2);}
-|
+| {$$ = make_tree(makeType(YFNULL), "StmtList",  @$.first_line, 0);}
 ;
 
 Stmt: Exp SEMI {$$ = make_tree(makeType(YFFULL), "Stmt",  @$.first_line, 2, $1, $2);}
@@ -124,7 +102,7 @@ Stmt: Exp SEMI {$$ = make_tree(makeType(YFFULL), "Stmt",  @$.first_line, 2, $1, 
 ;
 
 DefList: Def DefList {$$ = make_tree(makeType(YFFULL), "DefList",  @$.first_line, 2, $1, $2);}
-|
+|{$$ = make_tree(makeType(YFNULL), "DefList",  @$.first_line, 0);}
 ;
 
 Def: Specifier DecList SEMI {$$ = make_tree(makeType(YFFULL), "Def",  @$.first_line, 3, $1, $2, $3);}
@@ -138,7 +116,6 @@ DecList: Dec {$$ = make_tree(makeType(YFFULL), "DecList",  @$.first_line, 1, $1)
 
 Dec: VarDec {$$ = make_tree(makeType(YFFULL), "Dec",  @$.first_line, 1, $1);}
 | VarDec ASSIGNOP Exp {$$ = make_tree(makeType(YFFULL), "Dec",  @$.first_line, 3, $1, $2, $3);}
-| VarDec ASSIGNOP error
 ;
 
 Exp: Exp ASSIGNOP Exp {$$ = make_tree(makeType(YFFULL), "Exp",  @$.first_line, 3, $1, $2, $3);}
@@ -166,42 +143,13 @@ Args: Exp COMMA  Args {$$ = make_tree(makeType(YFFULL), "Args",  @$.first_line, 
 ;
 
 %%
-yyerror(char* msg) {
+
+int yyerror(char* msg) {
     fprintf(stderr, "error: %s line:%d\n", msg, yylineno);
 }
 
 
-struct TreeNode* make_tree(enum nodeType type, char* name, int lineNo, int num, ...){
-    va_list valist;
-    va_start(valist, num);
-    struct TreeNode* rt = malloc(sizeof(struct TreeNode));
-    rt->son = NULL;
-    rt->bro = NULL;
-    rt->type = type;
-    rt->name = name;
-    rt->extraInfo = malloc(sizeof(int));
-    memcpy(rt->extraInfo, &lineNo, sizeof(int));
-    struct TreeNode* p, *q = NULL;
-    for(int i = 1; i <= num; i++){
-        p = va_arg(valist, struct TreeNode*);
-        if (q) q->bro = p;
-        else rt->son = p;
-        q = p;
-    }
-    return rt;
-}
 
-#define make_node(res, _type, _name, _extraType, _extraInfo) res = malloc(sizeof(struct TreeNode)); \
-    res->son = NULL; \
-    res->bro = NULL; \
-    res->type = _type; \
-    res->name = _name; \
-    getExtraInfo_##_extraType(res->extraInfo, _extraInfo) 
-#define getExtraInfo_int(res, val)   res = malloc(sizeof(int));\
-    *res = val;
-#define getExtraInfo_float(res, val)   res = malloc(sizeof(float));\
-    *res = val;
-#define getExtraInfo_char(res, val)      int len = strlen(val); \
-    res = malloc(len + 1); \
-    strcpy(res, val); \
+
+
 
