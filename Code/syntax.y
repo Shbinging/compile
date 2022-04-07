@@ -86,6 +86,7 @@ CompSt: LC DefList StmtList RC {$$ = make_tree(makeType(YFFULL), "CompSt",  @$.f
 | LC error
 ;
 
+
 StmtList: Stmt StmtList {$$ = make_tree(makeType(YFFULL), "StmtList",  @$.first_line, 2, $1, $2);}
 | {$$ = make_tree(makeType(YFNULL), "StmtList",  @$.first_line, 0);}
 ;
@@ -127,6 +128,7 @@ Exp: Exp ASSIGNOP Exp {$$ = make_tree(makeType(YFFULL), "Exp",  @$.first_line, 3
 | Exp DIV Exp {$$ = make_tree(makeType(YFFULL), "Exp",  @$.first_line, 3, $1, $2, $3);}
 | LP Exp RP {$$ = make_tree(makeType(YFFULL), "Exp",  @$.first_line, 3, $1, $2, $3);}
 | MINUS Exp {$$ = make_tree(makeType(YFFULL), "Exp",  @$.first_line, 2, $1, $2);}
+| PLUS Exp {$$ = make_tree(makeType(YFFULL), "Exp",  @$.first_line, 2, $1, $2);}
 | NOT Exp {$$ = make_tree(makeType(YFFULL), "Exp",  @$.first_line, 2, $1, $2);}
 | ID LP Args RP {$$ = make_tree(makeType(YFFULL), "Exp",  @$.first_line, 4, $1, $2, $3, $4);}
 | ID LP RP {$$ = make_tree(makeType(YFFULL), "Exp",  @$.first_line, 3, $1, $2, $3);}

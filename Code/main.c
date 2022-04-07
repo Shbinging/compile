@@ -1,5 +1,6 @@
 #include"syntax.tab.h"
 #include "treeNode.h"
+#include "sdt.h"
 #include <stdio.h>
 
 int parseOK;
@@ -16,7 +17,8 @@ int main(int argc, char** argv){
     //yydebug = 1;
     yyparse();
     if (parseOK){
-        printTree(parseTreeRoot, 0);
+        //printTree(parseTreeRoot, 0);
+        sdtTree(parseTreeRoot, 0);
     }
     //for(int i = 0; i < 20; i++) yylex();
     return 0;

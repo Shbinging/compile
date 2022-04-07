@@ -1,5 +1,5 @@
-int main()
+int a;
+int main(int b, float c)
 {
-	int i = 1;
-	int j = 2;
+	a.b + 3= 1;
 }
