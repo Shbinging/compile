@@ -17,6 +17,7 @@ typedef struct FieldList_* FieldList;
 typedef struct varItem_* varItem;
 typedef struct structItem_* structItem;
 typedef struct expVal_* expVal;
+typedef struct expValList_* expValList;
 
 typedef struct Type_
 {
@@ -30,6 +31,7 @@ typedef struct Type_
     // 结构体类型信息是一个链表
     FieldList structure;
     } u;
+    char* structureName;
 } Type_;
 
 typedef struct FieldList_
@@ -54,9 +56,13 @@ typedef struct expVal_
         int val_int;
         float val_float;
     }val;
-    
+    enum {L_VAL, R_VAL} lr;
 } expVal_;
 
+typedef struct expValList_{
+    expVal val;
+    expValList tail;
+} expValList_;
 
 typedef struct structItem_{
     char* name;
@@ -123,6 +129,7 @@ Type StructSpecifier(TreeNode* rt, TreeNode* fa, int depth){
             tmps->name = name;
             tmps->type = tmp;
             map_set(&structTable, tmps->name, tmps);
+            tmp->structureName = name;
             return tmp;
         }
     }
@@ -132,7 +139,10 @@ Type StructSpecifier(TreeNode* rt, TreeNode* fa, int depth){
             error(17);
             return tmp;
         }else{
-            return *map_get(&structTable, name);
+            structItem sItem =  *map_get(&structTable, name);
+            tmp->structureName = sItem->name;
+            tmp->u.structure = sItem->type;
+            return tmp;
         }
     }
 }
@@ -146,8 +156,89 @@ Type Specifier(TreeNode* rt, TreeNode* fa, int depth){
     }
 }
 
+expVal Exp(TreeNode* rt, TreeNode* fa, int depth);
+
+expValList Args(TreeNode* rt, TreeNode* fa, int depth){
+    if (TWO(rt) == NULL){
+        expValList tmp = new(expValList_);
+        tmp->val = Exp(ONE(rt), rt, depth + 1);
+        tmp->tail = NULL;
+        return tmp;
+    }
+    MT3("Args"){
+        expValList tmp = new(expValList_);
+        tmp->val = Exp(ONE(rt), rt, depth + 1);
+        tmp->tail = Args(THREE(rt), rt, depth + 1);
+        return tmp;
+    }
+}
+
 expVal Exp(TreeNode* rt, TreeNode* fa, int depth){
     //TODO::complete exp
+    char* op2Name[8] = {"ASSIGNOP", "AND", "OR", "RELOP", "PLUS", "MINUS", "STAR", "DIV"};
+    for(int i = 0; i < 8; i++){//ASSIGNOP AND OR RELOP PLUS MINUS STAR DIV
+        if (strcpy(TWO(rt)->name, op2Name[i]) == 0){
+            expVal left = Exp(ONE(rt), rt, depth + 1);
+            expVal right = Exp(THREE(rt), rt, depth + 1);
+            //TODO::检查类型
+            left->val.val_float = right->val.val_float;
+            left->val.val_int = right->val.val_int;
+
+            expVal res = new(expVal_);
+            res->type = left->type;
+            res->val = left->val;
+            res->lr = R_VAL;
+            return res;
+        }
+    }
+    MT1("LP"){//LP Exp RP
+        return Exp(TWO(rt), rt, depth + 1);
+    }
+    MT1("MINUS"){
+        expVal res = Exp(TWO(rt), rt, depth + 1);
+        //TODO::检查类型
+        return res;
+    }
+    MT1("NOT"){
+        expVal res = Exp(TWO(rt), rt, depth + 1);
+        //TODO::检查类型
+        return res;
+    }
+    MT1("ID"){
+        char* name = ID(ONE(rt), rt, depth + 1);
+        if (TWO(rt) == NULL){//ID
+            
+            //TODO::检查变量是否存在，并在table中寻找该变量
+            expVal res = new(expVal_);
+            res->lr = L_VAL;
+            //TODO:找table，找到该变量的type
+            //res->type = 
+            return res;
+        }
+        MT3("Args"){//ID LP Args RP
+            //TODO:检查函数是否存在
+            expValList args = Args(THREE(rt), rt, depth + 1);
+            //TODO::检查函数调用实参与形参数目和类型是否匹配
+            expVal res = new(expVal_);
+            res->lr = R_VAL;
+            //TODO::查询函数返回类型
+            //res->type = 
+            //res->val = 
+            return res;
+        }
+        MT2("LP"){
+            expVal res = new(expVal_);
+            res->lr = R_VAL;
+            //TODO::检查函数调用实参与形参数目和类型是否匹配
+            //TODO::查询函数返回类型
+            return res;
+        }
+    }
+    MT2("LB"){//Exp LB Exp RB
+        expVal left = Exp(ONE(rt), rt, depth + 1);
+        expVal right = Exp(THREE(rt), rt, depth + 1);
+        //TODO::检查left是否为左值且type为
+    }
     expVal tmp = new(expVal_);
     tmp->type = new(Type_);
     tmp->type->kind = BASIC;
@@ -156,8 +247,28 @@ expVal Exp(TreeNode* rt, TreeNode* fa, int depth){
     return tmp;
 }
 
+int INT(TreeNode* rt, TreeNode* fa, int depth){
+    assert(strcmp(rt->name, "INT") == 0);
+    return rt->info.val_int;
+}
+
 FieldList VarDec(TreeNode* rt, TreeNode* fa, int depth, Type* type){
     //TODO::第一层返回varDec, 后面返回Type
+    if (TWO(rt) == NULL){//ID
+        FieldList tmp = new(FieldList_);
+        tmp->name = ID(ONE(rt), rt, depth + 1);
+        tmp->tail = NULL;
+        tmp->type = type;
+        return tmp;
+    }
+    MT2("LB"){
+        int idx = INT(THREE(rt), rt, depth + 1);
+        Type tmp = new (Type_);
+        tmp->kind = ARRAY;
+        tmp->u.array.size = idx;
+        tmp->u.array.elem = type;
+        return VarDec(ONE(rt), rt, depth + 1, tmp);
+    }
 }
 
 FieldList Dec(TreeNode* rt, TreeNode* fa, int depth, Type* type){
