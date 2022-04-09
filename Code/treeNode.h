@@ -26,7 +26,7 @@ typedef struct TreeNode{
 } TreeNode;
 extern int parseOK;
 extern void printTree(TreeNode*, int);
-extern print(TreeNode*, int);
+extern void print(TreeNode*, int);
 extern TreeNode* parseTreeRoot;
 extern TreeNode* make_tree(enum nodeType type, char* name, int lineNo, int num, ...);
 #endif

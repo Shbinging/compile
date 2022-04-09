@@ -5,6 +5,7 @@
         "assert.h": "c",
         "stdlib.h": "c",
         "sdt.h": "c",
-        "treenode.h": "c"
+        "treenode.h": "c",
+        "typeinfo": "c"
     }
 }
