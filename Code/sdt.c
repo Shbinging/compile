@@ -17,8 +17,8 @@
 #define MT1(b) if (ONE(rt) != NULL && eName(ONE(rt), b))
 #define strCopy(a, b) a = malloc(strlen(b) + 1);\
 strcpy(a, b)
-//#define preWORK(rt) print(rt, depth);
-#define preWORK(rt) if (rt->type == makeType(YFFULL)){\
+#define preWORK(rt) print(rt, depth);\
+ if (rt->type == makeType(YFFULL)){\
         lineNo = rt->info.lineNo;\
     }
 typedef struct Type_* Type;
@@ -91,10 +91,12 @@ typedef map_t(structItem) map_structItem_t;
 typedef map_t(varItem) map_varItem_t;
 typedef map_t(funcItem) map_funcItem_t;
 map_structItem_t structTable;
-map_varItem_t localVarTable, globalVarTable;
+map_varItem_t localVarTable, globalVarTable, domainTable;
+
 map_funcItem_t funcTable;
 int lineNo;
-int isStruct;
+int isStruct = 0;
+funcItem funcUse = NULL;
 int isInt(Type type){
     return (type != NULL) && (type->kind == BASIC) && (type->u.basic == type_int);
 }
@@ -153,12 +155,13 @@ expVal lookupTable(char* name){
     return res;
 }
 
-int isExsist(char* name){
+int isExsist(char* name, int inStruct){
     int res = 0;
     res |=  (map_get(&localVarTable, name) != NULL);
     res |=  (map_get(&globalVarTable, name) != NULL);
     res |=  (map_get(&funcTable, name) != NULL);
     res |=  (map_get(&structTable, name) != NULL);
+    if (inStruct) res |= (map_get(&domainTable, name) != NULL);
     return res;
 }
 
@@ -175,6 +178,7 @@ void sdtInit(){
     map_init(&localVarTable);
     map_init(&globalVarTable);
     map_init(&funcTable);
+    map_init(&domainTable);
 }
 
 
@@ -228,12 +232,13 @@ Type TYPE(TreeNode* rt, TreeNode* fa, int depth){
     preWORK(rt)
     Type tmp = new(Type_);
     tmp->kind = BASIC;
-    if (strcmp(rt->info.type, "INT")){
+    if (strcmp(rt->info.type, "int") == 0){
         tmp->u.basic = type_int;
     }
-    if (strcmp(rt->info.type, "FLOAT")){
+    if (strcmp(rt->info.type, "float") == 0){
         tmp->u.basic = type_float;
     }
+    return tmp;
 }
 
 void Program(TreeNode* rt, TreeNode* fa, int depth){
@@ -267,7 +272,7 @@ void ExtDef(TreeNode* rt, TreeNode* fa, int depth){
 void ExtDecList(TreeNode* rt, TreeNode* fa, int depth, Type type){
     preWORK(rt)
     FieldList tmp = VarDec(ONE(rt), rt, depth + 1, type);//VarDec
-    if (isExsist(tmp->name)){
+    if (isExsist(tmp->name, isStruct)){
         error(3);
         return;
     }
@@ -285,12 +290,13 @@ void ExtDecList(TreeNode* rt, TreeNode* fa, int depth, Type type){
 Type Specifier(TreeNode* rt, TreeNode* fa, int depth){
     preWORK(rt)
     MT1("TYPE"){
-        isStruct = 0;
         return TYPE(ONE(rt), rt, depth + 1);
     }
     MT1("StructSpecifier"){
         isStruct = 1;
-        return StructSpecifier(ONE(rt), rt, depth + 1);
+        Type tmp = StructSpecifier(ONE(rt), rt, depth + 1);
+        isStruct = 0;
+        return tmp;
     }
 }
 
@@ -298,6 +304,8 @@ Type StructSpecifier(TreeNode* rt, TreeNode* fa, int depth){
     preWORK(rt)
     MT2("OptTag"){
         char* name = OptTag(TWO(rt), rt, depth + 1);
+        map_deinit(&domainTable);
+        map_init(&domainTable);
         FieldList structure = DefList(FOUR(rt), rt, depth + 1);
         Type tmp = new(Type_);
         tmp->kind = STRUCTURE;
@@ -307,7 +315,7 @@ Type StructSpecifier(TreeNode* rt, TreeNode* fa, int depth){
             return tmp;
         }else{
             //XXX:struct名称是否能和函数名相等
-            if (map_get(&structTable, name) != NULL || isExsist(name)){
+            if (map_get(&structTable, name) != NULL || isExsist(name, isStruct)){
                 error(16);
                 return NULL;
             }
@@ -371,7 +379,7 @@ void FunDec(TreeNode* rt, TreeNode* fa, int depth, Type type){
     char* name = ID(ONE(rt), rt, depth + 1);
     //check name
     assert(name != NULL);
-    if (isExsist(name)){
+    if (isExsist(name, isStruct)){
         error(4);
         return;
     }
@@ -380,15 +388,17 @@ void FunDec(TreeNode* rt, TreeNode* fa, int depth, Type type){
         func->name = name;
         func->para = NULL;
         func->retType = type;
+        funcUse = func;
         map_set(&funcTable, name, func);
     }
     MT3("VarList"){//ID LP VarList RP
         FieldList para = VarList(THREE(rt), rt, depth + 1);
-        //XXX:检查形参是否重复
+        //TODO:检查形参是否重复
         funcItem func = new(funcItem_);
         func->name = name;
         func->para = para;
         func->retType = type;
+        funcUse = func;
         map_set(&funcTable, name, func);
     }
 }
@@ -412,7 +422,16 @@ FieldList VarList(TreeNode* rt, TreeNode* fa, int depth){
 FieldList ParamDec(TreeNode* rt, TreeNode* fa, int depth){
     preWORK(rt)
     Type type = Specifier(ONE(rt), rt, depth + 1);
-    return VarDec(TWO(rt), rt, depth + 1, type);
+    FieldList tmp = VarDec(TWO(rt), rt, depth + 1, type);
+    if (isExsist(tmp->name, isStruct)){
+        error(3);
+        return NULL;
+    }
+    varItem var = new(varItem_);
+    var->name = tmp->name;
+    var->isInit = 0;
+    var->type = tmp->type;
+    map_set(&localVarTable, var->name, var);
 }
 
 void CompSt(TreeNode* rt, TreeNode* fa, int depth){
@@ -437,8 +456,13 @@ void Stmt(TreeNode* rt, TreeNode* fa, int depth){
         CompSt(ONE(rt), rt, depth + 1);
     }
     MT1("RETURN"){
-        Exp(TWO(rt), rt, depth + 1);
-        //TODO:: check return
+        //check return
+        expVal res = Exp(TWO(rt), rt, depth + 1);
+        if (!((funcUse != NULL) && (res != NULL) && isSameType(funcUse->retType, res->type))){
+            error(15);
+            return;
+        }
+
     }
     MT1("IF"){
         expVal condVal = Exp(THREE(rt), rt, depth + 1);
@@ -497,11 +521,12 @@ FieldList Dec(TreeNode* rt, TreeNode* fa, int depth, Type type){
     preWORK(rt)
     FieldList var = VarDec(ONE(rt), rt, depth + 1, type);
     //根据是否是struct还是localVariable 检查变量是否重复定义
-    if (isExsist(var->name)){
+    if (isExsist(var->name, isStruct)){
         if (isStruct){
+            error(15);
             return NULL;
         }else{
-            error(2);
+            error(3);
             return NULL;
         }
     }
@@ -510,7 +535,11 @@ FieldList Dec(TreeNode* rt, TreeNode* fa, int depth, Type type){
         vari->isInit = 0;
         vari->name = var->name;
         vari->type = var->type;
-        map_set(&localVarTable, vari->name, vari);
+        if (isStruct){
+            map_set(&domainTable, vari->name, vari);
+        }else{        
+            map_set(&localVarTable, vari->name, vari);
+        }
         return var;
     }
     MT2("ASSIGNOP"){//varDec ASSIGNOP Exp
@@ -533,7 +562,11 @@ FieldList Dec(TreeNode* rt, TreeNode* fa, int depth, Type type){
         vari->isInit = 1;
         vari->name = var->name;
         vari->type = var->type;
-        map_set(&localVarTable, vari->name, vari);
+        if (isStruct){
+            map_set(&domainTable, vari->name, vari);
+        }else{        
+            map_set(&localVarTable, vari->name, vari);
+        }
         return var;
     }
 }
