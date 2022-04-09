@@ -1,13 +1,18 @@
- int func(int i) 
+ struct Temp1
  {
- return i;
- }
+ int i;
+ float j;
+ };
 
- int func() 
+ struct Temp2
  {
- return 0;
- }
+ int x;
+ float y;
+ };
 
  int main()
  {
+ struct Temp1 t1;
+ struct Temp2 t2;
+ t1 = t2;
  }

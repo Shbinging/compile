@@ -306,6 +306,10 @@ Type StructSpecifier(TreeNode* rt, TreeNode* fa, int depth){
         char* name = OptTag(TWO(rt), rt, depth + 1);
         map_deinit(&domainTable);
         map_init(&domainTable);
+        if (name != NULL && (isExsist(name, isStruct))){
+            error(16);
+            return NULL;
+        }
         FieldList structure = DefList(FOUR(rt), rt, depth + 1);
         Type tmp = new(Type_);
         tmp->kind = STRUCTURE;
@@ -315,10 +319,6 @@ Type StructSpecifier(TreeNode* rt, TreeNode* fa, int depth){
             return tmp;
         }else{
             //XXX:struct名称是否能和函数名相等
-            if (map_get(&structTable, name) != NULL || isExsist(name, isStruct)){
-                error(16);
-                return NULL;
-            }
             // 登记struct
             structItem tmps = new(structItem_);
             tmps->name = name;
@@ -459,7 +459,7 @@ void Stmt(TreeNode* rt, TreeNode* fa, int depth){
         //check return
         expVal res = Exp(TWO(rt), rt, depth + 1);
         if (!((funcUse != NULL) && (res != NULL) && isSameType(funcUse->retType, res->type))){
-            error(15);
+            error(8);
             return;
         }
 
@@ -711,7 +711,7 @@ expVal Exp(TreeNode* rt, TreeNode* fa, int depth){
         assert(name != NULL);
         FieldList p = left->type->u.structure;
         for(p ; p != NULL; p = p->tail){
-            if (strcmp(name, p->name)){
+            if (strcmp(name, p->name) == 0){
                 break;
             }
         }
