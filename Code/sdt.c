@@ -10,12 +10,13 @@
 #define SIX(x) (x->son->bro->bro->bro->bro->bro)
 #define new(x) (malloc(sizeof(x)))
 #define eName(a, b) (strcmp(a->name, b) == 0)
-#define MT4(b) if (eName(FOUR(rt), b))
-#define MT3(b) if (eName(THREE(rt), b))
-#define MT2(b) if (eName(TWO(rt), b))
-#define MT1(b) if (eName(ONE(rt), b))
+#define MT4(b) if (FOUR(rt) != NULL && eName(FOUR(rt), b))
+#define MT3(b) if (THREE(rt) != NULL && eName(THREE(rt), b))
+#define MT2(b) if (TWO(rt) != NULL && eName(TWO(rt), b))
+#define MT1(b) if (ONE(rt) != NULL && eName(ONE(rt), b))
 #define strCopy(a, b) a = malloc(strlen(b) + 1);\
 strcpy(a, b)
+#define pri print(rt, depth);
 typedef struct Type_* Type;
 typedef struct FieldList_* FieldList;
 typedef struct varItem_* varItem;
@@ -124,22 +125,26 @@ expValList Args(TreeNode* rt, TreeNode* fa, int depth);
 
 
 int INT(TreeNode* rt, TreeNode* fa, int depth){
+    pri
     assert(strcmp(rt->name, "INT") == 0);
     return rt->info.val_int;
 }
 
 float FLOAT(TreeNode* rt, TreeNode* fa, int depth){
+    pri
     assert(strcmp(rt->name, "FLOAT") == 0);
     return rt->info.val_float;
 }
 
 char* ID(TreeNode* rt, TreeNode* fa, int depth){
+    pri
     char* tmp;
     strCopy(tmp, rt->info.varName);
     return tmp;
 }
 
 Type TYPE(TreeNode* rt, TreeNode* fa, int depth){
+    pri
     Type tmp = new(Type_);
     tmp->kind = BASIC;
     if (strcmp(rt->info.type, "INT")){
@@ -151,16 +156,19 @@ Type TYPE(TreeNode* rt, TreeNode* fa, int depth){
 }
 
 void Program(TreeNode* rt, TreeNode* fa, int depth){
+    pri
     ExtDefList(ONE(rt), rt, depth + 1);
 }
 
 void ExtDefList(TreeNode* rt, TreeNode* fa, int depth){
+    pri
     if (ONE(rt) == NULL) return;
     ExtDef(ONE(rt), rt, depth + 1);
-    ExtDef(TWO(rt), rt, depth + 1);
+    ExtDefList(TWO(rt), rt, depth + 1);
 }
 
 void ExtDef(TreeNode* rt, TreeNode* fa, int depth){
+    pri
     MT2("ExtDecList"){//Specifier ExtDecList SEMI
         Type type = Specifier(ONE(rt), rt, depth + 1);
         ExtDecList(TWO(rt), rt, depth + 1, type);
@@ -176,6 +184,7 @@ void ExtDef(TreeNode* rt, TreeNode* fa, int depth){
 }
 
 void ExtDecList(TreeNode* rt, TreeNode* fa, int depth, Type type){
+    pri
     if (TWO(rt) == NULL){//VarDec
         VarDec(ONE(rt), rt, depth + 1, type);
     }
@@ -186,6 +195,7 @@ void ExtDecList(TreeNode* rt, TreeNode* fa, int depth, Type type){
 }
 
 Type Specifier(TreeNode* rt, TreeNode* fa, int depth){
+    pri
     MT1("TYPE"){
         return TYPE(ONE(rt), rt, depth + 1);
     }
@@ -195,6 +205,7 @@ Type Specifier(TreeNode* rt, TreeNode* fa, int depth){
 }
 
 Type StructSpecifier(TreeNode* rt, TreeNode* fa, int depth){
+    pri
     Type tmp = new(Type_);
     tmp->kind = STRUCTURE;
     tmp->u.structure = NULL;
@@ -231,6 +242,7 @@ Type StructSpecifier(TreeNode* rt, TreeNode* fa, int depth){
 }
 
 char* OptTag(TreeNode* rt, TreeNode* fa, int depth){
+    pri
     if (rt->son == NULL){
         return NULL;
     }else{
@@ -239,10 +251,12 @@ char* OptTag(TreeNode* rt, TreeNode* fa, int depth){
 }
 
 char* Tag(TreeNode* rt, TreeNode* fa, int depth){
+    pri
     return ID(ONE(rt), rt, depth + 1);
 }
 
 FieldList VarDec(TreeNode* rt, TreeNode* fa, int depth, Type* type){
+    pri
     //TODO::第一层返回varDec, 后面返回Type
     if (TWO(rt) == NULL){//ID
         FieldList tmp = new(FieldList_);
@@ -262,6 +276,7 @@ FieldList VarDec(TreeNode* rt, TreeNode* fa, int depth, Type* type){
 }
 
 void FunDec(TreeNode* rt, TreeNode* fa, int depth, Type type){
+    pri
     char* name = ID(ONE(rt), rt, depth + 1);
     //TODO::check name
     MT3("RP"){//ID LP VarList RP
@@ -283,6 +298,7 @@ void FunDec(TreeNode* rt, TreeNode* fa, int depth, Type type){
 }
 
 FieldList VarList(TreeNode* rt, TreeNode* fa, int depth){
+    pri
     if (TWO(rt) == NULL){//ParamDec
         return ParamDec(ONE(rt), rt, depth + 1);
     }
@@ -298,22 +314,26 @@ FieldList VarList(TreeNode* rt, TreeNode* fa, int depth){
 }
 
 FieldList ParamDec(TreeNode* rt, TreeNode* fa, int depth){
+    pri
     Type type = Specifier(ONE(rt), rt, depth + 1);
     return VarDec(TWO(rt), rt, depth + 1, type);
 }
 
 void CompSt(TreeNode* rt, TreeNode* fa, int depth){
+    pri
     DefList(TWO(rt), rt, depth + 1);
     StmtList(THREE(rt), rt, depth + 1);
 }
 
 void StmtList(TreeNode* rt, TreeNode* fa, int depth){
+    pri
     if(ONE(rt) == NULL) return;
     Stmt(ONE(rt), rt, depth + 1);
     StmtList(TWO(rt), rt, depth + 1);
 }
 
 void Stmt(TreeNode* rt, TreeNode* fa, int depth){
+    pri
     MT1("Exp"){
         Exp(ONE(rt), rt, depth + 1);
     }
@@ -340,6 +360,7 @@ void Stmt(TreeNode* rt, TreeNode* fa, int depth){
 }
 
 FieldList DefList(TreeNode* rt, TreeNode* fa, int depth){
+    pri
     if (rt->son == NULL){
         return NULL;
     }
@@ -355,11 +376,13 @@ FieldList DefList(TreeNode* rt, TreeNode* fa, int depth){
 }
 
 FieldList Def(TreeNode* rt, TreeNode* fa, int depth){
+    pri
     Type spType = Specifier(ONE(rt), rt, depth + 1);
     return DecList(TWO(rt), rt, depth + 1, spType);
 }
 
 FieldList DecList(TreeNode* rt, TreeNode* fa, int depth, Type* type){
+    pri
     if (TWO(rt) == NULL){//Dec
         return Dec(ONE(rt), rt, depth + 1, type);
     }
@@ -375,6 +398,7 @@ FieldList DecList(TreeNode* rt, TreeNode* fa, int depth, Type* type){
 }
 
 FieldList Dec(TreeNode* rt, TreeNode* fa, int depth, Type* type){
+    pri
     FieldList var = VarDec(ONE(rt), rt, depth + 1, type);
     //TODO: 根据是否是struct还是localVariable 检查变量是否重复定义
     if (TWO(rt) == NULL){//varDec
@@ -398,10 +422,12 @@ FieldList Dec(TreeNode* rt, TreeNode* fa, int depth, Type* type){
 }
 
 expVal Exp(TreeNode* rt, TreeNode* fa, int depth){
+    pri
     //TODO::complete exp
+    if (TWO(rt) != NULL){
     char* op2Name[8] = {"ASSIGNOP", "AND", "OR", "RELOP", "PLUS", "MINUS", "STAR", "DIV"};
     for(int i = 0; i < 8; i++){//ASSIGNOP AND OR RELOP PLUS MINUS STAR DIV
-        if (strcpy(TWO(rt)->name, op2Name[i]) == 0){
+        if (strcmp(TWO(rt)->name, op2Name[i]) == 0){
             expVal left = Exp(ONE(rt), rt, depth + 1);
             expVal right = Exp(THREE(rt), rt, depth + 1);
             //TODO::检查类型
@@ -414,6 +440,7 @@ expVal Exp(TreeNode* rt, TreeNode* fa, int depth){
             res->lr = R_VAL;
             return res;
         }
+    }
     }
     MT1("LP"){//LP Exp RP
         return Exp(TWO(rt), rt, depth + 1);
@@ -518,6 +545,7 @@ expVal Exp(TreeNode* rt, TreeNode* fa, int depth){
 }
 
 expValList Args(TreeNode* rt, TreeNode* fa, int depth){
+    pri
     if (TWO(rt) == NULL){
         expValList tmp = new(expValList_);
         tmp->val = Exp(ONE(rt), rt, depth + 1);

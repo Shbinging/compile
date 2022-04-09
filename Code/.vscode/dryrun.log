@@ -1,0 +1,12 @@
+make parser --dry-run --keep-going --print-directory
+make: Entering directory '/root/Lab/Code'
+ 
+flex -o ./lex.yy.c ./lexical.l
+ 
+bison -o ./syntax.tab.c -d -v -t ./syntax.y
+ 
+gcc -c ./syntax.tab.c -o ./syntax.tab.o
+ 
+gcc -o parser ./tree.o ./syntax.tab.o ./map/map.o ./sdt.o ./main.o -lfl -ly
+make: Leaving directory '/root/Lab/Code'
+ 

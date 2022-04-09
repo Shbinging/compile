@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "random": "c",
+        "map.h": "c",
+        "assert.h": "c",
+        "stdlib.h": "c",
+        "sdt.h": "c",
+        "treenode.h": "c"
+    }
+}
