@@ -1,9 +1,13 @@
 #include"sdt.h"
 #include "map/map.h"
+#include"stdlib.h"
+#include"assert.h"
 #define ONE(x) (x->son)
 #define TWO(x) (x->son->bro)
 #define THREE(x) (x->son->bro->bro)
 #define FOUR(x) (x->son->bro->bro->bro)
+#define FIVE(x) (x->son->bro->bro->bro->bro)
+#define SIX(x) (x->son->bro->bro->bro->bro->bro)
 #define new(x) (malloc(sizeof(x)))
 #define eName(a, b) (strcmp(a->name, b) == 0)
 #define MT4(b) if (eName(FOUR(rt), b))
@@ -18,7 +22,7 @@ typedef struct varItem_* varItem;
 typedef struct structItem_* structItem;
 typedef struct expVal_* expVal;
 typedef struct expValList_* expValList;
-
+typedef struct funcItem_* funcItem;
 typedef struct Type_
 {
     enum { BASIC, ARRAY, STRUCTURE } kind;
@@ -69,11 +73,18 @@ typedef struct structItem_{
     Type type;
 } structItem_;
 
+typedef struct funcItem_{
+    char* name;
+    FieldList para;
+    Type retType;
+} funcItem_;
+
 typedef map_t(structItem) map_structItem_t;
 typedef map_t(varItem) map_varItem_t;
+typedef map_t(funcItem) map_funcItem_t;
 map_structItem_t structTable;
 map_varItem_t localVarTable, globalVarTable;
-
+map_funcItem_t funcTable;
 void error(int errorNo){
 
 }
@@ -81,6 +92,51 @@ void sdtInit(){
     map_init(&structTable);
     map_init(&localVarTable);
     map_init(&globalVarTable);
+    map_init(&funcTable);
+}
+
+
+int INT(TreeNode* rt, TreeNode* fa, int depth);
+float FLOAT(TreeNode* rt, TreeNode* fa, int depth);
+char* ID(TreeNode* rt, TreeNode* fa, int depth);
+Type TYPE(TreeNode* rt, TreeNode* fa, int depth);
+void Program(TreeNode* rt, TreeNode* fa, int depth);
+void ExtDefList(TreeNode* rt, TreeNode* fa, int depth);
+void ExtDef(TreeNode* rt, TreeNode* fa, int depth);
+void ExtDecList(TreeNode* rt, TreeNode* fa, int depth, Type type);
+Type Specifier(TreeNode* rt, TreeNode* fa, int depth);
+Type StructSpecifier(TreeNode* rt, TreeNode* fa, int depth);
+char* OptTag(TreeNode* rt, TreeNode* fa, int depth);
+char* Tag(TreeNode* rt, TreeNode* fa, int depth);
+FieldList VarDec(TreeNode* rt, TreeNode* fa, int depth, Type* type);
+void FunDec(TreeNode* rt, TreeNode* fa, int depth, Type type);
+FieldList VarList(TreeNode* rt, TreeNode* fa, int depth);
+FieldList ParamDec(TreeNode* rt, TreeNode* fa, int depth);
+void CompSt(TreeNode* rt, TreeNode* fa, int depth);
+void StmtList(TreeNode* rt, TreeNode* fa, int depth);
+void Stmt(TreeNode* rt, TreeNode* fa, int depth);
+FieldList DefList(TreeNode* rt, TreeNode* fa, int depth);
+FieldList Def(TreeNode* rt, TreeNode* fa, int depth);
+FieldList DecList(TreeNode* rt, TreeNode* fa, int depth, Type* type);
+FieldList Dec(TreeNode* rt, TreeNode* fa, int depth, Type* type);
+expVal Exp(TreeNode* rt, TreeNode* fa, int depth);
+expValList Args(TreeNode* rt, TreeNode* fa, int depth);
+
+
+int INT(TreeNode* rt, TreeNode* fa, int depth){
+    assert(strcmp(rt->name, "INT") == 0);
+    return rt->info.val_int;
+}
+
+float FLOAT(TreeNode* rt, TreeNode* fa, int depth){
+    assert(strcmp(rt->name, "FLOAT") == 0);
+    return rt->info.val_float;
+}
+
+char* ID(TreeNode* rt, TreeNode* fa, int depth){
+    char* tmp;
+    strCopy(tmp, rt->info.varName);
+    return tmp;
 }
 
 Type TYPE(TreeNode* rt, TreeNode* fa, int depth){
@@ -93,24 +149,51 @@ Type TYPE(TreeNode* rt, TreeNode* fa, int depth){
         tmp->u.basic = type_float;
     }
 }
-char* ID(TreeNode* rt, TreeNode* fa, int depth){
-    char* tmp;
-    strCopy(tmp, rt->info.varName);
-    return tmp;
+
+void Program(TreeNode* rt, TreeNode* fa, int depth){
+    ExtDefList(ONE(rt), rt, depth + 1);
 }
 
-char* OptTag(TreeNode* rt, TreeNode* fa, int depth){
-    if (rt->son == NULL){
-        return NULL;
-    }else{
-        return ID(ONE(rt), rt, depth + 1);
+void ExtDefList(TreeNode* rt, TreeNode* fa, int depth){
+    if (ONE(rt) == NULL) return;
+    ExtDef(ONE(rt), rt, depth + 1);
+    ExtDef(TWO(rt), rt, depth + 1);
+}
+
+void ExtDef(TreeNode* rt, TreeNode* fa, int depth){
+    MT2("ExtDecList"){//Specifier ExtDecList SEMI
+        Type type = Specifier(ONE(rt), rt, depth + 1);
+        ExtDecList(TWO(rt), rt, depth + 1, type);
+    }
+    MT2("SEMI"){
+        Specifier(ONE(rt), rt, depth + 1);
+    }
+    MT2("FunDec"){
+        Type type = Specifier(ONE(rt), rt, depth + 1);
+        FunDec(TWO(rt), rt, depth + 1, type);
+        CompSt(THREE(rt), rt, depth + 1);
     }
 }
 
-char* Tag(TreeNode* rt, TreeNode* fa, int depth){
-    return ID(ONE(rt), rt, depth + 1);
+void ExtDecList(TreeNode* rt, TreeNode* fa, int depth, Type type){
+    if (TWO(rt) == NULL){//VarDec
+        VarDec(ONE(rt), rt, depth + 1, type);
+    }
+    MT2("COMMA"){
+        VarDec(ONE(rt), rt, depth + 1, type);
+        ExtDecList(THREE(rt), rt, depth + 1, type);
+    }
 }
-FieldList DefList(TreeNode* rt, TreeNode* fa, int depth);
+
+Type Specifier(TreeNode* rt, TreeNode* fa, int depth){
+    MT1("TYPE"){
+        return TYPE(ONE(rt), rt, depth + 1);
+    }
+    MT1("StructSpecifier"){
+        return StructSpecifier(ONE(rt), rt, depth + 1);
+    }
+}
+
 Type StructSpecifier(TreeNode* rt, TreeNode* fa, int depth){
     Type tmp = new(Type_);
     tmp->kind = STRUCTURE;
@@ -147,29 +230,170 @@ Type StructSpecifier(TreeNode* rt, TreeNode* fa, int depth){
     }
 }
 
-Type Specifier(TreeNode* rt, TreeNode* fa, int depth){
-    MT1("TYPE"){
-        return TYPE(ONE(rt), rt, depth + 1);
-    }
-    MT1("StructSpecifier"){
-        return StructSpecifier(ONE(rt), rt, depth + 1);
+char* OptTag(TreeNode* rt, TreeNode* fa, int depth){
+    if (rt->son == NULL){
+        return NULL;
+    }else{
+        return ID(ONE(rt), rt, depth + 1);
     }
 }
 
-expVal Exp(TreeNode* rt, TreeNode* fa, int depth);
+char* Tag(TreeNode* rt, TreeNode* fa, int depth){
+    return ID(ONE(rt), rt, depth + 1);
+}
 
-expValList Args(TreeNode* rt, TreeNode* fa, int depth){
-    if (TWO(rt) == NULL){
-        expValList tmp = new(expValList_);
-        tmp->val = Exp(ONE(rt), rt, depth + 1);
+FieldList VarDec(TreeNode* rt, TreeNode* fa, int depth, Type* type){
+    //TODO::第一层返回varDec, 后面返回Type
+    if (TWO(rt) == NULL){//ID
+        FieldList tmp = new(FieldList_);
+        tmp->name = ID(ONE(rt), rt, depth + 1);
         tmp->tail = NULL;
+        tmp->type = type;
         return tmp;
     }
-    MT3("Args"){
-        expValList tmp = new(expValList_);
-        tmp->val = Exp(ONE(rt), rt, depth + 1);
-        tmp->tail = Args(THREE(rt), rt, depth + 1);
-        return tmp;
+    MT2("LB"){
+        int idx = INT(THREE(rt), rt, depth + 1);
+        Type tmp = new (Type_);
+        tmp->kind = ARRAY;
+        tmp->u.array.size = idx;
+        tmp->u.array.elem = type;
+        return VarDec(ONE(rt), rt, depth + 1, tmp);
+    }
+}
+
+void FunDec(TreeNode* rt, TreeNode* fa, int depth, Type type){
+    char* name = ID(ONE(rt), rt, depth + 1);
+    //TODO::check name
+    MT3("RP"){//ID LP VarList RP
+        funcItem func = new(funcItem_);
+        func->name = name;
+        func->para = NULL;
+        func->retType = type;
+        map_set(&funcTable, name, func);
+    }
+    MT3("VarList"){//ID LP VarList RP
+        FieldList para = VarList(THREE(rt), rt, depth + 1);
+        //TODO::check name
+        funcItem func = new(funcItem_);
+        func->name = name;
+        func->para = para;
+        func->retType = type;
+        map_set(&funcTable, name, func);
+    }
+}
+
+FieldList VarList(TreeNode* rt, TreeNode* fa, int depth){
+    if (TWO(rt) == NULL){//ParamDec
+        return ParamDec(ONE(rt), rt, depth + 1);
+    }
+    MT2("COMMA"){//ParamDec COMMA VarList
+        FieldList lst1 = ParamDec(ONE(rt), rt, depth + 1);
+        FieldList lst2 = VarList(THREE(rt), rt, depth + 1);
+        if (lst1 == NULL) return lst2;
+        FieldList p;
+        for(p = lst1; p->tail != NULL; p = p->tail);
+        p->tail = lst2;
+        return lst1;
+    }
+}
+
+FieldList ParamDec(TreeNode* rt, TreeNode* fa, int depth){
+    Type type = Specifier(ONE(rt), rt, depth + 1);
+    return VarDec(TWO(rt), rt, depth + 1, type);
+}
+
+void CompSt(TreeNode* rt, TreeNode* fa, int depth){
+    DefList(TWO(rt), rt, depth + 1);
+    StmtList(THREE(rt), rt, depth + 1);
+}
+
+void StmtList(TreeNode* rt, TreeNode* fa, int depth){
+    if(ONE(rt) == NULL) return;
+    Stmt(ONE(rt), rt, depth + 1);
+    StmtList(TWO(rt), rt, depth + 1);
+}
+
+void Stmt(TreeNode* rt, TreeNode* fa, int depth){
+    MT1("Exp"){
+        Exp(ONE(rt), rt, depth + 1);
+    }
+    MT1("CompSt"){
+        CompSt(ONE(rt), rt, depth + 1);
+    }
+    MT1("RETURN"){
+        Exp(TWO(rt), rt, depth + 1);
+        //TODO:: check return
+    }
+    MT1("IF"){
+        expVal condVal = Exp(THREE(rt), rt, depth + 1);
+        //TODO::check condVal
+        Stmt(FIVE(rt), rt, depth + 1);
+        if (SIX(rt) != NULL){// else
+            Stmt(SIX(rt)->bro, rt, depth + 1);
+        }
+    }
+    MT1("WHILE"){
+        expVal condVal = Exp(THREE(rt), rt, depth + 1);
+        //TODO::check condVal
+        Stmt(FIVE(rt), rt, depth + 1);
+    }
+}
+
+FieldList DefList(TreeNode* rt, TreeNode* fa, int depth){
+    if (rt->son == NULL){
+        return NULL;
+    }
+    MT1("Def"){
+        FieldList lst1 = Def(ONE(rt), rt, depth + 1);
+        FieldList lst2 = DefList(TWO(rt), rt, depth + 1);
+        if (lst1 == NULL) return lst2;
+        FieldList p;
+        for(p = lst1; p->tail != NULL; p = p->tail);
+        p->tail = lst2;
+        return lst1;
+    }
+}
+
+FieldList Def(TreeNode* rt, TreeNode* fa, int depth){
+    Type spType = Specifier(ONE(rt), rt, depth + 1);
+    return DecList(TWO(rt), rt, depth + 1, spType);
+}
+
+FieldList DecList(TreeNode* rt, TreeNode* fa, int depth, Type* type){
+    if (TWO(rt) == NULL){//Dec
+        return Dec(ONE(rt), rt, depth + 1, type);
+    }
+    MT2("COMMA"){//Dec COMMA DecList
+        FieldList lst1 = Dec(ONE(rt), rt, depth + 1, type);
+        FieldList lst2 = DecList(THREE(rt), rt, depth + 1, type);
+        if (lst1 == NULL) return lst2;
+        FieldList p;
+        for(p = lst1; p->tail != NULL; p = p->tail);
+        p->tail = lst2;
+        return lst1;
+    }
+}
+
+FieldList Dec(TreeNode* rt, TreeNode* fa, int depth, Type* type){
+    FieldList var = VarDec(ONE(rt), rt, depth + 1, type);
+    //TODO: 根据是否是struct还是localVariable 检查变量是否重复定义
+    if (TWO(rt) == NULL){//varDec
+        varItem vari = new(varItem_);
+        vari->isInit = 0;
+        vari->name = var->name;
+        vari->type = var->type;
+        map_set(&localVarTable, vari->name, vari);
+        return var;
+    }
+    MT2("ASSIGNOP"){//varDec ASSIGNOP Exp
+        expVal res = Exp(THREE(rt), rt, depth + 1);
+        //TODO:: 检查赋值是否错误
+        varItem vari = new(varItem_);
+        vari->isInit = 1;
+        vari->name = var->name;
+        vari->type = var->type;
+        map_set(&localVarTable, vari->name, vari);
+        return var;
     }
 }
 
@@ -211,7 +435,7 @@ expVal Exp(TreeNode* rt, TreeNode* fa, int depth){
             //TODO::检查变量是否存在，并在table中寻找该变量
             expVal res = new(expVal_);
             res->lr = L_VAL;
-            //TODO:找table，找到该变量的type
+            //TODO:找table，找到该变量的type， 注意要拷贝复制
             //res->type = 
             return res;
         }
@@ -237,7 +461,53 @@ expVal Exp(TreeNode* rt, TreeNode* fa, int depth){
     MT2("LB"){//Exp LB Exp RB
         expVal left = Exp(ONE(rt), rt, depth + 1);
         expVal right = Exp(THREE(rt), rt, depth + 1);
-        //TODO::检查left是否为左值且type为
+        //TODO::检查right是否为整数
+        //TODO::检查left为左值
+        if(left->type->kind != ARRAY){
+            //TODO::数组维数不对
+            error(-1);
+            return left;
+        }
+        left->type = left->type->u.array.elem;
+        return left;
+    }
+    MT2("DOT"){
+        expVal left = Exp(ONE(rt), rt, depth + 1);
+        char* name = ID(THREE(rt), rt, depth + 1);
+        //TODO::检查left为左值
+        if (left->type->kind != STRUCTURE){
+            error(-1);
+            FieldList p = left->type->u.structure;
+            for(p ; p != NULL; p = p->tail){
+                if (strcmp(name, p->name)){
+                    break;
+                }
+            }
+            if (p == NULL){
+                error(-1);//未找到域名
+                return left;
+            }
+            left->type = p->type;
+            return left;
+        }
+    }
+    MT1("INT"){
+        expVal tmp = new(expVal_);
+        tmp->type = new(Type_);
+        tmp->type->kind = BASIC;
+        tmp->type->u.basic = type_int;
+        tmp->lr = R_VAL;
+        tmp->val.val_int = INT(ONE(rt), rt, depth + 1);
+        return tmp;
+    }
+    MT1("FLOAT"){
+        expVal tmp = new(expVal_);
+        tmp->type = new(Type_);
+        tmp->type->kind = BASIC;
+        tmp->type->u.basic = type_float;
+        tmp->lr = R_VAL;
+        tmp->val.val_int = FLOAT(ONE(rt), rt, depth + 1);
+        return tmp;
     }
     expVal tmp = new(expVal_);
     tmp->type = new(Type_);
@@ -247,91 +517,21 @@ expVal Exp(TreeNode* rt, TreeNode* fa, int depth){
     return tmp;
 }
 
-int INT(TreeNode* rt, TreeNode* fa, int depth){
-    assert(strcmp(rt->name, "INT") == 0);
-    return rt->info.val_int;
-}
-
-FieldList VarDec(TreeNode* rt, TreeNode* fa, int depth, Type* type){
-    //TODO::第一层返回varDec, 后面返回Type
-    if (TWO(rt) == NULL){//ID
-        FieldList tmp = new(FieldList_);
-        tmp->name = ID(ONE(rt), rt, depth + 1);
+expValList Args(TreeNode* rt, TreeNode* fa, int depth){
+    if (TWO(rt) == NULL){
+        expValList tmp = new(expValList_);
+        tmp->val = Exp(ONE(rt), rt, depth + 1);
         tmp->tail = NULL;
-        tmp->type = type;
         return tmp;
     }
-    MT2("LB"){
-        int idx = INT(THREE(rt), rt, depth + 1);
-        Type tmp = new (Type_);
-        tmp->kind = ARRAY;
-        tmp->u.array.size = idx;
-        tmp->u.array.elem = type;
-        return VarDec(ONE(rt), rt, depth + 1, tmp);
+    MT3("Args"){
+        expValList tmp = new(expValList_);
+        tmp->val = Exp(ONE(rt), rt, depth + 1);
+        tmp->tail = Args(THREE(rt), rt, depth + 1);
+        return tmp;
     }
 }
 
-FieldList Dec(TreeNode* rt, TreeNode* fa, int depth, Type* type){
-    FieldList var = VarDec(ONE(rt), rt, depth + 1, type);
-    //TODO: 根据是否是struct还是localVariable 检查变量是否重复定义
-    if (TWO(rt) == NULL){//varDec
-        varItem vari = new(varItem_);
-        vari->isInit = 0;
-        vari->name = var->name;
-        vari->type = var->type;
-        map_set(&localVarTable, vari->name, vari);
-        return var;
-    }
-    MT2("ASSIGNOP"){//varDec ASSIGNOP Exp
-        expVal res = Exp(THREE(rt), rt, depth + 1);
-        //TODO:: 检查赋值是否错误
-        varItem vari = new(varItem_);
-        vari->isInit = 1;
-        vari->name = var->name;
-        vari->type = var->type;
-        map_set(&localVarTable, vari->name, vari);
-        return var;
-    }
-}
-
-FieldList DecList(TreeNode* rt, TreeNode* fa, int depth, Type* type){
-    if (TWO(rt) == NULL){//Dec
-        return Dec(ONE(rt), rt, depth + 1, type);
-    }
-    MT2("COMMA"){//Dec COMMA DecList
-        FieldList lst1 = Dec(ONE(rt), rt, depth + 1, type);
-        FieldList lst2 = DecList(THREE(rt), rt, depth + 1, type);
-        if (lst1 == NULL) return lst2;
-        FieldList p;
-        for(p = lst1; p->tail != NULL; p = p->tail);
-        p->tail = lst2;
-        return lst1;
-    }
-}
-
-FieldList Def(TreeNode* rt, TreeNode* fa, int depth){
-    Type spType = Specifier(ONE(rt), rt, depth + 1);
-    return DecList(TWO(rt), rt, depth + 1, spType);
-}
-
-FieldList DefList(TreeNode* rt, TreeNode* fa, int depth){
-    if (rt->son == NULL){
-        return NULL;
-    }
-    MT1("Def"){
-        FieldList lst1 = Def(ONE(rt), rt, depth + 1);
-        FieldList lst2 = DefList(TWO(rt), rt, depth + 1);
-        if (lst1 == NULL) return lst2;
-        FieldList p;
-        for(p = lst1; p->tail != NULL; p = p->tail);
-        p->tail = lst2;
-        return lst1;
-    }
-}
-
-void Normal(TreeNode* rt, TreeNode* fa, int depth){
-
-}
 void sdtTree(TreeNode* rt, int depth){
 
 }
