@@ -533,5 +533,5 @@ expValList Args(TreeNode* rt, TreeNode* fa, int depth){
 }
 
 void sdtTree(TreeNode* rt, int depth){
-
+    Program(rt, NULL, 0);
 }
