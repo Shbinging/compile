@@ -2,6 +2,7 @@
 #include "map/map.h"
 #include"stdlib.h"
 #include"assert.h"
+#include"stdio.h"
 #define ONE(x) (x->son)
 #define TWO(x) (x->son->bro)
 #define THREE(x) (x->son->bro->bro)
@@ -16,8 +17,8 @@
 #define MT1(b) if (ONE(rt) != NULL && eName(ONE(rt), b))
 #define strCopy(a, b) a = malloc(strlen(b) + 1);\
 strcpy(a, b)
-#define preWORK(rt) print(rt, depth);\
-    if (rt->type == makeType(YFFULL)){\
+//#define preWORK(rt) print(rt, depth);
+#define preWORK(rt) if (rt->type == makeType(YFFULL)){\
         lineNo = rt->info.lineNo;\
     }
 typedef struct Type_* Type;
@@ -189,7 +190,7 @@ Type Specifier(TreeNode* rt, TreeNode* fa, int depth);
 Type StructSpecifier(TreeNode* rt, TreeNode* fa, int depth);
 char* OptTag(TreeNode* rt, TreeNode* fa, int depth);
 char* Tag(TreeNode* rt, TreeNode* fa, int depth);
-FieldList VarDec(TreeNode* rt, TreeNode* fa, int depth, Type* type);
+FieldList VarDec(TreeNode* rt, TreeNode* fa, int depth, Type type);
 void FunDec(TreeNode* rt, TreeNode* fa, int depth, Type type);
 FieldList VarList(TreeNode* rt, TreeNode* fa, int depth);
 FieldList ParamDec(TreeNode* rt, TreeNode* fa, int depth);
@@ -198,8 +199,8 @@ void StmtList(TreeNode* rt, TreeNode* fa, int depth);
 void Stmt(TreeNode* rt, TreeNode* fa, int depth);
 FieldList DefList(TreeNode* rt, TreeNode* fa, int depth);
 FieldList Def(TreeNode* rt, TreeNode* fa, int depth);
-FieldList DecList(TreeNode* rt, TreeNode* fa, int depth, Type* type);
-FieldList Dec(TreeNode* rt, TreeNode* fa, int depth, Type* type);
+FieldList DecList(TreeNode* rt, TreeNode* fa, int depth, Type type);
+FieldList Dec(TreeNode* rt, TreeNode* fa, int depth, Type type);
 expVal Exp(TreeNode* rt, TreeNode* fa, int depth);
 expValList Args(TreeNode* rt, TreeNode* fa, int depth);
 
@@ -266,7 +267,7 @@ void ExtDef(TreeNode* rt, TreeNode* fa, int depth){
 void ExtDecList(TreeNode* rt, TreeNode* fa, int depth, Type type){
     preWORK(rt)
     FieldList tmp = VarDec(ONE(rt), rt, depth + 1, type);//VarDec
-    if (isExsist(tmp)){
+    if (isExsist(tmp->name)){
         error(3);
         return;
     }
@@ -345,7 +346,7 @@ char* Tag(TreeNode* rt, TreeNode* fa, int depth){
     return ID(ONE(rt), rt, depth + 1);
 }
 
-FieldList VarDec(TreeNode* rt, TreeNode* fa, int depth, Type* type){
+FieldList VarDec(TreeNode* rt, TreeNode* fa, int depth, Type type){
     preWORK(rt)
     //第一层返回FieldList, 后面返回Type
     if (TWO(rt) == NULL){//ID
@@ -476,7 +477,7 @@ FieldList Def(TreeNode* rt, TreeNode* fa, int depth){
     return DecList(TWO(rt), rt, depth + 1, spType);
 }
 
-FieldList DecList(TreeNode* rt, TreeNode* fa, int depth, Type* type){
+FieldList DecList(TreeNode* rt, TreeNode* fa, int depth, Type type){
     preWORK(rt)
     if (TWO(rt) == NULL){//Dec
         return Dec(ONE(rt), rt, depth + 1, type);
@@ -492,7 +493,7 @@ FieldList DecList(TreeNode* rt, TreeNode* fa, int depth, Type* type){
     }
 }
 
-FieldList Dec(TreeNode* rt, TreeNode* fa, int depth, Type* type){
+FieldList Dec(TreeNode* rt, TreeNode* fa, int depth, Type type){
     preWORK(rt)
     FieldList var = VarDec(ONE(rt), rt, depth + 1, type);
     //根据是否是struct还是localVariable 检查变量是否重复定义
@@ -670,7 +671,7 @@ expVal Exp(TreeNode* rt, TreeNode* fa, int depth){
         char* name = ID(THREE(rt), rt, depth + 1);
         //检查left为左值
         if (!isVar(left)) return NULL;
-        if (!isStructure(left)){
+        if (!isStructure(left->type)){
             error(13);
             return NULL;
         }
