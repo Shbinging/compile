@@ -398,16 +398,17 @@ void FunDec(TreeNode* rt, TreeNode* fa, int depth, Type type, int isDef){
             return;
         }
         MT3("RP"){
+            if (isDef) funcUse = func;
             if (!isSameType(type, func->retType)){
                 error(19, rt->info.lineNo);
                 return;
             }
             func->isDef |= isDef;
             if (!isDef) func->lineNo[func->lineSum++] = rt->info.lineNo;
-            if (isDef) funcUse = func;
             return;
         }
         MT3("VarList"){
+            if (isDef) funcUse = func;
             FieldList para = VarList(THREE(rt), rt, depth + 1, isDef);
         //检查形参是否重复
             FieldList p = para;
@@ -430,7 +431,6 @@ void FunDec(TreeNode* rt, TreeNode* fa, int depth, Type type, int isDef){
             }
             if (!isDef) func->lineNo[func->lineSum++] = rt->info.lineNo;
             func->isDef |= isDef;
-            if (isDef) funcUse = func;
             return;
         }
     }
@@ -715,13 +715,14 @@ expVal Exp(TreeNode* rt, TreeNode* fa, int depth){
             //检查函数调用实参与形参数目和类型是否匹配
             FieldList argsFormal = res->val.func->para;
             for(; argsFormal != NULL; argsFormal = argsFormal->tail){
+                if (argsReal == NULL || argsReal->val == NULL) break;
                 if (!isSameType(argsFormal->type, argsReal->val->type)){
                     error(9, rt->info.lineNo);
                     return NULL;
                 }
                 argsReal = argsReal->tail;
             }
-            if (argsReal != NULL){
+            if (argsReal != NULL || argsFormal != NULL){
                 error(9, rt->info.lineNo);
                 return res;
             }
@@ -807,7 +808,26 @@ expVal Exp(TreeNode* rt, TreeNode* fa, int depth){
         left->lr = R_VAL;
         return left;
     }
-    char* op2Name[8] = {"AND", "OR", "RELOP", "PLUS", "MINUS", "STAR", "DIV"};
+    if((strcmp(TWO(rt)->name, "AND") == 0) || (strcmp(TWO(rt)->name, "OR") == 0)){
+        expVal left = Exp(ONE(rt), rt, depth + 1);
+        expVal right = Exp(THREE(rt), rt, depth + 1);
+        if (left == NULL || right == NULL){
+            error(7, rt->info.lineNo);
+            return NULL;
+        }
+        if (!isSameType(left->type, right->type)){
+            error(7, rt->info.lineNo);
+            Exp(THREE(rt), rt, depth + 1);
+            return NULL;
+        }
+        if (!(isInt(left->type))){
+            error(7, rt->info.lineNo);
+            return NULL;
+        }
+        left->lr = R_VAL;
+        return left;
+    }
+    char* op2Name[8] = {"RELOP", "PLUS", "MINUS", "STAR", "DIV"};
     for(int i = 0; i < 8; i++){//AND OR RELOP PLUS MINUS STAR DIV
         if (TWO(rt) != NULL && strcmp(TWO(rt)->name, op2Name[i]) == 0){
             expVal left = Exp(ONE(rt), rt, depth + 1);
@@ -818,11 +838,15 @@ expVal Exp(TreeNode* rt, TreeNode* fa, int depth){
             }
             if (!isSameType(left->type, right->type)){
                 error(7, rt->info.lineNo);
+                Exp(THREE(rt), rt, depth + 1);
                 return NULL;
             }
             if (!(isInt(left->type) || isFloat(left->type))){
                 error(7, rt->info.lineNo);
                 return NULL;
+            }
+            if (strcmp(op2Name[i], "RELOP") == 0){
+                left->type->u.basic = type_int;
             }
             left->lr = R_VAL;
             return left;
