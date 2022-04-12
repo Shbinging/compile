@@ -40,6 +40,7 @@ ExtDefList: ExtDef ExtDefList {$$ = make_tree(makeType(YFFULL), "ExtDefList",  @
 ExtDef : Specifier ExtDecList SEMI  {$$ = make_tree(makeType(YFFULL), "ExtDef",  @$.first_line, 3, $1, $2, $3);}
 | Specifier SEMI {$$ = make_tree(makeType(YFFULL), "ExtDef",  @$.first_line, 2, $1, $2);}
 | Specifier FunDec CompSt {$$ = make_tree(makeType(YFFULL), "ExtDef",  @$.first_line, 3, $1, $2, $3);}
+| Specifier FunDec SEMI {$$ = make_tree(makeType(YFFULL), "ExtDef", @$.first_line, 3, $1, $2, $3);}
 | error SEMI
 | Specifier error SEMI 
 ;

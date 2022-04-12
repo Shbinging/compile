@@ -17,8 +17,8 @@
 #define MT1(b) if (ONE(rt) != NULL && eName(ONE(rt), b))
 #define strCopy(a, b) a = malloc(strlen(b) + 1);\
 strcpy(a, b)
-#define preWORK(rt) print(rt, depth);\
- if (rt->type == makeType(YFFULL)){\
+//#define preWORK(rt) print(rt, depth);
+#define preWORK(rt) if (rt->type == makeType(YFFULL)){\
         lineNo = rt->info.lineNo;\
     }
 typedef struct Type_* Type;
@@ -66,6 +66,9 @@ typedef struct funcItem_{
     char* name;
     FieldList para;
     Type retType;
+    int isDef;
+    int lineSum;
+    int lineNo[256];
 } funcItem_;
 
 typedef struct expVal_
@@ -165,8 +168,8 @@ int isExsist(char* name, int inStruct){
     return res;
 }
 
-void error(int errorNo){
-    if (errorNo < 1 || errorNo > 17){
+void error(int errorNo, int lineNo){
+    if (errorNo < -2 || errorNo > 19){
         printf("wrong errorNo %d\n", errorNo);
         assert(0);
     }
@@ -195,9 +198,9 @@ Type StructSpecifier(TreeNode* rt, TreeNode* fa, int depth);
 char* OptTag(TreeNode* rt, TreeNode* fa, int depth);
 char* Tag(TreeNode* rt, TreeNode* fa, int depth);
 FieldList VarDec(TreeNode* rt, TreeNode* fa, int depth, Type type);
-void FunDec(TreeNode* rt, TreeNode* fa, int depth, Type type);
-FieldList VarList(TreeNode* rt, TreeNode* fa, int depth);
-FieldList ParamDec(TreeNode* rt, TreeNode* fa, int depth);
+void FunDec(TreeNode* rt, TreeNode* fa, int depth, Type type, int isDef);
+FieldList VarList(TreeNode* rt, TreeNode* fa, int depth, int isDef);
+FieldList ParamDec(TreeNode* rt, TreeNode* fa, int depth, int isDef);
 void CompSt(TreeNode* rt, TreeNode* fa, int depth);
 void StmtList(TreeNode* rt, TreeNode* fa, int depth);
 void Stmt(TreeNode* rt, TreeNode* fa, int depth);
@@ -264,8 +267,12 @@ void ExtDef(TreeNode* rt, TreeNode* fa, int depth){
     }
     MT2("FunDec"){
         Type type = Specifier(ONE(rt), rt, depth + 1);
-        FunDec(TWO(rt), rt, depth + 1, type);
-        CompSt(THREE(rt), rt, depth + 1);
+        MT3("SEMI"){
+            FunDec(TWO(rt), rt, depth + 1, type, 0);
+        }else{
+            FunDec(TWO(rt), rt, depth + 1, type, 1);
+            CompSt(THREE(rt), rt, depth + 1);
+        }
     }
 }
 
@@ -273,7 +280,7 @@ void ExtDecList(TreeNode* rt, TreeNode* fa, int depth, Type type){
     preWORK(rt)
     FieldList tmp = VarDec(ONE(rt), rt, depth + 1, type);//VarDec
     if (isExsist(tmp->name, isStruct)){
-        error(3);
+        error(3, rt->info.lineNo);
         return;
     }
     varItem var = new(varItem_);
@@ -307,7 +314,7 @@ Type StructSpecifier(TreeNode* rt, TreeNode* fa, int depth){
         map_deinit(&domainTable);
         map_init(&domainTable);
         if (name != NULL && (isExsist(name, isStruct))){
-            error(16);
+            error(16, rt->info.lineNo);
             return NULL;
         }
         FieldList structure = DefList(FOUR(rt), rt, depth + 1);
@@ -331,7 +338,7 @@ Type StructSpecifier(TreeNode* rt, TreeNode* fa, int depth){
         char* name = Tag(TWO(rt), rt, depth + 1);
         assert(name != NULL);
         if (map_get(&structTable, name) == NULL){
-            error(17);
+            error(17, rt->info.lineNo);
             return NULL;
         }else{
             structItem sItem =  *map_get(&structTable, name);
@@ -374,43 +381,99 @@ FieldList VarDec(TreeNode* rt, TreeNode* fa, int depth, Type type){
     }
 }
 
-void FunDec(TreeNode* rt, TreeNode* fa, int depth, Type type){
+void FunDec(TreeNode* rt, TreeNode* fa, int depth, Type type, int isDef){
     preWORK(rt)
     char* name = ID(ONE(rt), rt, depth + 1);
     //check name
     assert(name != NULL);
-    if (isExsist(name, isStruct)){
-        error(4);
+
+    if (isExsist(name, isStruct) && map_get(&funcTable, name) == NULL){
+        error(4, rt->info.lineNo);
         return;
     }
+    if (map_get(&funcTable, name) != NULL){
+        funcItem func = *map_get(&funcTable, name);
+        if (isDef && func->isDef){
+            error(4, rt->info.lineNo);
+            return;
+        }
+        MT3("RP"){
+            if (!isSameType(type, func->retType)){
+                error(19, rt->info.lineNo);
+                return;
+            }
+            func->isDef |= isDef;
+            if (!isDef) func->lineNo[func->lineSum++] = rt->info.lineNo;
+            if (isDef) funcUse = func;
+            return;
+        }
+        MT3("VarList"){
+            FieldList para = VarList(THREE(rt), rt, depth + 1, isDef);
+        //检查形参是否重复
+            FieldList p = para;
+            FieldList q = func->para;
+            for(;p != NULL; p = p->tail){
+                if (q == NULL) break;
+                if (!isSameType(p->type, q->type)){
+                    error(19, rt->info.lineNo);
+                    return;
+                }
+                q = q->tail;
+            }
+            if (p != NULL || q != NULL){
+                error(19, rt->info.lineNo);
+                return;
+            }
+            if (!isSameType(type, func->retType)){
+                error(19, rt->info.lineNo);
+                return;
+            }
+            if (!isDef) func->lineNo[func->lineSum++] = rt->info.lineNo;
+            func->isDef |= isDef;
+            if (isDef) funcUse = func;
+            return;
+        }
+    }
+
     MT3("RP"){//ID LP VarList RP
         funcItem func = new(funcItem_);
         func->name = name;
         func->para = NULL;
         func->retType = type;
-        funcUse = func;
+        if (isDef) funcUse = func;
+        func->isDef = isDef;
+        if (!isDef){
+            func->lineSum = 0;
+            func->lineNo[func->lineSum++] = rt->info.lineNo;
+        }
         map_set(&funcTable, name, func);
     }
     MT3("VarList"){//ID LP VarList RP
-        FieldList para = VarList(THREE(rt), rt, depth + 1);
-        //TODO:检查形参是否重复
+        FieldList para = VarList(THREE(rt), rt, depth + 1, isDef);
+        //检查形参是否重复
+        FieldList p = para;
         funcItem func = new(funcItem_);
         func->name = name;
         func->para = para;
         func->retType = type;
-        funcUse = func;
+        if (isDef) funcUse = func;
+        func->isDef = isDef;
+        if (!isDef){
+            func->lineSum = 0;
+            func->lineNo[func->lineSum++] = rt->info.lineNo;
+        }
         map_set(&funcTable, name, func);
     }
 }
 
-FieldList VarList(TreeNode* rt, TreeNode* fa, int depth){
+FieldList VarList(TreeNode* rt, TreeNode* fa, int depth, int isDef){
     preWORK(rt)
     if (TWO(rt) == NULL){//ParamDec
-        return ParamDec(ONE(rt), rt, depth + 1);
+        return ParamDec(ONE(rt), rt, depth + 1, isDef);
     }
     MT2("COMMA"){//ParamDec COMMA VarList
-        FieldList lst1 = ParamDec(ONE(rt), rt, depth + 1);
-        FieldList lst2 = VarList(THREE(rt), rt, depth + 1);
+        FieldList lst1 = ParamDec(ONE(rt), rt, depth + 1, isDef);
+        FieldList lst2 = VarList(THREE(rt), rt, depth + 1, isDef);
         if (lst1 == NULL) return lst2;
         FieldList p;
         for(p = lst1; p->tail != NULL; p = p->tail);
@@ -419,12 +482,13 @@ FieldList VarList(TreeNode* rt, TreeNode* fa, int depth){
     }
 }
 
-FieldList ParamDec(TreeNode* rt, TreeNode* fa, int depth){
+FieldList ParamDec(TreeNode* rt, TreeNode* fa, int depth, int isDef){
     preWORK(rt)
     Type type = Specifier(ONE(rt), rt, depth + 1);
     FieldList tmp = VarDec(TWO(rt), rt, depth + 1, type);
+    if (!isDef) return tmp;
     if (isExsist(tmp->name, isStruct)){
-        error(3);
+        error(3, rt->info.lineNo);
         return NULL;
     }
     varItem var = new(varItem_);
@@ -432,6 +496,7 @@ FieldList ParamDec(TreeNode* rt, TreeNode* fa, int depth){
     var->isInit = 0;
     var->type = tmp->type;
     map_set(&localVarTable, var->name, var);
+    return tmp;
 }
 
 void CompSt(TreeNode* rt, TreeNode* fa, int depth){
@@ -459,7 +524,7 @@ void Stmt(TreeNode* rt, TreeNode* fa, int depth){
         //check return
         expVal res = Exp(TWO(rt), rt, depth + 1);
         if (!((funcUse != NULL) && (res != NULL) && isSameType(funcUse->retType, res->type))){
-            error(8);
+            error(8, rt->info.lineNo);
             return;
         }
 
@@ -523,10 +588,10 @@ FieldList Dec(TreeNode* rt, TreeNode* fa, int depth, Type type){
     //根据是否是struct还是localVariable 检查变量是否重复定义
     if (isExsist(var->name, isStruct)){
         if (isStruct){
-            error(15);
+            error(15, rt->info.lineNo);
             return NULL;
         }else{
-            error(3);
+            error(3, rt->info.lineNo);
             return NULL;
         }
     }
@@ -544,17 +609,17 @@ FieldList Dec(TreeNode* rt, TreeNode* fa, int depth, Type type){
     }
     MT2("ASSIGNOP"){//varDec ASSIGNOP Exp
         if (isStruct){
-            error(15);
+            error(15, rt->info.lineNo);
             return NULL;
         }
         expVal res = Exp(THREE(rt), rt, depth + 1);
         //检查赋值是否错误
         if (!((res != NULL) && isSameType(res->type, var->type))){
-            error(5);
+            error(5, rt->info.lineNo);
             return NULL;
         }
         if (isArray(res->type)){
-            error(7);
+            error(7, rt->info.lineNo);
             return NULL;
         }
 
@@ -576,6 +641,7 @@ expVal Exp(TreeNode* rt, TreeNode* fa, int depth){
     preWORK(rt)
     MT1("LP"){//LP Exp RP
         expVal tmp =  Exp(TWO(rt), rt, depth + 1);
+        if (tmp == NULL) return NULL;
         tmp->lr = R_VAL;
         return tmp;
     }
@@ -583,11 +649,11 @@ expVal Exp(TreeNode* rt, TreeNode* fa, int depth){
         expVal res = Exp(TWO(rt), rt, depth + 1);
         //检查类型
         if (res == NULL){
-            error(7);
+            error(7, rt->info.lineNo);
             return NULL;
         }
         if (!(isInt(res->type) || isFloat(res->type))){
-            error(7);
+            error(7, rt->info.lineNo);
             return NULL;
         }
         res->lr = R_VAL;
@@ -597,11 +663,11 @@ expVal Exp(TreeNode* rt, TreeNode* fa, int depth){
         expVal res = Exp(TWO(rt), rt, depth + 1);
         //检查类型
         if (res == NULL){
-            error(7);
+            error(7, rt->info.lineNo);
             return NULL;
         }
         if (!isInt(res->type)){
-            error(7);
+            error(7, rt->info.lineNo);
             return NULL;
         }
         res->lr = R_VAL;
@@ -630,7 +696,7 @@ expVal Exp(TreeNode* rt, TreeNode* fa, int depth){
         expVal res = lookupTable(name);
         if (TWO(rt) == 0){//ID
             if (!isVar(res)){
-                error(1);
+                error(1, rt->info.lineNo);
                 return NULL;
             }
             return res;
@@ -638,11 +704,11 @@ expVal Exp(TreeNode* rt, TreeNode* fa, int depth){
         MT3("Args"){//ID LP Args RP
             //检查函数是否存在
             if (isVar(res)){
-                error(11);
+                error(11, rt->info.lineNo);
                 return NULL;
             }
             if (!isFunc(res)){
-                error(2);
+                error(2, rt->info.lineNo);
                 return NULL;
             }
             expValList argsReal = Args(THREE(rt), rt, depth + 1);
@@ -650,13 +716,13 @@ expVal Exp(TreeNode* rt, TreeNode* fa, int depth){
             FieldList argsFormal = res->val.func->para;
             for(; argsFormal != NULL; argsFormal = argsFormal->tail){
                 if (!isSameType(argsFormal->type, argsReal->val->type)){
-                    error(9);
+                    error(9, rt->info.lineNo);
                     return NULL;
                 }
                 argsReal = argsReal->tail;
             }
             if (argsReal != NULL){
-                error(9);
+                error(9, rt->info.lineNo);
                 return res;
             }
             res->type = res->val.func->retType;
@@ -667,15 +733,15 @@ expVal Exp(TreeNode* rt, TreeNode* fa, int depth){
             //检查函数调用实参与形参数目和类型是否匹配
             //查询函数返回类型
             if (isVar(res)){
-                error(11);
+                error(11, rt->info.lineNo);
                 return NULL;
             }
             if (!isFunc(res)){
-                error(2);
+                error(2, rt->info.lineNo);
                 return NULL;
             }
             if (res->val.func->para != NULL){
-                error(9);
+                error(9, rt->info.lineNo);
                 return NULL;
             }
             res->type = res->val.func->retType;
@@ -688,12 +754,12 @@ expVal Exp(TreeNode* rt, TreeNode* fa, int depth){
         expVal right = Exp(THREE(rt), rt, depth + 1);
         //检查right是否为整数
         if (!(isRight(right) && isInt(right->type))){
-            error(12);
+            error(12, rt->info.lineNo);
             return NULL;
         }
         if (!isVar(left)) return NULL;
         if (!isArray(left->type)){
-            error(10);
+            error(10, rt->info.lineNo);
             return NULL;
         }
         left->type = left->type->u.array.elem;
@@ -705,7 +771,7 @@ expVal Exp(TreeNode* rt, TreeNode* fa, int depth){
         //检查left为左值
         if (!isVar(left)) return NULL;
         if (!isStructure(left->type)){
-            error(13);
+            error(13, rt->info.lineNo);
             return NULL;
         }
         assert(name != NULL);
@@ -716,7 +782,7 @@ expVal Exp(TreeNode* rt, TreeNode* fa, int depth){
             }
         }
         if (p == NULL){
-            error(14);//未找到域名
+            error(14, rt->info.lineNo);//未找到域名
             return NULL;
         }
         left->type = p->type;
@@ -725,17 +791,17 @@ expVal Exp(TreeNode* rt, TreeNode* fa, int depth){
     MT2("ASSIGNOP"){
         expVal left = Exp(ONE(rt), rt, depth + 1);
         expVal right = Exp(THREE(rt), rt, depth + 1);
-        if (right == NULL){ error(-1); return NULL;}
+        if (right == NULL){return NULL;}
         if (!isVar(left)){
-            error(6);
+            error(6, rt->info.lineNo);
             return NULL;
         }
         if (!isSameType(left->type, right->type)){
-            error(5);
+            error(5, rt->info.lineNo);
             return NULL;
         }
         if (isArray(left->type)){
-            error(7);
+            error(7, rt->info.lineNo);
             return NULL;
         }
         left->lr = R_VAL;
@@ -747,15 +813,15 @@ expVal Exp(TreeNode* rt, TreeNode* fa, int depth){
             expVal left = Exp(ONE(rt), rt, depth + 1);
             expVal right = Exp(THREE(rt), rt, depth + 1);
             if (left == NULL || right == NULL){
-                error(7);
+                error(7, rt->info.lineNo);
                 return NULL;
             }
             if (!isSameType(left->type, right->type)){
-                error(7);
+                error(7, rt->info.lineNo);
                 return NULL;
             }
             if (!(isInt(left->type) || isFloat(left->type))){
-                error(7);
+                error(7, rt->info.lineNo);
                 return NULL;
             }
             left->lr = R_VAL;
@@ -782,4 +848,15 @@ expValList Args(TreeNode* rt, TreeNode* fa, int depth){
 
 void sdtTree(TreeNode* rt, int depth){
     Program(rt, NULL, 0);
+    funcItem *key;
+    map_iter_t iter = map_iter(&funcTable);
+
+    while ((key = map_next(&funcTable, &iter))) {
+        funcItem func = *map_get(&funcTable, key);
+        if (!func->isDef){
+            for(int i = 0; i < func->lineSum; i++){
+                error(18, func->lineNo[i]);
+            }
+        }
+    }
 }

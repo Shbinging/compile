@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Sat Apr  9 07:34:22 2022
+# Make data base, printed on Tue Apr 12 15:02:42 2022
 
 # Variables
 
@@ -35,7 +35,7 @@ CURDIR := /root/Lab/Code
 # makefile
 SHELL = /bin/sh
 # environment
-VSCODE_NLS_CONFIG = {"locale":"zh-cn","availableLanguages":{"*":"zh-cn"},"_languagePackId":"2d459c3c1e4312b6770e21efe80cc342.zh-cn","_translationsConfigFile":"/root/.vscode-server/data/clp/2d459c3c1e4312b6770e21efe80cc342.zh-cn/tcf.json","_cacheRoot":"/root/.vscode-server/data/clp/2d459c3c1e4312b6770e21efe80cc342.zh-cn","_resolvedLanguagePackCoreLocation":"/root/.vscode-server/data/clp/2d459c3c1e4312b6770e21efe80cc342.zh-cn/e18005f0f1b33c29e81d732535d8c0e47cafb0b5","_corruptedFile":"/root/.vscode-server/data/clp/2d459c3c1e4312b6770e21efe80cc342.zh-cn/corrupted.info","_languagePackSupport":true}
+VSCODE_NLS_CONFIG = {"locale":"zh-cn","availableLanguages":{"*":"zh-cn"},"_languagePackId":"8aee2a6259b28036085891d63c7b68d2.zh-cn","_translationsConfigFile":"/root/.vscode-server/data/clp/8aee2a6259b28036085891d63c7b68d2.zh-cn/tcf.json","_cacheRoot":"/root/.vscode-server/data/clp/8aee2a6259b28036085891d63c7b68d2.zh-cn","_resolvedLanguagePackCoreLocation":"/root/.vscode-server/data/clp/8aee2a6259b28036085891d63c7b68d2.zh-cn/e18005f0f1b33c29e81d732535d8c0e47cafb0b5","_corruptedFile":"/root/.vscode-server/data/clp/8aee2a6259b28036085891d63c7b68d2.zh-cn/corrupted.info","_languagePackSupport":true}
 # environment
 _ = /bin/cat
 # makefile (from 'Makefile', line 8)
@@ -67,7 +67,7 @@ YFC = $(shell find ./ -name "*.y" | sed s/[^/]*\\.y/syntax.tab.c/)
 # makefile (from 'Makefile', line 15)
 LFC = $(shell find ./ -name "*.l" | sed s/[^/]*\\.l/lex.yy.c/)
 # environment
-SSH_AUTH_SOCK = /tmp/vscode-ssh-auth-a3a3d42e5f89215d0251a80f6e62c58806fb64ba.sock
+SSH_AUTH_SOCK = /tmp/vscode-ssh-auth-4e14ef30aa9c857866f8efdb7e137df213affd0b.sock
 # automatic
 %F = $(notdir $%)
 # environment
@@ -75,7 +75,7 @@ VSCODE_PIPE_LOGGING = true
 # environment
 PWD = /root/Lab/Code
 # environment
-VSCODE_IPC_HOOK_CLI = /tmp/vscode-ipc-664be409-8228-4ade-8887-164351d96007.sock
+VSCODE_IPC_HOOK_CLI = /tmp/vscode-ipc-7539d8fd-e5fd-4741-b2f1-44b8b25972f7.sock
 # environment
 VSCODE_AMD_ENTRYPOINT = vs/workbench/api/node/extensionHostProcess
 # environment
@@ -83,7 +83,7 @@ HOME = /root
 # environment
 REMOTE_CONTAINERS = true
 # environment
-APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = 1
+APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = true
 # automatic
 +F = $(notdir $+)
 # environment
@@ -113,7 +113,7 @@ YFO = $(YFC:.c=.o)
 # makefile (from 'Makefile', line 7)
 BISON = bison
 # environment
-REMOTE_CONTAINERS_IPC = /tmp/vscode-remote-containers-ipc-a3a3d42e5f89215d0251a80f6e62c58806fb64ba.sock
+REMOTE_CONTAINERS_IPC = /tmp/vscode-remote-containers-ipc-4e14ef30aa9c857866f8efdb7e137df213affd0b.sock
 # default
 MAKE_COMMAND := make
 # default
@@ -145,7 +145,7 @@ LC_ALL = C
 # default
 SUFFIXES := 
 # environment
-REMOTE_CONTAINERS_SOCKETS = ["/tmp/vscode-ssh-auth-a3a3d42e5f89215d0251a80f6e62c58806fb64ba.sock"]
+REMOTE_CONTAINERS_SOCKETS = ["/tmp/vscode-ssh-auth-4e14ef30aa9c857866f8efdb7e137df213affd0b.sock"]
 # default
 .INCLUDE_DIRS = /usr/include /usr/local/include /usr/include
 # default
@@ -283,11 +283,11 @@ clean:
 	rm -f $(LFC) $(YFC) $(YFC:.c=.h)
 	rm -f *~
 
- 
 # Not a target:
 map/map.o:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
+ 
 #  File has not been updated.
 
 testB:
@@ -360,12 +360,12 @@ tryB:
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 44 / storage = 361 B / avg = 8 B
-# current buf: size = 8162 B / used = 361 B / count = 44 / avg = 8 B
+# strcache buffers: 1 (0) / strings = 44 / storage = 366 B / avg = 8 B
+# current buf: size = 8162 B / used = 366 B / count = 44 / avg = 8 B
 
 # strcache performance: lookups = 78 / hit rate = 43%
 # hash-table stats:
 # Load=44/8192=1%, Rehash=0, Collisions=4/78=5%
-# Finished Make data base on Sat Apr  9 07:34:22 2022
+# Finished Make data base on Tue Apr 12 15:02:42 2022
 
  
