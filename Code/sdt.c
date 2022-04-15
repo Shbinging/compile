@@ -168,12 +168,35 @@ int isExsist(char* name, int inStruct){
     return res;
 }
 
+char* errorName[]= {
+    "",
+    "Undefined variable",
+    "Undefined function",
+    "Redefined variable",
+    "Redefined function",
+    "Type mismatched for assignment",
+    "The left-hand side of an assignment must be a variable",
+    "Type mismatched for operands",
+    "Type mismatched for return",
+    "Function is not applicable for arguments",
+    "is not an array",
+    "is not a function",
+    "is not an integer",
+    "Illegal use of '.'",
+    "Non-existent field",
+    "Redefined field",
+    "Duplicated name",
+    "Undefined structure",
+    "Undefined function",
+    "Inconsistent declaration of function"
+};
 void error(int errorNo, int lineNo){
     if (errorNo < -2 || errorNo > 19){
-        printf("wrong errorNo %d\n", errorNo);
+        printf("wrong errorNo %d", errorNo);
         assert(0);
     }
-    printf("Error type %d at Line %d: test.\n", errorNo, lineNo);
+
+    printf("Error type %d at Line %d: %s.\n", errorNo, lineNo, errorName[errorNo]);
 }
 
 void sdtInit(){
