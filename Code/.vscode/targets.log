@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Tue Apr 12 15:02:42 2022
+# Make data base, printed on Fri Apr 15 06:11:17 2022
 
 # Variables
 
@@ -35,7 +35,7 @@ CURDIR := /root/Lab/Code
 # makefile
 SHELL = /bin/sh
 # environment
-VSCODE_NLS_CONFIG = {"locale":"zh-cn","availableLanguages":{"*":"zh-cn"},"_languagePackId":"8aee2a6259b28036085891d63c7b68d2.zh-cn","_translationsConfigFile":"/root/.vscode-server/data/clp/8aee2a6259b28036085891d63c7b68d2.zh-cn/tcf.json","_cacheRoot":"/root/.vscode-server/data/clp/8aee2a6259b28036085891d63c7b68d2.zh-cn","_resolvedLanguagePackCoreLocation":"/root/.vscode-server/data/clp/8aee2a6259b28036085891d63c7b68d2.zh-cn/e18005f0f1b33c29e81d732535d8c0e47cafb0b5","_corruptedFile":"/root/.vscode-server/data/clp/8aee2a6259b28036085891d63c7b68d2.zh-cn/corrupted.info","_languagePackSupport":true}
+VSCODE_NLS_CONFIG = {"locale":"zh-cn","availableLanguages":{"*":"zh-cn"},"_languagePackId":"1a7316c624e1dd66d26cf581ee0fb4ca.zh-cn","_translationsConfigFile":"/root/.vscode-server/data/clp/1a7316c624e1dd66d26cf581ee0fb4ca.zh-cn/tcf.json","_cacheRoot":"/root/.vscode-server/data/clp/1a7316c624e1dd66d26cf581ee0fb4ca.zh-cn","_resolvedLanguagePackCoreLocation":"/root/.vscode-server/data/clp/1a7316c624e1dd66d26cf581ee0fb4ca.zh-cn/8dfae7a5cd50421d10cd99cb873990460525a898","_corruptedFile":"/root/.vscode-server/data/clp/1a7316c624e1dd66d26cf581ee0fb4ca.zh-cn/corrupted.info","_languagePackSupport":true}
 # environment
 _ = /bin/cat
 # makefile (from 'Makefile', line 8)
@@ -53,11 +53,11 @@ LFILE = $(shell find ./ -name "*.l")
 # makefile (from 'Makefile', line 12)
 OBJS = $(CFILES:.c=.o)
 # environment
-VSCODE_CWD = /root/.vscode-server/bin/e18005f0f1b33c29e81d732535d8c0e47cafb0b5
+VSCODE_CWD = /root/.vscode-server/bin/8dfae7a5cd50421d10cd99cb873990460525a898
 # default
 MAKE_HOST := x86_64-pc-linux-gnu
 # environment
-PATH = /root/.vscode-server/bin/e18005f0f1b33c29e81d732535d8c0e47cafb0b5/bin/remote-cli:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+PATH = /root/.vscode-server/bin/8dfae7a5cd50421d10cd99cb873990460525a898/bin/remote-cli:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 # environment
 VSCODE_LOG_STACK = false
 # makefile (from 'Makefile', line 16)
@@ -67,7 +67,7 @@ YFC = $(shell find ./ -name "*.y" | sed s/[^/]*\\.y/syntax.tab.c/)
 # makefile (from 'Makefile', line 15)
 LFC = $(shell find ./ -name "*.l" | sed s/[^/]*\\.l/lex.yy.c/)
 # environment
-SSH_AUTH_SOCK = /tmp/vscode-ssh-auth-4e14ef30aa9c857866f8efdb7e137df213affd0b.sock
+SSH_AUTH_SOCK = /tmp/vscode-ssh-auth-f07dc39de40aa615533af7ecb0b0484d5127e1d3.sock
 # automatic
 %F = $(notdir $%)
 # environment
@@ -75,7 +75,7 @@ VSCODE_PIPE_LOGGING = true
 # environment
 PWD = /root/Lab/Code
 # environment
-VSCODE_IPC_HOOK_CLI = /tmp/vscode-ipc-7539d8fd-e5fd-4741-b2f1-44b8b25972f7.sock
+VSCODE_IPC_HOOK_CLI = /tmp/vscode-ipc-9849eb00-ef0a-4af1-a36e-2e438706c362.sock
 # environment
 VSCODE_AMD_ENTRYPOINT = vs/workbench/api/node/extensionHostProcess
 # environment
@@ -113,7 +113,7 @@ YFO = $(YFC:.c=.o)
 # makefile (from 'Makefile', line 7)
 BISON = bison
 # environment
-REMOTE_CONTAINERS_IPC = /tmp/vscode-remote-containers-ipc-4e14ef30aa9c857866f8efdb7e137df213affd0b.sock
+REMOTE_CONTAINERS_IPC = /tmp/vscode-remote-containers-ipc-f07dc39de40aa615533af7ecb0b0484d5127e1d3.sock
 # default
 MAKE_COMMAND := make
 # default
@@ -131,7 +131,7 @@ MFLAGS = -pqrR
 # automatic
 +D = $(patsubst %/,%,$(dir $+))
 # environment
-BROWSER = /root/.vscode-server/bin/e18005f0f1b33c29e81d732535d8c0e47cafb0b5/bin/helpers/browser.sh
+BROWSER = /root/.vscode-server/bin/8dfae7a5cd50421d10cd99cb873990460525a898/bin/helpers/browser.sh
 # default
 MAKEFILES := 
 # automatic
@@ -145,7 +145,7 @@ LC_ALL = C
 # default
 SUFFIXES := 
 # environment
-REMOTE_CONTAINERS_SOCKETS = ["/tmp/vscode-ssh-auth-4e14ef30aa9c857866f8efdb7e137df213affd0b.sock"]
+REMOTE_CONTAINERS_SOCKETS = ["/tmp/vscode-ssh-auth-f07dc39de40aa615533af7ecb0b0484d5127e1d3.sock"]
 # default
 .INCLUDE_DIRS = /usr/include /usr/local/include /usr/include
 # default
@@ -287,13 +287,13 @@ clean:
 map/map.o:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
- 
 #  File has not been updated.
 
 testB:
 #  Phony target (prerequisite of .PHONY).
 #  Implicit rule search has not been done.
 #  File does not exist.
+ 
 #  File has not been updated.
 #  recipe to execute (from 'Makefile', line 41):
 	./parser test.txt
@@ -366,6 +366,6 @@ tryB:
 # strcache performance: lookups = 78 / hit rate = 43%
 # hash-table stats:
 # Load=44/8192=1%, Rehash=0, Collisions=4/78=5%
-# Finished Make data base on Tue Apr 12 15:02:42 2022
+# Finished Make data base on Fri Apr 15 06:11:17 2022
 
  

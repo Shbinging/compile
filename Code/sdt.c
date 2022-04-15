@@ -173,7 +173,7 @@ void error(int errorNo, int lineNo){
         printf("wrong errorNo %d\n", errorNo);
         assert(0);
     }
-    printf("\033[0m\033[1;32mError type %d at Line %d: test.\033[0m\n", errorNo, lineNo);
+    printf("Error type %d at Line %d: test.\n", errorNo, lineNo);
 }
 
 void sdtInit(){
