@@ -22,7 +22,7 @@ typedef struct Operand_{
 typedef Operand_ * Operand;
 
 typedef struct TripleExp_{
-    enum Ttype_ {t_label, t_func, t_assign, t_goto, t_eq, t_neq, t_g, t_l, t_leq, t_geq, t_return ,t_dec, t_arg, t_call, t_param, t_read, t_write} type;
+    enum Ttype_ {t_label, t_func, t_assign, t_add, t_sub, t_star, t_div, t_goto, t_eq, t_neq, t_g, t_l, t_leq, t_geq, t_return ,t_dec, t_arg, t_call, t_param, t_read, t_write} type;
     Operand src1, src2, dest;
 } TripleExp_;
 typedef TripleExp_* TripleExp;
@@ -54,8 +54,9 @@ void printTripe(listHead* funcBlock);
 #define gen_Def(x) void Def##x(TreeNode* rt)
 #define gen_DecList(x) void DecList##x(TreeNode* rt)
 #define gen_Dec(x) void Dec##x(TreeNode* rt)
-#define gen_Exp(x) listHead* Exp##x(TreeNode* rt, int place)
+#define gen_Exp(x) listHead* Exp##x(TreeNode* rt, Operand place)
 #define gen_Args(x) void Args##x(TreeNode* rt)
+#define gen_ExpCond(x) listHead* ExpCond##x(TreeNode* rt, Operand label1, Operand label2)
 
 #define call_Program(x) return Program##x(rt)
 #define call_ExtDefList(x) ExtDefList##x(rt)
@@ -78,6 +79,7 @@ void printTripe(listHead* funcBlock);
 #define call_Dec(x) Dec##x(rt)
 #define call_Exp(x) return Exp##x(rt, place)
 #define call_Args(x) Args##x(rt)
+#define call_ExpCond(x) return ExpCond##x(rt, label1, label2)
 
 gen_Program(0);
 static gen_Program(1);
@@ -159,4 +161,5 @@ static gen_Exp(18);
 static gen_Args(0);
 static gen_Args(1);
 static gen_Args(2);
+static gen_ExpCond(0);
 #endif

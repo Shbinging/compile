@@ -27,4 +27,5 @@ void pop_back(listHead*);
 void insert(listHead*, void* pos, void* node);
 void del(listHead*, void* pos);
 void* find(listHead*, int(*)(void*));
+void append_list(listHead* a, listHead* b);
 #endif

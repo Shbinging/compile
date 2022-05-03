@@ -65,3 +65,10 @@ void del(listHead*lst , void* pos){//TODO
 void* find(listHead* lst , int(*func)(void*)){//TODO
 
 }
+
+
+void append_list(listHead* a, listHead* b){
+    if (a->tail && b) a->tail->next = b->head;
+    if (b && b->head && a) b->head->pre = a->tail;
+    if (b) a->tail = b->tail;
+}

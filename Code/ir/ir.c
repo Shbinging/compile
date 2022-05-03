@@ -5,9 +5,10 @@
 
 listHead* funcBlock;
 listHead* tripleList;
-
-int tmpSum = 0;
-int labelSum = 0;
+typedef unsigned int tmpId; 
+typedef unsigned int labelId;
+tmpId tmpSum = 0;
+labelId labelSum = 0;
 void printTripe(listHead* funcBlock){
     for(funcNode p = funcBlock->head; p; p = p->next){
         for(tripleNode q = p->val->head; q; q = q->next){
@@ -25,7 +26,7 @@ void printTripe(listHead* funcBlock){
         }
     }
 }
-void addTriple(enum Ttype_ type, Operand dest, Operand src1, Operand src2){
+tripleNode getTriple(enum Ttype_ type, Operand dest, Operand src1, Operand src2){
     TripleExp tri = malloc(sizeof(TripleExp_));
     tri->type = type;
     tri->src1 = src1;
@@ -34,10 +35,15 @@ void addTriple(enum Ttype_ type, Operand dest, Operand src1, Operand src2){
     tripleNode triNode = malloc(sizeof(tripleNode_));
     triNode->val = tri;
     triNode->property = NULL;
-    push_back(tripleList, triNode);
+    return triNode;
 }
 
-Operand* getOperand(enum Otype_ type, enum Oproperty_ property, void* val, ...){
+void addTriple(enum Ttype_ type, Operand dest, Operand src1, Operand src2){
+    push_back(tripleList, getTriple(type, dest, src1, src2));
+}
+
+
+Operand getOperand(enum Otype_ type, enum Oproperty_ property, void* val, ...){
     Operand op = malloc(sizeof(Operand_));
     op->type = type;
     op->property = property;
@@ -49,15 +55,13 @@ Operand* getOperand(enum Otype_ type, enum Oproperty_ property, void* val, ...){
             op->u.constInt = (int)val;
             break;
         case o_label:
-            labelSum++;
-            op->u.labelId = labelSum;
+            op->u.labelId = (labelId)val;
             break;
         case o_var:
             op->u.varPoint = (varItem) val;
             break;
         case o_tmpVar:
-            tmpSum++;
-            op->u.tmpId = tmpSum;
+            op->u.tmpId = (tmpId)val;
             break;
         case o_func:
             op->u.funcPoint = (funcItem) val;
@@ -75,6 +79,31 @@ Operand* getOperand(enum Otype_ type, enum Oproperty_ property, void* val, ...){
     return op;
 }
 
+Operand new_tmp(){
+    tmpSum++;
+    return getOperand(o_tmpVar, o_normal, tmpSum);
+}
+
+Operand new_label(){
+    labelSum++;
+    return getOperand(o_label, o_label, labelSum);
+}
+
+void addLabel(listHead* code, Operand a){
+    push_back(code, getTriple(t_label, a, NULL, NULL));
+}
+
+void addAssignI(listHead* code, Operand dest, int val){
+    push_back(code, getTriple(t_assign, dest, getOperand(o_const, o_normal, val), NULL));
+}
+
+void addAssignR(listHead* code, Operand dest, Operand src){
+    push_back(code, getTriple(t_assign, dest, src, NULL));
+}
+
+void addCode(listHead* src, listHead* dest){
+    append_list(src, dest);
+}
 
 gen_Program(0) { 
 	 switch(rt->no) {
@@ -391,7 +420,12 @@ gen_Dec(1) {
 }
 
 gen_Dec(2) { 
-
+    char* varName = VarDec0(ONE(rt));
+    Operand tmpVar = new_tmp();
+    listHead* exp = Exp0(THREE(rt), tmpVar);
+    varItem var = *map_get(&localVarTable, varName);
+    append_list(tripleList, exp);
+    addTriple(t_assign, var, tmpVar, NULL);
 }
 
 gen_Exp(0) { 
@@ -417,41 +451,68 @@ gen_Exp(0) {
 	}
 }
 
-gen_Exp(1) { 
-    listHead* left = Exp0(ONE(rt), place);
-    listHead* right = Exp0(THREE(rt), place);
+gen_Exp(1) { //ASSIGNOP
+    Operand leftPlace = getOperand(o_tmpVar, o_normal, NULL);
+    listHead* left = Exp0(ONE(rt), leftPlace);
+    Operand rightPlace = getOperand(o_tmpVar, o_normal, NULL);
+    listHead* right = Exp0(THREE(rt), rightPlace);
+    addCode(left, right);
+    addAssignR(left, leftPlace, rightPlace);
+    addAssignR(left, place, leftPlace);
+    return left;
 }
 
-gen_Exp(2) { 
-
+gen_Exp(2) { //AND
+    Operand label1 = new_label();
+    Operand label2 = new_label();
+    listHead* code;
+    createList(&code);
+    addAssignI(code, place, 0);
+    addCode(code, ExpCond0(rt, label1, label2));
+    addLabel(code, label1);
+    addAssignI(code, place, 1);
+    addLabel(code, label2);
+    return code;
 }
 
-gen_Exp(3) { 
-
+gen_Exp(3) { //OR
+    call_Exp(2);
 }
 
-gen_Exp(4) { 
-
+gen_Exp(4) { //RELOP
+    call_Exp(2);
 }
 
-gen_Exp(5) { 
-
+gen_Exp(5) { //ADD
+    Operand t1 = new_tmp();
+    Operand t2 = new_tmp();
+    listHead* code1 = Exp0(ONE(rt), t1);
+    listHead* code2 = Exp0(THREE(rt), t2);
+    addCode(code1, code2);
+    push_back(code1, getTriple(t_add, place, t1, t2));
+    return code1;
 }
 
-gen_Exp(6) { 
-
+gen_Exp(6) { //SUB
+    listHead* code = Exp5(rt, place);
+    ((tripleNode) get_back(code))->val->type = t_sub;
+    return code;
 }
 
-gen_Exp(7) { 
-
+gen_Exp(7) { //STAR
+    listHead* code = Exp5(rt, place);
+    ((tripleNode) get_back(code))->val->type = t_star;
+    return code;
 }
 
-gen_Exp(8) { 
-
+gen_Exp(8) { //DIV
+    listHead* code = Exp5(rt, place);
+    ((tripleNode) get_back(code))->val->type = t_div;
+    return code;
 }
 
-gen_Exp(9) { 
-
+gen_Exp(9) { //()
+    return Exp0(TWO(rt), place);
 }
 
 gen_Exp(10) { 
@@ -505,3 +566,6 @@ gen_Args(2) {
 
 }
 
+gen_ExpCond(0){
+
+}
