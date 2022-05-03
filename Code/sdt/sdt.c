@@ -655,7 +655,7 @@ expVal Exp(TreeNode* rt, TreeNode* fa, int depth){
         tmp->val.val_int = FLOAT(ONE(rt), rt, depth + 1);
         return tmp;
     }
-    MT1("ID0"){
+    MT1("ID"){
         char* name = ID0(ONE(rt), rt, depth + 1);
         expVal res = lookupTable(name);
         if (TWO(rt) == 0){//ID0

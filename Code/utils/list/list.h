@@ -1,8 +1,8 @@
 #ifndef __list__
 #define __list__
 #include "../map/map.h"
-#define listNode(T1, T2) struct {\
-    struct listNode* pre, *next;\
+#define listNode(T1, T2, T3) struct T3{\
+    struct T3* pre, *next;\
     T1* val;\
     T2* property;\
 }
@@ -14,18 +14,22 @@ typedef struct listNodeTemplate{
 } listNodeTemplate;
 
 typedef struct listHead{
-    struct listNodeTemplate* head, *tail;
+    void* head, *tail;
 } listHead;
 
-void createList(listHead**);
-void push_front(listHead*, void*);
-void push_back(listHead*, void*);
-void* get_front(listHead*);
-void* get_back(listHead*);
-void pop_front(listHead*);
-void pop_back(listHead*);
-void insert(listHead*, void* pos, void* node);
-void del(listHead*, void* pos);
-void* find(listHead*, int(*)(void*));
-void append_list(listHead* a, listHead* b);
+typedef struct listHeadTemplate{
+    listNodeTemplate* head, *tail;
+} listHeadTemplate;
+
+void createList(void**);
+void push_front(void*, void*);
+void push_back(void*, void*);
+void* get_front(void*);
+void* get_back(void*);
+void pop_front(void*);
+void pop_back(void*);
+void insert(void*, void* pos, void* node);
+void del(void*, void* pos);
+void* find(void*, int(*)(void*));
+void append_list(void* a, void* b);
 #endif

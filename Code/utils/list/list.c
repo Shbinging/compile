@@ -1,15 +1,17 @@
 #include"list.h"
 #include "assert.h"
-#define toTem listNodeTemplate* nodeUse = (listNodeTemplate*) node
+#define toTem listNodeTemplate* nodeUse = (listNodeTemplate*) node;\
+listHeadTemplate* lst = lst1
 
-void createList(listHead** lst){
+void createList(void** lst1){
+    listHeadTemplate** lst = lst1;
     *lst = malloc(sizeof(lst));
     assert(*lst != NULL);
     (*lst)->head = NULL;
     (*lst)->tail = NULL;
 }
 
-void push_front(listHead* lst, void* node){
+void push_front(void* lst1, void* node){
     toTem;
     nodeUse->next = lst->head;
     nodeUse->pre = NULL;
@@ -18,7 +20,7 @@ void push_front(listHead* lst, void* node){
     lst->head = nodeUse;   
 }
 
-void push_back(listHead* lst, void* node){
+void push_back(void* lst1, void* node){
     toTem;
     nodeUse->pre = lst->tail;
     nodeUse->next = NULL;
@@ -28,15 +30,18 @@ void push_back(listHead* lst, void* node){
 }
 
 
-void* get_front(listHead* lst){
+void* get_front(void* lst1){
+    listHeadTemplate* lst = lst1;
     return lst->head;
 }
 
-void* get_back(listHead* lst){
+void* get_back(void* lst1){
+    listHeadTemplate* lst = lst1;
     return lst->tail;
 }
 
-void pop_front(listHead* lst){
+void pop_front(void* lst1){
+    listHeadTemplate* lst = lst1;
     if (lst->head == lst->tail){
         lst->head = NULL;
         lst->tail = NULL;
@@ -46,7 +51,8 @@ void pop_front(listHead* lst){
     }
 }
 
-void pop_back(listHead* lst){
+void pop_back(void* lst1){
+    listHeadTemplate* lst = lst1;
     if (lst->head == lst->tail){
         lst->head = NULL;
         lst->tail = NULL;
@@ -56,18 +62,19 @@ void pop_back(listHead* lst){
     }
 }
 
-void insert(listHead* lst, void* pos, void* node){//TODO
+void insert(void* lst1, void* pos, void* node){//TODO
 
 }
-void del(listHead*lst , void* pos){//TODO
+void del(void*lst1 , void* pos){//TODO
 
 }
-void* find(listHead* lst , int(*func)(void*)){//TODO
+void* find(void* lst1 , int(*func)(void*)){//TODO
 
 }
 
 
-void append_list(listHead* a, listHead* b){
+void append_list(void* a1, void* b1){
+    listHeadTemplate* a = a1, *b = b1;
     if (a->tail && b) a->tail->next = b->head;
     if (b && b->head && a) b->head->pre = a->tail;
     if (b) a->tail = b->tail;

@@ -2,30 +2,15 @@
 #include "../utils/list/list.h"
 #include "../utils/syntaxTree/treeNode.h"
 #include <stdarg.h>
-
+#include <stdio.h>
+#include <stdlib.h>
 listHead* funcBlock;
 listHead* tripleList;
 typedef unsigned int tmpId; 
 typedef unsigned int labelId;
 tmpId tmpSum = 0;
 labelId labelSum = 0;
-void printTripe(listHead* funcBlock){
-    for(funcNode p = funcBlock->head; p; p = p->next){
-        for(tripleNode q = p->val->head; q; q = q->next){
-            TripleExp tri = q->val;
-            switch (tri->type){
-            case t_func:
-                printf("FUNCTION %s :\n", tri->dest->u.funcPoint->name);
-                break;
-            case t_param:
-                printf("PARAM %s\n", tri->dest->u.varPoint->name);
-                break;
-            default:
-                break;
-            }
-        }
-    }
-}
+
 tripleNode getTriple(enum Ttype_ type, Operand dest, Operand src1, Operand src2){
     TripleExp tri = malloc(sizeof(TripleExp_));
     tri->type = type;
@@ -43,40 +28,43 @@ void addTriple(enum Ttype_ type, Operand dest, Operand src1, Operand src2){
 }
 
 
-Operand getOperand(enum Otype_ type, enum Oproperty_ property, void* val, ...){
+Operand getOperand(enum Otype_ type, enum Oproperty_ property, ...){
     Operand op = malloc(sizeof(Operand_));
     op->type = type;
     op->property = property;
     va_list valist;
-    va_start(valist, val);
+    va_start(valist, property);
     switch (type)
     {
         case o_const:
-            op->u.constInt = (int)val;
+            op->u.constInt = va_arg(valist, int);
             break;
         case o_label:
-            op->u.labelId = (labelId)val;
+            op->u.labelId = va_arg(valist, labelId);
             break;
         case o_var:
-            op->u.varPoint = (varItem) val;
+            op->u.varPoint = va_arg(valist, varItem);
             break;
         case o_tmpVar:
-            op->u.tmpId = (tmpId)val;
+            op->u.tmpId = va_arg(valist, tmpId);
             break;
         case o_func:
-            op->u.funcPoint = (funcItem) val;
+            op->u.funcPoint = va_arg(valist, funcItem);
     }
     switch (property)
     {
-        case o_offset:
-            op->addtion.offsize = va_arg(valist, int);
-            break;
         case o_size:
             op->addtion.size = va_arg(valist, int);
             break;
     }
     va_end(valist);
     return op;
+}
+
+OperandNode getOperandNode(Operand op){
+    OperandNode tmp = malloc(sizeof(OperandNode_));
+    tmp->val = op;
+    return tmp;
 }
 
 Operand new_tmp(){
@@ -86,7 +74,7 @@ Operand new_tmp(){
 
 Operand new_label(){
     labelSum++;
-    return getOperand(o_label, o_label, labelSum);
+    return getOperand(o_label, o_normal, labelSum);
 }
 
 void addLabel(listHead* code, Operand a){
@@ -105,7 +93,12 @@ void addCode(listHead* src, listHead* dest){
     append_list(src, dest);
 }
 
+Operand getImm(int val){
+    return getOperand(o_const, o_normal, val);
+}
+
 gen_Program(0) { 
+    createList(&funcBlock);
 	 switch(rt->no) {
 		case 1: call_Program(1); break; 
 	}
@@ -123,7 +116,7 @@ gen_ExtDefList(0) {
 }
 
 gen_ExtDefList(1) { 
-
+    ExtDef0(ONE(rt));
 }
 
 gen_ExtDefList(2) { 
@@ -253,11 +246,11 @@ gen_VarDec(0) {
 }
 
 gen_VarDec(1) { 
-
+    return ID0(ONE(rt), NULL,0);
 }
 
 gen_VarDec(2) { 
-
+    return VarDec0(ONE(rt));
 }
 
 gen_FunDec(0) { 
@@ -324,7 +317,8 @@ gen_StmtList(0) {
 }
 
 gen_StmtList(1) { 
-
+    Stmt0(ONE(rt));
+    StmtList0(TWO(rt));
 }
 
 gen_StmtList(2) { 
@@ -343,7 +337,9 @@ gen_Stmt(0) {
 }
 
 gen_Stmt(1) { 
-
+    Operand tmp = new_tmp();
+    listHead* code = Exp0(ONE(rt), tmp);
+    addCode(tripleList, code);
 }
 
 gen_Stmt(2) { 
@@ -425,7 +421,7 @@ gen_Dec(2) {
     listHead* exp = Exp0(THREE(rt), tmpVar);
     varItem var = *map_get(&localVarTable, varName);
     append_list(tripleList, exp);
-    addTriple(t_assign, var, tmpVar, NULL);
+    addTriple(t_assign, getOperand(o_var, o_normal, var), tmpVar, NULL);
 }
 
 gen_Exp(0) { 
@@ -448,13 +444,14 @@ gen_Exp(0) {
 		case 16: call_Exp(16); break; 
 		case 17: call_Exp(17); break; 
 		case 18: call_Exp(18); break; 
+        case 19: call_Exp(19); break;
 	}
 }
 
 gen_Exp(1) { //ASSIGNOP
-    Operand leftPlace = getOperand(o_tmpVar, o_normal, NULL);
+    Operand leftPlace = new_tmp();
     listHead* left = Exp0(ONE(rt), leftPlace);
-    Operand rightPlace = getOperand(o_tmpVar, o_normal, NULL);
+    Operand rightPlace = new_tmp();
     listHead* right = Exp0(THREE(rt), rightPlace);
     addCode(left, right);
     addAssignR(left, leftPlace, rightPlace);
@@ -515,39 +512,70 @@ gen_Exp(9) { //()
     return Exp0(TWO(rt), place);
 }
 
-gen_Exp(10) { 
+gen_Exp(10) { //MINUS
+    Operand t1 = new_tmp();
+    listHead* code = Exp0(TWO(rt), t1);
+    push_back(code, getTriple(t_sub, place, getImm(0), t1));
+    return code;
+}
+
+gen_Exp(11) { //NOT
+    call_Exp(2);
+}
+
+gen_Exp(12){ //PLUS
+    Operand t1 = new_tmp();
+    listHead* code = Exp0(TWO(rt), t1);
+    push_back(code, getTriple(t_add, place, getImm(0), t1));
+    return code;
+}
+gen_Exp(13) { //ID LP Args RP
+    char* funcName = ID0(ONE(rt), 0, 0);
+    listHead* code;
+    createList(&code);
+    listHead* paraList;
+    createList(&paraList);
+    Args0(THREE(rt), paraList);
+    for(OperandNode p = paraList->head; p; p = p->next){
+        push_back(code, getTriple(t_arg, p->val, NULL, NULL));
+    }
+    push_back(code, getTriple(t_call, place, getOperand(o_func, o_normal, *map_get(&funcTable, funcName)), NULL));
+    return code;
+}
+
+gen_Exp(14) { //ID LP RP
+    char* funcName = ID0(ONE(rt), 0, 0);
+    listHead* code;
+    createList(&code);
+    push_back(code, getTriple(t_call, *map_get(&funcTable, funcName), NULL, NULL));
+    return code;
+}
+
+gen_Exp(15) { //Exp LB Exp RB
 
 }
 
-gen_Exp(11) { 
+gen_Exp(16) { //Exp DOT ID
 
 }
 
-gen_Exp(12) { 
-
+gen_Exp(17) { //ID
+    char* name = ID0(ONE(rt), NULL, 0);
+    listHead* code;
+    createList(&code);
+    push_back(code, getTriple(t_assign, place, getOperand(o_var, o_normal, *map_get(&localVarTable, name)), NULL));
+    return code;
 }
 
-gen_Exp(13) { 
-
+gen_Exp(18) { //INT
+    int val = ONE(rt)->info.val_int;
+    listHead* code;
+    createList(&code);
+    push_back(code, getTriple(t_assign, place, getOperand(o_const, o_normal, val), NULL));
+    return code;
 }
 
-gen_Exp(14) { 
-
-}
-
-gen_Exp(15) { 
-
-}
-
-gen_Exp(16) { 
-
-}
-
-gen_Exp(17) { 
-
-}
-
-gen_Exp(18) { 
+gen_Exp(19) { //FLOAT
 
 }
 
@@ -559,11 +587,14 @@ gen_Args(0) {
 }
 
 gen_Args(1) { 
-
+    Args2(rt, paraList);
+    Args0(THREE(rt), paraList);
 }
 
 gen_Args(2) { 
-
+    Operand t1 = new_tmp();
+    append_list(tripleList, Exp0(ONE(rt), t1));
+    push_front(paraList, getOperandNode(t1));
 }
 
 gen_ExpCond(0){

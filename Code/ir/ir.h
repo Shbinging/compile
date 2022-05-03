@@ -1,40 +1,8 @@
 #ifndef __ir__
 #define __ir__
-#include "../sdt/sdt.h"
-#include "../utils/list/list.h"
-typedef struct Operand_{
-    enum Otype_ {o_label, o_const, o_var, o_tmpVar, o_func} type;
-    enum Oproperty_ {o_normal, o_address, o_point, o_size, o_offset} property;
-    union {
-        int tmpId;
-        int constInt;
-        int labelId;
-        funcItem funcPoint;
-        varItem varPoint;
-    }u;
-    union{
-        int size;
-        int offsize;
-    }addtion
+#include "irUtils.h"
 
-} Operand_;
-
-typedef Operand_ * Operand;
-
-typedef struct TripleExp_{
-    enum Ttype_ {t_label, t_func, t_assign, t_add, t_sub, t_star, t_div, t_goto, t_eq, t_neq, t_g, t_l, t_leq, t_geq, t_return ,t_dec, t_arg, t_call, t_param, t_read, t_write} type;
-    Operand src1, src2, dest;
-} TripleExp_;
-typedef TripleExp_* TripleExp;
-
-typedef listNode(TripleExp_, int) tripleNode_;
-
-typedef listNode(listHead, funcItem_) funcNode_;
-
-typedef tripleNode_* tripleNode;
-typedef funcNode_* funcNode;
 void printTripe(listHead* funcBlock);
-
 #define gen_Program(x) listHead* Program##x(TreeNode* rt)
 #define gen_ExtDefList(x) void ExtDefList##x(TreeNode* rt)
 #define gen_ExtDef(x) void ExtDef##x(TreeNode* rt)
@@ -55,7 +23,7 @@ void printTripe(listHead* funcBlock);
 #define gen_DecList(x) void DecList##x(TreeNode* rt)
 #define gen_Dec(x) void Dec##x(TreeNode* rt)
 #define gen_Exp(x) listHead* Exp##x(TreeNode* rt, Operand place)
-#define gen_Args(x) void Args##x(TreeNode* rt)
+#define gen_Args(x) void Args##x(TreeNode* rt, listHead* paraList)
 #define gen_ExpCond(x) listHead* ExpCond##x(TreeNode* rt, Operand label1, Operand label2)
 
 #define call_Program(x) return Program##x(rt)
@@ -78,7 +46,7 @@ void printTripe(listHead* funcBlock);
 #define call_DecList(x) DecList##x(rt)
 #define call_Dec(x) Dec##x(rt)
 #define call_Exp(x) return Exp##x(rt, place)
-#define call_Args(x) Args##x(rt)
+#define call_Args(x) Args##x(rt, paraList)
 #define call_ExpCond(x) return ExpCond##x(rt, label1, label2)
 
 gen_Program(0);
@@ -158,6 +126,7 @@ static gen_Exp(15);
 static gen_Exp(16);
 static gen_Exp(17);
 static gen_Exp(18);
+static gen_Exp(19);
 static gen_Args(0);
 static gen_Args(1);
 static gen_Args(2);
