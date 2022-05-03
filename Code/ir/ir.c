@@ -1,7 +1,7 @@
 #include "ir.h"
 #include "../utils/list/list.h"
 #include "../utils/syntaxTree/treeNode.h"
-
+#include <stdarg.h>
 
 
 listHead* funcBlock;
@@ -38,10 +38,12 @@ void addTriple(enum Ttype_ type, Operand dest, Operand src1, Operand src2){
     push_back(tripleList, triNode);
 }
 
-Operand* getOperand(enum Otype_ type, enum Oproperty_ property, void* val){
+Operand* getOperand(enum Otype_ type, enum Oproperty_ property, void* val, ...){
     Operand op = malloc(sizeof(Operand_));
     op->type = type;
     op->property = property;
+    va_list valist;
+    va_start(valist, val);
     switch (type)
     {
         case o_const:
@@ -61,6 +63,16 @@ Operand* getOperand(enum Otype_ type, enum Oproperty_ property, void* val){
         case o_func:
             op->u.funcPoint = (funcItem) val;
     }
+    switch (property)
+    {
+        case o_offset:
+            op->addtion.offsize = va_arg(valist, int);
+            break;
+        case o_size:
+            op->addtion.size = va_arg(valist, int);
+            break;
+    }
+    va_end(valist);
     return op;
 }
 listHead* Program0(TreeNode* rt) { 
@@ -205,19 +217,19 @@ void Tag1(TreeNode* rt) {
 
 }
 
-void VarDec0(TreeNode* rt) { 
+char* VarDec0(TreeNode* rt) { 
 	 switch(rt->no) {
-		case 1: VarDec1(rt); break; 
-		case 2: VarDec2(rt); break; 
+		case 1: return VarDec1(rt); break; 
+		case 2: return VarDec2(rt); break; 
 	}
 }
 
-void VarDec1(TreeNode* rt) { 
-
+char* VarDec1(TreeNode* rt) { 
+    return ID0(ONE(rt));
 }
 
-void VarDec2(TreeNode* rt) { 
-
+char* VarDec2(TreeNode* rt) { 
+    return VarDec0(ONE(rt));
 }
 
 char* FunDec0(TreeNode* rt) { 
@@ -228,11 +240,11 @@ char* FunDec0(TreeNode* rt) {
 }
 
 char* FunDec1(TreeNode* rt) { 
-    return ID(ONE(rt), NULL, 0);
+    return ID0(ONE(rt), NULL, 0);
 }
 
 char* FunDec2(TreeNode* rt) { 
-    return ID(ONE(rt), NULL, 0);
+    return ID0(ONE(rt), NULL, 0);
 }
 
 void VarList0(TreeNode* rt) { 
@@ -272,7 +284,8 @@ void Compst0(TreeNode* rt) {
 }
 
 void Compst1(TreeNode* rt) { 
-
+    DefList0(TWO(rt));
+    StmtList0(THREE(rt));
 }
 
 void StmtList0(TreeNode* rt) { 
@@ -333,7 +346,8 @@ void DefList0(TreeNode* rt) {
 }
 
 void DefList1(TreeNode* rt) { 
-
+    Def0(ONE(rt));
+    DefList0(TWO(rt));
 }
 
 void DefList2(TreeNode* rt) { 
@@ -347,7 +361,7 @@ void Def0(TreeNode* rt) {
 }
 
 void Def1(TreeNode* rt) { 
-
+    DecList0(TWO(rt));
 }
 
 void DecList0(TreeNode* rt) { 
@@ -358,11 +372,12 @@ void DecList0(TreeNode* rt) {
 }
 
 void DecList1(TreeNode* rt) { 
-
+    Dec0(ONE(rt));
 }
 
 void DecList2(TreeNode* rt) { 
-
+    Dec0(ONE(rt));
+    DecList0(THREE(rt));
 }
 
 void Dec0(TreeNode* rt) { 
@@ -373,105 +388,109 @@ void Dec0(TreeNode* rt) {
 }
 
 void Dec1(TreeNode* rt) { 
-
+ 
 }
 
 void Dec2(TreeNode* rt) { 
-
+    char* name = VarDec0(ONE(rt));
+    Operand* exp = Exp0(THREE(rt));
+    addTriple(t_assign, getOperand(o_var, o_normal, *map_get(&localVarTable, name)), exp, NULL);
 }
 
-void Exp0(TreeNode* rt) { 
+listHead* Exp0(TreeNode* rt, int place) { 
 	 switch(rt->no) {
-		case 1: Exp1(rt); break; 
-		case 2: Exp2(rt); break; 
-		case 3: Exp3(rt); break; 
-		case 4: Exp4(rt); break; 
-		case 5: Exp5(rt); break; 
-		case 6: Exp6(rt); break; 
-		case 7: Exp7(rt); break; 
-		case 8: Exp8(rt); break; 
-		case 9: Exp9(rt); break; 
-		case 10: Exp10(rt); break; 
-		case 11: Exp11(rt); break; 
-		case 12: Exp12(rt); break; 
-		case 13: Exp13(rt); break; 
-		case 14: Exp14(rt); break; 
-		case 15: Exp15(rt); break; 
-		case 16: Exp16(rt); break; 
-		case 17: Exp17(rt); break; 
-		case 18: Exp18(rt); break; 
+		case 1: return Exp1(rt, place); break; 
+		case 2: return Exp2(rt, place); break; 
+		case 3: return Exp3(rt, place); break; 
+		case 4: return Exp4(rt, place); break; 
+		case 5: return Exp5(rt, place); break; 
+		case 6: return Exp6(rt, place); break; 
+		case 7: return Exp7(rt, place); break; 
+		case 8: return Exp8(rt, place); break; 
+		case 9: return Exp9(rt, place); break; 
+		case 10: return Exp10(rt, place); break; 
+		case 11: return Exp11(rt, place); break; 
+		case 12: return Exp12(rt, place); break; 
+		case 13: return Exp13(rt, place); break; 
+		case 14: return Exp14(rt, place); break; 
+		case 15: return Exp15(rt, place); break; 
+		case 16: return Exp16(rt, place); break; 
+		case 17: return Exp17(rt, place); break; 
+		case 18: return Exp18(rt, place); break; 
 	}
 }
 
-void Exp1(TreeNode* rt) { 
+listHead* Exp1(TreeNode* rt, int place) { //ASSIGN OP
+    listHead* left = Exp0(ONE(rt));
+    listHead* right = Exp0(THREE(rt));
 
 }
 
-void Exp2(TreeNode* rt) { 
+listHead* Exp2(TreeNode* rt, int place) { 
 
 }
 
-void Exp3(TreeNode* rt) { 
+listHead* Exp3(TreeNode* rt, int place) { 
 
 }
 
-void Exp4(TreeNode* rt) { 
+listHead* Exp4(TreeNode* rt, int place) { 
 
 }
 
-void Exp5(TreeNode* rt) { 
+listHead* Exp5(TreeNode* rt, int place) { 
 
 }
 
-void Exp6(TreeNode* rt) { 
+listHead* Exp6(TreeNode* rt, int place) { 
 
 }
 
-void Exp7(TreeNode* rt) { 
+listHead* Exp7(TreeNode* rt, int place) { 
 
 }
 
-void Exp8(TreeNode* rt) { 
+listHead* Exp8(TreeNode* rt, int place) { 
 
 }
 
-void Exp9(TreeNode* rt) { 
+listHead* Exp9(TreeNode* rt, int place) { 
 
 }
 
-void Exp10(TreeNode* rt) { 
+listHead* Exp10(TreeNode* rt, int place) { 
 
 }
 
-void Exp11(TreeNode* rt) { 
+listHead* Exp11(TreeNode* rt, int place) { 
 
 }
 
-void Exp12(TreeNode* rt) { 
+listHead* Exp12(TreeNode* rt, int place) { 
 
 }
 
-void Exp13(TreeNode* rt) { 
+listHead* Exp13(TreeNode* rt, int place) { 
 
 }
 
-void Exp14(TreeNode* rt) { 
+listHead* Exp14(TreeNode* rt, int place) { 
 
 }
 
-void Exp15(TreeNode* rt) { 
+listHead* Exp15(TreeNode* rt, int place) { 
 
 }
 
-void Exp16(TreeNode* rt) { 
+listHead* Exp16(TreeNode* rt, int place) { 
 
 }
 
-void Exp17(TreeNode* rt) { 
+listHead* Exp17(TreeNode* rt, int place) { 
 
 }
 
-void Exp18(TreeNode* rt) { 
+listHead* Exp18(TreeNode* rt, int place) { 
 
 }
 

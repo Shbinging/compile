@@ -152,7 +152,7 @@ void sdtInit(){
 
 int INT(TreeNode* rt, TreeNode* fa, int depth);
 float FLOAT(TreeNode* rt, TreeNode* fa, int depth);
-char* ID(TreeNode* rt, TreeNode* fa, int depth);
+char* ID0(TreeNode* rt, TreeNode* fa, int depth);
 Type TYPE(TreeNode* rt, TreeNode* fa, int depth);
 void Program(TreeNode* rt, TreeNode* fa, int depth);
 void ExtDefList(TreeNode* rt, TreeNode* fa, int depth);
@@ -189,7 +189,7 @@ float FLOAT(TreeNode* rt, TreeNode* fa, int depth){
     return rt->info.val_float;
 }
 
-char* ID(TreeNode* rt, TreeNode* fa, int depth){
+char* ID0(TreeNode* rt, TreeNode* fa, int depth){
     preWORK(rt)
     char* tmp;
     strCopy(tmp, rt->info.varName);
@@ -317,21 +317,21 @@ char* OptTag(TreeNode* rt, TreeNode* fa, int depth){
     if (rt->son == NULL){
         return NULL;
     }else{
-        return ID(ONE(rt), rt, depth + 1);
+        return ID0(ONE(rt), rt, depth + 1);
     }
 }
 
 char* Tag(TreeNode* rt, TreeNode* fa, int depth){
     preWORK(rt)
-    return ID(ONE(rt), rt, depth + 1);
+    return ID0(ONE(rt), rt, depth + 1);
 }
 
 FieldList VarDec(TreeNode* rt, TreeNode* fa, int depth, Type type){
     preWORK(rt)
     //第一层返回FieldList, 后面返回Type
-    if (TWO(rt) == NULL){//ID
+    if (TWO(rt) == NULL){//ID0
         FieldList tmp = new(FieldList_);
-        tmp->name = ID(ONE(rt), rt, depth + 1);
+        tmp->name = ID0(ONE(rt), rt, depth + 1);
         tmp->tail = NULL;
         tmp->type = type;
         return tmp;
@@ -348,7 +348,7 @@ FieldList VarDec(TreeNode* rt, TreeNode* fa, int depth, Type type){
 
 void FunDec(TreeNode* rt, TreeNode* fa, int depth, Type type, int isDef){
     preWORK(rt)
-    char* name = ID(ONE(rt), rt, depth + 1);
+    char* name = ID0(ONE(rt), rt, depth + 1);
     //check name
     assert(name != NULL);
 
@@ -400,7 +400,7 @@ void FunDec(TreeNode* rt, TreeNode* fa, int depth, Type type, int isDef){
         }
     }
 
-    MT3("RP"){//ID LP VarList RP
+    MT3("RP"){//ID0 LP VarList RP
         funcItem func = new(funcItem_);
         func->name = name;
         func->para = NULL;
@@ -413,7 +413,7 @@ void FunDec(TreeNode* rt, TreeNode* fa, int depth, Type type, int isDef){
         }
         map_set(&funcTable, name, func);
     }
-    MT3("VarList"){//ID LP VarList RP
+    MT3("VarList"){//ID0 LP VarList RP
         FieldList para = VarList(THREE(rt), rt, depth + 1, isDef);
         //检查形参是否重复
         FieldList p = para;
@@ -655,17 +655,17 @@ expVal Exp(TreeNode* rt, TreeNode* fa, int depth){
         tmp->val.val_int = FLOAT(ONE(rt), rt, depth + 1);
         return tmp;
     }
-    MT1("ID"){
-        char* name = ID(ONE(rt), rt, depth + 1);
+    MT1("ID0"){
+        char* name = ID0(ONE(rt), rt, depth + 1);
         expVal res = lookupTable(name);
-        if (TWO(rt) == 0){//ID
+        if (TWO(rt) == 0){//ID0
             if (!isVar(res)){
                 error(1, rt->info.lineNo);
                 return NULL;
             }
             return res;
         }
-        MT3("Args"){//ID LP Args RP
+        MT3("Args"){//ID0 LP Args RP
             //检查函数是否存在
             if (isVar(res)){
                 error(11, rt->info.lineNo);
@@ -694,7 +694,7 @@ expVal Exp(TreeNode* rt, TreeNode* fa, int depth){
             res->lr = R_VAL;
             return res;
         }
-        MT2("LP"){//ID LP RP
+        MT2("LP"){//ID0 LP RP
             //检查函数调用实参与形参数目和类型是否匹配
             //查询函数返回类型
             if (isVar(res)){
@@ -730,9 +730,9 @@ expVal Exp(TreeNode* rt, TreeNode* fa, int depth){
         left->type = left->type->u.array.elem;
         return left;
     }
-    MT2("DOT"){//Exp DOT ID
+    MT2("DOT"){//Exp DOT ID0
         expVal left = Exp(ONE(rt), rt, depth + 1);
-        char* name = ID(THREE(rt), rt, depth + 1);
+        char* name = ID0(THREE(rt), rt, depth + 1);
         //检查left为左值
         if (!isVar(left)) return NULL;
         if (!isStructure(left->type)){

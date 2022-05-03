@@ -82,5 +82,5 @@ typedef map_t(funcItem) map_funcItem_t;
 extern map_varItem_t localVarTable;
 extern map_funcItem_t funcTable;
 
-char* ID(TreeNode* rt, TreeNode* fa, int depth);
+char* ID0(TreeNode* rt, TreeNode* fa, int depth);
 #endif

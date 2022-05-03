@@ -4,7 +4,7 @@
 #include "../utils/list/list.h"
 typedef struct Operand_{
     enum Otype_ {o_label, o_const, o_var, o_tmpVar, o_func} type;
-    enum Oproperty_ {o_normal, o_address, o_point, o_size} property;
+    enum Oproperty_ {o_normal, o_address, o_point, o_size, o_offset} property;
     union {
         int tmpId;
         int constInt;
@@ -12,7 +12,11 @@ typedef struct Operand_{
         funcItem funcPoint;
         varItem varPoint;
     }u;
-    int size;
+    union{
+        int size;
+        int offsize;
+    }addtion
+
 } Operand_;
 
 typedef Operand_ * Operand;
@@ -53,9 +57,9 @@ static void OptTag1(TreeNode* rt);
 static void OptTag2(TreeNode* rt);
 static void Tag0(TreeNode* rt);
 static void Tag1(TreeNode* rt);
-static void VarDec0(TreeNode* rt);
-static void VarDec1(TreeNode* rt);
-static void VarDec2(TreeNode* rt);
+static char* VarDec0(TreeNode* rt);
+static char* VarDec1(TreeNode* rt);
+static char* VarDec2(TreeNode* rt);
 static char* FunDec0(TreeNode* rt);
 static char* FunDec1(TreeNode* rt);
 static char* FunDec2(TreeNode* rt);
@@ -88,25 +92,25 @@ static void DecList2(TreeNode* rt);
 static void Dec0(TreeNode* rt);
 static void Dec1(TreeNode* rt);
 static void Dec2(TreeNode* rt);
-static void Exp0(TreeNode* rt);
-static void Exp1(TreeNode* rt);
-static void Exp2(TreeNode* rt);
-static void Exp3(TreeNode* rt);
-static void Exp4(TreeNode* rt);
-static void Exp5(TreeNode* rt);
-static void Exp6(TreeNode* rt);
-static void Exp7(TreeNode* rt);
-static void Exp8(TreeNode* rt);
-static void Exp9(TreeNode* rt);
-static void Exp10(TreeNode* rt);
-static void Exp11(TreeNode* rt);
-static void Exp12(TreeNode* rt);
-static void Exp13(TreeNode* rt);
-static void Exp14(TreeNode* rt);
-static void Exp15(TreeNode* rt);
-static void Exp16(TreeNode* rt);
-static void Exp17(TreeNode* rt);
-static void Exp18(TreeNode* rt);
+static Operand* Exp0(TreeNode* rt);
+static Operand* Exp1(TreeNode* rt);
+static Operand* Exp2(TreeNode* rt);
+static Operand* Exp3(TreeNode* rt);
+static Operand* Exp4(TreeNode* rt);
+static Operand* Exp5(TreeNode* rt);
+static Operand* Exp6(TreeNode* rt);
+static Operand* Exp7(TreeNode* rt);
+static Operand* Exp8(TreeNode* rt);
+static Operand* Exp9(TreeNode* rt);
+static Operand* Exp10(TreeNode* rt);
+static Operand* Exp11(TreeNode* rt);
+static Operand* Exp12(TreeNode* rt);
+static Operand* Exp13(TreeNode* rt);
+static Operand* Exp14(TreeNode* rt);
+static Operand* Exp15(TreeNode* rt);
+static Operand* Exp16(TreeNode* rt);
+static Operand* Exp17(TreeNode* rt);
+static Operand* Exp18(TreeNode* rt);
 static void Args0(TreeNode* rt);
 static void Args1(TreeNode* rt);
 static void Args2(TreeNode* rt);
