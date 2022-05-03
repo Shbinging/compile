@@ -7,6 +7,10 @@
         "sdt.h": "c",
         "treenode.h": "c",
         "typeinfo": "c",
-        "stdio.h": "c"
-    }
+        "stdio.h": "c",
+        "syntax.tab.h": "c",
+        "deque": "cpp",
+        "list.h": "c"
+    },
+    "C_Cpp.errorSquiggles": "Disabled"
 }

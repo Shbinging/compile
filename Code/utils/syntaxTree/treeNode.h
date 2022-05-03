@@ -14,6 +14,7 @@ enum nodeType{
 typedef struct TreeNode{
     enum nodeType type;
     char* name;
+    int no;
     union{
         int lineNo;
         int val_int;
@@ -28,5 +29,5 @@ extern int parseOK;
 extern void printTree(TreeNode*, int);
 extern void print(TreeNode*, int);
 extern TreeNode* parseTreeRoot;
-extern TreeNode* make_tree(enum nodeType type, char* name, int lineNo, int num, ...);
+extern TreeNode* make_tree(enum nodeType type, char* name, int lineNo, int no, int num, ...);
 #endif

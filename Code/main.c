@@ -1,6 +1,7 @@
-#include"syntax.tab.h"
-#include "treeNode.h"
-#include "sdt.h"
+#include"frontEnd/syntax.tab.h"
+#include "utils/syntaxTree/treeNode.h"
+#include "sdt/sdt.h"
+#include "utils/list/list.h"
 #include <stdio.h>
 
 int parseOK;
@@ -22,4 +23,5 @@ int main(int argc, char** argv){
     }
     //for(int i = 0; i < 20; i++) yylex();
     return 0;
+
 }

@@ -1,5 +1,5 @@
 #include"sdt.h"
-#include "map/map.h"
+#include "../utils/map/map.h"
 #include"stdlib.h"
 #include"assert.h"
 #include"stdio.h"
@@ -195,8 +195,9 @@ void error(int errorNo, int lineNo){
         printf("wrong errorNo %d", errorNo);
         assert(0);
     }
-
-    printf("Error type %d at Line %d: %s.\n", errorNo, lineNo, errorName[errorNo]);
+    if (errorNo > 0){
+        printf("Error type %d at Line %d: %s.\n", errorNo, lineNo, errorName[errorNo]);
+    }
 }
 
 void sdtInit(){
@@ -633,7 +634,6 @@ FieldList Dec(TreeNode* rt, TreeNode* fa, int depth, Type type){
     MT2("ASSIGNOP"){//varDec ASSIGNOP Exp
         if (isStruct){
             error(15, rt->info.lineNo);
-            return NULL;
         }
         expVal res = Exp(THREE(rt), rt, depth + 1);
         //检查赋值是否错误

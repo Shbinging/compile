@@ -3,7 +3,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include "syntax.tab.h"
-#include "treeNode.h"
+#include "../utils/syntaxTree/treeNode.h"
 
 #define make_node(res, _type, _name) res = malloc(sizeof(TreeNode)); \
     res->son = NULL; \

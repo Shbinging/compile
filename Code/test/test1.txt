@@ -1,5 +1,4 @@
- int main()
- {
- int i; 
- i[0];
- }
+int main(){
+    int c = 1.0;
+    return 0;
+}

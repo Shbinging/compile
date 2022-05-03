@@ -5,7 +5,7 @@
 #include <stdio.h>
 
 
-TreeNode* make_tree(enum nodeType type, char* name, int lineNo, int num, ...){
+TreeNode* make_tree(enum nodeType type, char* name, int lineNo, int no, int num, ...){
     va_list valist;
     va_start(valist, num);
     TreeNode* rt = malloc(sizeof(TreeNode));
@@ -21,6 +21,7 @@ TreeNode* make_tree(enum nodeType type, char* name, int lineNo, int num, ...){
         else rt->son = p;
         q = p;
     }
+    rt->no = no;
     return rt;
 }
 
