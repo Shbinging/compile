@@ -30,7 +30,8 @@
         "system_error": "c",
         "tuple": "c",
         "utility": "c",
-        "ir.h": "c"
+        "ir.h": "c",
+        "stdarg.h": "c"
     },
     "C_Cpp.errorSquiggles": "Disabled"
 }

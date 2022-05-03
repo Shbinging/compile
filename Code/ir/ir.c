@@ -3,7 +3,6 @@
 #include "../utils/syntaxTree/treeNode.h"
 #include <stdarg.h>
 
-
 listHead* funcBlock;
 listHead* tripleList;
 
@@ -75,46 +74,46 @@ Operand* getOperand(enum Otype_ type, enum Oproperty_ property, void* val, ...){
     va_end(valist);
     return op;
 }
-listHead* Program0(TreeNode* rt) { 
-    createList(&funcBlock);
+
+
+gen_Program(0) { 
 	 switch(rt->no) {
-		case 1: Program1(rt); break; 
+		case 1: call_Program(1); break; 
 	}
-    return funcBlock;
 }
 
-void Program1(TreeNode* rt) { 
+gen_Program(1) { 
     ExtDefList0(ONE(rt));
 }
 
-void ExtDefList0(TreeNode* rt) { 
+gen_ExtDefList(0) { 
 	 switch(rt->no) {
-		case 1: ExtDefList1(rt); break; 
-		case 2: ExtDefList2(rt); break; 
+		case 1: call_ExtDefList(1); break; 
+		case 2: call_ExtDefList(2); break; 
 	}
 }
 
-void ExtDefList1(TreeNode* rt) { 
-    ExtDef0(ONE(rt)); ExtDefList0(TWO(rt));
-}
-
-void ExtDefList2(TreeNode* rt) { 
+gen_ExtDefList(1) { 
 
 }
 
-void ExtDef0(TreeNode* rt) { 
+gen_ExtDefList(2) { 
+
+}
+
+gen_ExtDef(0) { 
 	 switch(rt->no) {
-		case 1: ExtDef1(rt); break; 
-		case 2: ExtDef2(rt); break; 
-		case 3: ExtDef3(rt); break; 
+		case 1: call_ExtDef(1); break; 
+		case 2: call_ExtDef(2); break; 
+		case 3: call_ExtDef(3); break; 
 	}
 }
 
-void ExtDef1(TreeNode* rt) { 
+gen_ExtDef(1) { 
 
 }
 
-void ExtDef2(TreeNode* rt) { 
+gen_ExtDef(2) { 
 
 }
 
@@ -126,7 +125,7 @@ void generateFuncHead(char* funcName){
     }
 }
 
-void ExtDef3(TreeNode* rt) { //函数定义
+gen_ExtDef(3) { 
     Specifier0(ONE(rt));
     {
 
@@ -147,365 +146,362 @@ void ExtDef3(TreeNode* rt) { //函数定义
     }
 }
 
-void ExtDecList0(TreeNode* rt) { 
+gen_ExtDecList(0) { 
 	 switch(rt->no) {
-		case 1: ExtDecList1(rt); break; 
-		case 2: ExtDecList2(rt); break; 
+		case 1: call_ExtDecList(1); break; 
+		case 2: call_ExtDecList(2); break; 
 	}
 }
 
-void ExtDecList1(TreeNode* rt) { 
+gen_ExtDecList(1) { 
 
 }
 
-void ExtDecList2(TreeNode* rt) { 
+gen_ExtDecList(2) { 
 
 }
 
-void Specifier0(TreeNode* rt) { 
+gen_Specifier(0) { 
 	 switch(rt->no) {
-		case 1: Specifier1(rt); break; 
-		case 2: Specifier2(rt); break; 
+		case 1: call_Specifier(1); break; 
+		case 2: call_Specifier(2); break; 
 	}
 }
 
-void Specifier1(TreeNode* rt) { 
+gen_Specifier(1) { 
 
 }
 
-void Specifier2(TreeNode* rt) { 
+gen_Specifier(2) { 
 
 }
 
-void StructSpecifier0(TreeNode* rt) { 
+gen_StructSpecifier(0) { 
 	 switch(rt->no) {
-		case 1: StructSpecifier1(rt); break; 
-		case 2: StructSpecifier2(rt); break; 
+		case 1: call_StructSpecifier(1); break; 
+		case 2: call_StructSpecifier(2); break; 
 	}
 }
 
-void StructSpecifier1(TreeNode* rt) { 
+gen_StructSpecifier(1) { 
 
 }
 
-void StructSpecifier2(TreeNode* rt) { 
+gen_StructSpecifier(2) { 
 
 }
 
-void OptTag0(TreeNode* rt) { 
+gen_OptTag(0) { 
 	 switch(rt->no) {
-		case 1: OptTag1(rt); break; 
-		case 2: OptTag2(rt); break; 
+		case 1: call_OptTag(1); break; 
+		case 2: call_OptTag(2); break; 
 	}
 }
 
-void OptTag1(TreeNode* rt) { 
+gen_OptTag(1) { 
 
 }
 
-void OptTag2(TreeNode* rt) { 
+gen_OptTag(2) { 
 
 }
 
-void Tag0(TreeNode* rt) { 
+gen_Tag(0) { 
 	 switch(rt->no) {
-		case 1: Tag1(rt); break; 
+		case 1: call_Tag(1); break; 
 	}
 }
 
-void Tag1(TreeNode* rt) { 
+gen_Tag(1) { 
 
 }
 
-char* VarDec0(TreeNode* rt) { 
+gen_VarDec(0) { 
 	 switch(rt->no) {
-		case 1: return VarDec1(rt); break; 
-		case 2: return VarDec2(rt); break; 
+		case 1: call_VarDec(1); break; 
+		case 2: call_VarDec(2); break; 
 	}
 }
 
-char* VarDec1(TreeNode* rt) { 
-    return ID0(ONE(rt));
+gen_VarDec(1) { 
+
 }
 
-char* VarDec2(TreeNode* rt) { 
-    return VarDec0(ONE(rt));
+gen_VarDec(2) { 
+
 }
 
-char* FunDec0(TreeNode* rt) { 
+gen_FunDec(0) { 
 	 switch(rt->no) {
-		case 1: return FunDec1(rt); break; 
-		case 2: return FunDec2(rt); break; 
+		case 1: call_FunDec(1); break; 
+		case 2: call_FunDec(2); break; 
 	}
 }
 
-char* FunDec1(TreeNode* rt) { 
+gen_FunDec(1) { 
     return ID0(ONE(rt), NULL, 0);
 }
 
-char* FunDec2(TreeNode* rt) { 
+gen_FunDec(2) { 
     return ID0(ONE(rt), NULL, 0);
 }
 
-void VarList0(TreeNode* rt) { 
+gen_VarList(0) { 
 	 switch(rt->no) {
-		case 1: VarList1(rt); break; 
-		case 2: VarList2(rt); break; 
+		case 1: call_VarList(1); break; 
+		case 2: call_VarList(2); break; 
 	}
 }
 
-void VarList1(TreeNode* rt) { 
+gen_VarList(1) { 
 
 }
 
-void VarList2(TreeNode* rt) { 
+gen_VarList(2) { 
 
 }
 
-void ParamDec0(TreeNode* rt) { 
+gen_ParamDec(0) { 
 	 switch(rt->no) {
-		case 1: ParamDec1(rt); break; 
-		case 2: ParamDec2(rt); break; 
+		case 1: call_ParamDec(1); break; 
+		case 2: call_ParamDec(2); break; 
 	}
 }
 
-void ParamDec1(TreeNode* rt) { 
+gen_ParamDec(1) { 
 
 }
 
-void ParamDec2(TreeNode* rt) { 
+gen_ParamDec(2) { 
 
 }
 
-void Compst0(TreeNode* rt) { 
+gen_Compst(0) { 
 	 switch(rt->no) {
-		case 1: Compst1(rt); break; 
+		case 1: call_Compst(1); break; 
 	}
 }
 
-void Compst1(TreeNode* rt) { 
+gen_Compst(1) { 
     DefList0(TWO(rt));
     StmtList0(THREE(rt));
 }
 
-void StmtList0(TreeNode* rt) { 
+gen_StmtList(0) { 
 	 switch(rt->no) {
-		case 1: StmtList1(rt); break; 
-		case 2: StmtList2(rt); break; 
+		case 1: call_StmtList(1); break; 
+		case 2: call_StmtList(2); break; 
 	}
 }
 
-void StmtList1(TreeNode* rt) { 
+gen_StmtList(1) { 
 
 }
 
-void StmtList2(TreeNode* rt) { 
+gen_StmtList(2) { 
 
 }
 
-void Stmt0(TreeNode* rt) { 
+gen_Stmt(0) { 
 	 switch(rt->no) {
-		case 1: Stmt1(rt); break; 
-		case 2: Stmt2(rt); break; 
-		case 3: Stmt3(rt); break; 
-		case 4: Stmt4(rt); break; 
-		case 5: Stmt5(rt); break; 
-		case 6: Stmt6(rt); break; 
+		case 1: call_Stmt(1); break; 
+		case 2: call_Stmt(2); break; 
+		case 3: call_Stmt(3); break; 
+		case 4: call_Stmt(4); break; 
+		case 5: call_Stmt(5); break; 
+		case 6: call_Stmt(6); break; 
 	}
 }
 
-void Stmt1(TreeNode* rt) { 
+gen_Stmt(1) { 
 
 }
 
-void Stmt2(TreeNode* rt) { 
+gen_Stmt(2) { 
 
 }
 
-void Stmt3(TreeNode* rt) { 
+gen_Stmt(3) { 
 
 }
 
-void Stmt4(TreeNode* rt) { 
+gen_Stmt(4) { 
 
 }
 
-void Stmt5(TreeNode* rt) { 
+gen_Stmt(5) { 
 
 }
 
-void Stmt6(TreeNode* rt) { 
+gen_Stmt(6) { 
 
 }
 
-void DefList0(TreeNode* rt) { 
-	switch(rt->no) {
-		case 1: DefList1(rt); break; 
-		case 2: DefList2(rt); break; 
+gen_DefList(0) { 
+	 switch(rt->no) {
+		case 1: call_DefList(1); break; 
+		case 2: call_DefList(2); break; 
 	}
 }
 
-void DefList1(TreeNode* rt) { 
+gen_DefList(1) { 
     Def0(ONE(rt));
     DefList0(TWO(rt));
 }
 
-void DefList2(TreeNode* rt) { 
+gen_DefList(2) { 
 
 }
 
-void Def0(TreeNode* rt) { 
+gen_Def(0) { 
 	 switch(rt->no) {
-		case 1: Def1(rt); break; 
+		case 1: call_Def(1); break; 
 	}
 }
 
-void Def1(TreeNode* rt) { 
+gen_Def(1) { 
     DecList0(TWO(rt));
 }
 
-void DecList0(TreeNode* rt) { 
+gen_DecList(0) { 
 	 switch(rt->no) {
-		case 1: DecList1(rt); break; 
-		case 2: DecList2(rt); break; 
+		case 1: call_DecList(1); break; 
+		case 2: call_DecList(2); break; 
 	}
 }
 
-void DecList1(TreeNode* rt) { 
+gen_DecList(1) { 
     Dec0(ONE(rt));
 }
 
-void DecList2(TreeNode* rt) { 
+gen_DecList(2) { 
     Dec0(ONE(rt));
     DecList0(THREE(rt));
 }
 
-void Dec0(TreeNode* rt) { 
+gen_Dec(0) { 
 	 switch(rt->no) {
-		case 1: Dec1(rt); break; 
-		case 2: Dec2(rt); break; 
+		case 1: call_Dec(1); break; 
+		case 2: call_Dec(2); break; 
 	}
 }
 
-void Dec1(TreeNode* rt) { 
- 
+gen_Dec(1) { 
+
 }
 
-void Dec2(TreeNode* rt) { 
-    char* name = VarDec0(ONE(rt));
-    Operand* exp = Exp0(THREE(rt));
-    addTriple(t_assign, getOperand(o_var, o_normal, *map_get(&localVarTable, name)), exp, NULL);
+gen_Dec(2) { 
+
 }
 
-listHead* Exp0(TreeNode* rt, int place) { 
+gen_Exp(0) { 
 	 switch(rt->no) {
-		case 1: return Exp1(rt, place); break; 
-		case 2: return Exp2(rt, place); break; 
-		case 3: return Exp3(rt, place); break; 
-		case 4: return Exp4(rt, place); break; 
-		case 5: return Exp5(rt, place); break; 
-		case 6: return Exp6(rt, place); break; 
-		case 7: return Exp7(rt, place); break; 
-		case 8: return Exp8(rt, place); break; 
-		case 9: return Exp9(rt, place); break; 
-		case 10: return Exp10(rt, place); break; 
-		case 11: return Exp11(rt, place); break; 
-		case 12: return Exp12(rt, place); break; 
-		case 13: return Exp13(rt, place); break; 
-		case 14: return Exp14(rt, place); break; 
-		case 15: return Exp15(rt, place); break; 
-		case 16: return Exp16(rt, place); break; 
-		case 17: return Exp17(rt, place); break; 
-		case 18: return Exp18(rt, place); break; 
+		case 1: call_Exp(1); break; 
+		case 2: call_Exp(2); break; 
+		case 3: call_Exp(3); break; 
+		case 4: call_Exp(4); break; 
+		case 5: call_Exp(5); break; 
+		case 6: call_Exp(6); break; 
+		case 7: call_Exp(7); break; 
+		case 8: call_Exp(8); break; 
+		case 9: call_Exp(9); break; 
+		case 10: call_Exp(10); break; 
+		case 11: call_Exp(11); break; 
+		case 12: call_Exp(12); break; 
+		case 13: call_Exp(13); break; 
+		case 14: call_Exp(14); break; 
+		case 15: call_Exp(15); break; 
+		case 16: call_Exp(16); break; 
+		case 17: call_Exp(17); break; 
+		case 18: call_Exp(18); break; 
 	}
 }
 
-listHead* Exp1(TreeNode* rt, int place) { //ASSIGN OP
-    listHead* left = Exp0(ONE(rt));
-    listHead* right = Exp0(THREE(rt));
+gen_Exp(1) { 
+    listHead* left = Exp0(ONE(rt), place);
+    listHead* right = Exp0(THREE(rt), place);
+}
+
+gen_Exp(2) { 
 
 }
 
-listHead* Exp2(TreeNode* rt, int place) { 
+gen_Exp(3) { 
 
 }
 
-listHead* Exp3(TreeNode* rt, int place) { 
+gen_Exp(4) { 
 
 }
 
-listHead* Exp4(TreeNode* rt, int place) { 
+gen_Exp(5) { 
 
 }
 
-listHead* Exp5(TreeNode* rt, int place) { 
+gen_Exp(6) { 
 
 }
 
-listHead* Exp6(TreeNode* rt, int place) { 
+gen_Exp(7) { 
 
 }
 
-listHead* Exp7(TreeNode* rt, int place) { 
+gen_Exp(8) { 
 
 }
 
-listHead* Exp8(TreeNode* rt, int place) { 
+gen_Exp(9) { 
 
 }
 
-listHead* Exp9(TreeNode* rt, int place) { 
+gen_Exp(10) { 
 
 }
 
-listHead* Exp10(TreeNode* rt, int place) { 
+gen_Exp(11) { 
 
 }
 
-listHead* Exp11(TreeNode* rt, int place) { 
+gen_Exp(12) { 
 
 }
 
-listHead* Exp12(TreeNode* rt, int place) { 
+gen_Exp(13) { 
 
 }
 
-listHead* Exp13(TreeNode* rt, int place) { 
+gen_Exp(14) { 
 
 }
 
-listHead* Exp14(TreeNode* rt, int place) { 
+gen_Exp(15) { 
 
 }
 
-listHead* Exp15(TreeNode* rt, int place) { 
+gen_Exp(16) { 
 
 }
 
-listHead* Exp16(TreeNode* rt, int place) { 
+gen_Exp(17) { 
 
 }
 
-listHead* Exp17(TreeNode* rt, int place) { 
+gen_Exp(18) { 
 
 }
 
-listHead* Exp18(TreeNode* rt, int place) { 
-
-}
-
-void Args0(TreeNode* rt) { 
+gen_Args(0) { 
 	 switch(rt->no) {
-		case 1: Args1(rt); break; 
-		case 2: Args2(rt); break; 
+		case 1: call_Args(1); break; 
+		case 2: call_Args(2); break; 
 	}
 }
 
-void Args1(TreeNode* rt) { 
+gen_Args(1) { 
 
 }
 
-void Args2(TreeNode* rt) { 
+gen_Args(2) { 
 
 }
 

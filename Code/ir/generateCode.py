@@ -21,20 +21,24 @@ lst = [
 	("Exp", 18),
 	("Args", 2)
 ]
-with open("std.out", "w") as fp:
+with open("std.c", "w") as fp:
+	for item in lst:
+		fp.write(f"#define gen_{item[0]}(x) void {item[0]}##x(TreeNode* rt)\n")
+	
+	for item in lst:
+		fp.write(f"#define call_{item[0]}(x) {item[0]}##x(rt)\n")
 	for item in lst:
 		for i in range(0, item[1] + 1):
-			funcName = f"static void {item[0]}{i}(TreeNode* rt)"
-			fp.write(f"{funcName};\n")
+			fp.write(f"static gen_{item[0]}({i});\n")
 
 	for item in lst:
 		for i in range(0, item[1] + 1):
-			funcName = f"void {item[0]}{i}(TreeNode* rt)"
+			funcName = f"gen_{item[0]}({i})"
 			if (i == 0):
 				fp.write(f"{funcName} {{ \n")
 				fp.write("\t switch(rt->no) {\n")
 				for j in range(1, item[1] + 1):
-					fp.write(f"\t\tcase {j}: {item[0]}{j}(rt); break; \n")
+					fp.write(f"\t\tcase {j}: call_{item[0]}({j}); break; \n")
 				fp.write("\t}\n")
 				fp.write("}\n")
 			else:
