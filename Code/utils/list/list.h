@@ -1,7 +1,7 @@
 #ifndef __list__
 #define __list__
 #include "../map/map.h"
-#define listNode(T1, T2) struct listNode{\
+#define listNode(T1, T2) struct {\
     struct listNode* pre, *next;\
     T1* val;\
     T2* property;\
@@ -17,7 +17,7 @@ typedef struct listHead{
     struct listNodeTemplate* head, *tail;
 } listHead;
 
-void createList(listHead*);
+void createList(listHead**);
 void push_front(listHead*, void*);
 void push_back(listHead*, void*);
 void* get_front(listHead*);

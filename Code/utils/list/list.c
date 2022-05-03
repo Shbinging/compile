@@ -1,9 +1,12 @@
 #include"list.h"
+#include "assert.h"
 #define toTem listNodeTemplate* nodeUse = (listNodeTemplate*) node
 
-void createList(listHead* lst){
-    lst->head = NULL;
-    lst->tail = NULL;
+void createList(listHead** lst){
+    *lst = malloc(sizeof(lst));
+    assert(*lst != NULL);
+    (*lst)->head = NULL;
+    (*lst)->tail = NULL;
 }
 
 void push_front(listHead* lst, void* node){
@@ -23,6 +26,7 @@ void push_back(listHead* lst, void* node){
     if (!lst->head) lst->head = nodeUse;
     lst->tail = nodeUse;
 }
+
 
 void* get_front(listHead* lst){
     return lst->head;

@@ -3,6 +3,7 @@
 #include "sdt/sdt.h"
 #include "utils/list/list.h"
 #include <stdio.h>
+#include "ir/ir.h"
 
 int parseOK;
 TreeNode* parseTreeRoot;
@@ -21,6 +22,7 @@ int main(int argc, char** argv){
         //printTree(parseTreeRoot, 0);
         sdtTree(parseTreeRoot, 0);
     }
+    printTripe(Program0(parseTreeRoot));
     //for(int i = 0; i < 20; i++) yylex();
     return 0;
 

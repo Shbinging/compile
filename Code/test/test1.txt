@@ -1,4 +1,5 @@
-int main(){
-    int c = 1.0;
+int main(int a, int b){
+    int d;
+    int c = d + 2;
     return 0;
 }

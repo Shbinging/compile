@@ -30,7 +30,7 @@
 %nonassoc ELSE
 
 %%
-Program: ExtDefList {$$ = make_tree(makeType(YFFULL), "Program",  @$.first_line, 0, 1, $1); parseTreeRoot = $$;}
+Program: ExtDefList {$$ = make_tree(makeType(YFFULL), "Program",  @$.first_line, 1, 1, $1); parseTreeRoot = $$;}
 ;
 
 ExtDefList: ExtDef ExtDefList {$$ = make_tree(makeType(YFFULL), "ExtDefList",  @$.first_line, 1, 2, $1, $2);}

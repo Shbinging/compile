@@ -10,7 +10,27 @@
         "stdio.h": "c",
         "syntax.tab.h": "c",
         "deque": "cpp",
-        "list.h": "c"
+        "list.h": "c",
+        "array": "c",
+        "*.tcc": "c",
+        "cmath": "c",
+        "unordered_map": "c",
+        "exception": "c",
+        "algorithm": "c",
+        "functional": "c",
+        "type_traits": "c",
+        "fstream": "c",
+        "iosfwd": "c",
+        "istream": "c",
+        "limits": "c",
+        "new": "c",
+        "ostream": "c",
+        "sstream": "c",
+        "streambuf": "c",
+        "system_error": "c",
+        "tuple": "c",
+        "utility": "c",
+        "ir.h": "c"
     },
     "C_Cpp.errorSquiggles": "Disabled"
 }
