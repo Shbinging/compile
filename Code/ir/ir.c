@@ -652,7 +652,7 @@ gen_Exp(15) { //Exp LB Exp RB
 }
 
 gen_Exp(16) { //Exp DOT ID
-
+    return localVal(rt, place);
 }
 
 gen_Exp(17) { //ID
@@ -690,9 +690,45 @@ gen_Args(2) {
 }
 
 gen_ExpCond(0){
+    switch(rt->no){
+        case 4:
+            call_ExpCond(1);
+            break;
+        case 11:
+            call_ExpCond(2);
+            break;
+        case 2:
+            call_ExpCond(3);
+        case 3:
+            call_ExpCond(4);
+        default:
+            call_ExpCond(5);
+    }
+}
+
+gen_ExpCond(1){
+    Operand t1 = new_tmp();
+    Operand t2 = new_tmp();
+    list code1 = Exp0(ONE(rt), t1);
+    list code2 = Exp0(THREE(rt), t2);
 
 }
 
+gen_ExpCond(2){
+    
+}
+
+gen_ExpCond(3){
+    
+}
+
+gen_ExpCond(4){
+    
+}
+
+gen_ExpCond(5){
+    
+}
 gen_localVal{
     listHead* code;
     char* name;
