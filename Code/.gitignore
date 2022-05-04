@@ -1,4 +1,5 @@
 ./map/*.o
 *.o
 parser
-.vscode
+.vscode/
+irsim/

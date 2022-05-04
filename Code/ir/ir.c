@@ -130,6 +130,7 @@ void addAssignR(listHead* code, Operand dest, Operand src){
 void addGoto(listHead* code, Operand dest){
     push_back(code, getTriple(t_goto, dest, NULL, NULL ));
 }
+
 void addCode(listHead* src, listHead* dest){
     append_list(src, dest);
 }
@@ -246,12 +247,11 @@ void generateFuncHead(char* funcName){
 
 gen_ExtDef(3) { 
     char* funName = FunDec0(TWO(rt));
-    {
-        createList(&tripleList);
-        generateFuncHead(funName);
-    }
+    
+    createList(&tripleList);
+    generateFuncHead(funName);
 
-    Compst0(THREE(rt));
+    addCode(tripleList, Compst0(THREE(rt)));
     
     funcNode node = malloc(sizeof(funcNode_));
     node->val = tripleList;
@@ -342,13 +342,13 @@ gen_VarDec(1) {
     if (isLocalDef){
         varItem var = *map_get(&localVarTable, varName);
         if (var->type->kind != BASIC)
-            addTriple(t_dec, getOperand(o_var, o_size, var, getTypeSize(var->type)), NULL, NULL);
+            push_back(code, getTriple(t_dec, getOperand(o_var, o_size, var, getTypeSize(var->type)), NULL, NULL));
     }
     return ID0(ONE(rt), NULL,0);
 }
 
 gen_VarDec(2) { 
-    return VarDec0(ONE(rt), isLocalDef);
+    return VarDec0(ONE(rt), isLocalDef, code);
 }
 
 gen_FunDec(0) { 
@@ -403,9 +403,11 @@ gen_Compst(0) {
 }
 
 gen_Compst(1) { 
-    DefList0(TWO(rt));
-
-    StmtList0(THREE(rt));
+    list code1 = DefList0(TWO(rt));
+    list code2 = StmtList0(THREE(rt));
+    if (!code1) return code2;
+    addCode(code1, code2);
+    return code1;
 }
 
 gen_StmtList(0) { 
@@ -416,13 +418,14 @@ gen_StmtList(0) {
 }
 
 gen_StmtList(1) { 
-    list code = Stmt0(ONE(rt));
-    addCode(tripleList, code);
-    StmtList0(TWO(rt));
+    list code1 = Stmt0(ONE(rt));
+    list code2 = StmtList0(TWO(rt));
+    addCode(code1, code2);
+    return code1;
 }
 
 gen_StmtList(2) { 
-
+    return NULL;
 }
 
 gen_Stmt(0) { 
@@ -441,7 +444,7 @@ gen_Stmt(1) {
 }
 
 gen_Stmt(2) { 
-    Compst0(ONE(rt));
+    return Compst0(ONE(rt));
 }
 
 gen_Stmt(3) { 
@@ -503,12 +506,14 @@ gen_DefList(0) {
 }
 
 gen_DefList(1) { 
-    Def0(ONE(rt));
-    DefList0(TWO(rt));
+    list code1 = Def0(ONE(rt));
+    list code2 = DefList0(TWO(rt));
+    addCode(code1, code2);
+    return code1;
 }
 
 gen_DefList(2) { 
-
+    return NULL;
 }
 
 gen_Def(0) { 
@@ -518,7 +523,7 @@ gen_Def(0) {
 }
 
 gen_Def(1) { 
-    DecList0(TWO(rt));
+    return DecList0(TWO(rt));
 }
 
 gen_DecList(0) { 
@@ -529,12 +534,14 @@ gen_DecList(0) {
 }
 
 gen_DecList(1) { 
-    Dec0(ONE(rt));
+    return Dec0(ONE(rt));
 }
 
 gen_DecList(2) { 
-    Dec0(ONE(rt));
-    DecList0(THREE(rt));
+    list code1 = Dec0(ONE(rt));
+    list code2 = DecList0(THREE(rt));
+    addCode(code1, code2);
+    return code1;
 }
 
 gen_Dec(0) { 
@@ -545,16 +552,22 @@ gen_Dec(0) {
 }
 
 gen_Dec(1) { 
-    VarDec0(ONE(rt), 1);
+    list code;
+    createList(&code);
+    VarDec0(ONE(rt), 1, code);
+    return code;
 }
 
 gen_Dec(2) { 
-    char* varName = VarDec0(ONE(rt), 1);
+    list code;
+    createList(&code);
+    char* varName = VarDec0(ONE(rt), 1, code);
     Operand tmpVar = new_tmp();
     listHead* exp = Exp0(THREE(rt), tmpVar);
+    addCode(code, exp);
     varItem var = *map_get(&localVarTable, varName);
-    append_list(tripleList, exp);
-    addTriple(t_assign, getOperand(o_var, o_normal, var), tmpVar, NULL);
+    push_back(code, getTriple(t_assign, getOperand(o_var, o_normal, var), tmpVar, NULL));
+    return code;
 }
 
 gen_Exp(0) { 

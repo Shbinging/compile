@@ -1,0 +1,70 @@
+Error type 2 at Line 18: Undefined function.
+FUNCTION check :
+PARAM k
+tmp1 := #0
+tmp7 := #3
+tmp4 := k / tmp7
+tmp5 := #3
+tmp2 := tmp4 * tmp5
+IF tmp2 == k GOTO label1
+GOTO label2
+LABEL label1 :
+tmp1 := #1
+LABEL label2 :
+RETURN tmp1
+FUNCTION main :
+tmp10 := #0
+i := tmp10
+tmp11 := #0
+s := tmp11
+DEC a 40
+LABEL label3 :
+tmp13 := #10
+IF i < tmp13 GOTO label4
+GOTO label5
+LABEL label4 :
+tmp19 := #0
+tmp18 := &a
+tmp19 := tmp19 * #10
+tmp19 := tmp19 + i
+tmp19 := tmp19 * #4
+tmp15 := tmp18 + tmp19
+tmp26 := #5
+tmp23 := i - tmp26
+tmp16 := i * tmp23
+*tmp15 := tmp16
+tmp32 := #1
+tmp29 := i + tmp32
+i := tmp29
+GOTO label3
+LABEL label5 :
+tmp35 := #0
+i := tmp35
+LABEL label6 :
+tmp38 := #10
+IF i < tmp38 GOTO label7
+GOTO label8
+LABEL label7 :
+tmp44 := #0
+tmp43 := &a
+tmp44 := tmp44 * #10
+tmp44 := tmp44 + i
+tmp44 := tmp44 * #4
+tmp41 := tmp43 + tmp44
+ARG *tmp41
+tmp40 := CALL check
+IF tmp40 != #0 GOTO label9
+GOTO label10
+LABEL label9 :
+tmp51 := #1
+tmp48 := s + tmp51
+s := tmp48
+LABEL label10 :
+tmp57 := #1
+tmp54 := i + tmp57
+i := tmp54
+GOTO label6
+LABEL label8 :
+WRITE s
+tmp61 := #0
+RETURN tmp61

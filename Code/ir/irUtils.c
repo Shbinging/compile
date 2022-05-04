@@ -197,7 +197,7 @@ void printCode(listHead* code){
                 case t_l:
                     op = "<";
                     label3:
-                    printf("IF %s %s %s GOTO %s", sprintOperand(tri->src1), sprintOperand(tri->src2), sprintOperand(tri->dest));
+                     printf("IF %s %s %s GOTO %s", sprintOperand(tri->src1), op, sprintOperand(tri->src2), sprintOperand(tri->dest));
                     break;
                 case t_call:
                     printf("%s := CALL %s", sprintOperand(tri->dest), sprintOperand(tri->src1));
