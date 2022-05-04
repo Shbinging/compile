@@ -10,5 +10,6 @@ int main(int f, int b){
     struct a hh[2];
     int gg, hhh;
     hh[1].h[5].g[2] = gg;
+    main(hh[1].h[5].g[2], 3);
     return 0;
 }

@@ -187,35 +187,9 @@ size_t getTypeSize(Type type){
     }
 }
 
-void genVarSize(){
-    map_varItem_t localVarTable1;
-    map_init(&localVarTable1);
-    map_iter_t iter = map_iter(&localVarTable);
-    char* key;
-    while ((key = map_next(&localVarTable, &iter))) {
-        varItem var = *map_get(&localVarTable, key);
-        switch(var->type->kind){
-            case BASIC:
-                var->totalSize = 4;
-                var->baseSize = 4;
-                break;
-            case ARRAY:
-                getArraySize(var->type, &(var->totalSize), &(var->baseSize));
-                break;
-            case STRUCTURE:
-                var->totalSize = getStructureSize(var->type);
-                var->baseSize = var->totalSize;
-                break;
-        }
-        map_set(&localVarTable1, key, var);
-    }
-    map_deinit(&localVarTable);
-    memcpy(&localVarTable, &localVarTable1, sizeof(map_varItem_t));
-}
 
 gen_Program(0) { 
     createList(&funcBlock);
-    genVarSize();
 	 switch(rt->no) {
 		case 1: call_Program(1); break; 
 	}
@@ -268,11 +242,6 @@ void generateFuncHead(char* funcName){
 }
 
 gen_ExtDef(3) { 
-    Specifier0(ONE(rt));
-    {
-
-    }
-
     char* funName = FunDec0(TWO(rt));
     {
         createList(&tripleList);
@@ -370,7 +339,7 @@ gen_VarDec(1) {
     if (isLocalDef){
         varItem var = *map_get(&localVarTable, varName);
         if (var->type->kind != BASIC)
-            addTriple(t_dec, getOperand(o_var, o_size, var, var->totalSize), NULL, NULL);
+            addTriple(t_dec, getOperand(o_var, o_size, var, getTypeSize(var->type)), NULL, NULL);
     }
     return ID0(ONE(rt), NULL,0);
 }
@@ -723,58 +692,6 @@ gen_Args(2) {
 gen_ExpCond(0){
 
 }
-// gen_leftVal(0){
-//     switch(rt->no) {
-// 		case 15: 
-//             call_leftVal(1); 
-//             break; 
-// 		case 16: call_leftVal(2); break; 
-//         case 17: call_leftVal(3); break;
-// 	}
-// } 
-
-// gen_leftVal(1){
-//     Operand base = new_tmp();
-//     Type type = leftVal0(ONE(rt), base, code, array);
-//     Operand offset = new_tmp();
-//     listHead* code1 = Exp0(THREE(rt), offset);
-//     addCode(code, code1);
-//     push_back(code, getTriple(t_star, base, base, getOperand(o_const, o_normal, type->u.array.size)));
-//     push_back(code, getTriple(t_add, place, base, offset));
-//     return type->u.array.elem;
-// }
-
-// gen_leftVal(2){
-//     Type type = leftVal0(ONE(rt), place, code, array);
-//     char* name = ID0(THREE(rt), NULL, 0);
-//     assert(type->kind == STRUCTURE);
-//     int offset = 0;
-//     for(FieldList p = type->u.structure; p; p = p->tail){
-//         if (strcmp(p->name, name) == 0){
-//                 break;
-//         }else{
-//             offset += getTypeSize(p->type);
-//         }
-//     }
-// }
-
-// gen_leftVal(3){
-//     char* name = ID0(ONE(rt), NULL, 0);
-//     varItem var = *map_get(&localVarTable, name);
-//     assert(var->type != BASIC);
-//     push_back(code, getTriple(t_assign, place, op_Imm(0), NULL));
-//     (*array) = var;
-//     return var->type;
-// }
-
-// gen_leftVal(4){
-//     Type type = leftVal1(rt, place, code, array);
-//     push_back(code, getTriple(t_star, place, place, op_Imm((*array)->baseSize)));
-//     push_back(code, getTriple(t_add, place, place, getOperand(o_var, o_address, *array)));
-//     return type;
-// }
-
-
 
 gen_localVal{
     listHead* code;

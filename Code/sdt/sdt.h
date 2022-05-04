@@ -43,8 +43,6 @@ typedef struct varItem_
     char* name;
     Type type;
     int isInit;
-    size_t totalSize;
-    size_t baseSize;
 } varItem_;
 
 typedef struct structItem_{
