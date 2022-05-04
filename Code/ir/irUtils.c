@@ -1,5 +1,8 @@
 #include "irUtils.h"
 
+int isOperandValid(Operand op){
+    return (op == NULL) || !(op->type == o_tmpVar && op->u.tmpId < 0);
+}
 char* sprintOperand(Operand op){
     char* st = malloc(100);
     char* varname = malloc(100);
@@ -44,12 +47,15 @@ void printTripe(listHead* funcBlock){
         for(tripleNode q = (tripleNode)p->val->head; q; q = q->next){
             TripleExp tri = q->val;
             char* op = malloc(10);
+            if (!isOperandValid(tri->dest)) continue;
+            if (!isOperandValid(tri->src1)) continue;
+            if (!isOperandValid(tri->src2)) continue;
             switch (tri->type){
                 case t_label:
-                    printf("LABEL %s:", sprintOperand(tri->dest));
+                    printf("LABEL %s :", sprintOperand(tri->dest));
                     break;
                 case t_func:
-                    printf("FUNCTION %s:", sprintOperand(tri->dest));
+                    printf("FUNCTION %s :", sprintOperand(tri->dest));
                     break;
                 case t_goto:
                     op = "GOTO";
@@ -76,7 +82,7 @@ void printTripe(listHead* funcBlock){
                     printf("%s %s", op, sprintOperand(tri->dest));
                     break;
                 case t_assign:
-                    printf("%s:=%s", sprintOperand(tri->dest), sprintOperand(tri->src1));
+                    printf("%s := %s", sprintOperand(tri->dest), sprintOperand(tri->src1));
                     break;
                 case t_add:
                     op = "+";
@@ -90,7 +96,7 @@ void printTripe(listHead* funcBlock){
                 case t_div:
                     op = "/";
                     label2:
-                    printf("%s:=%s%s%s", sprintOperand(tri->dest), sprintOperand(tri->src1), op, sprintOperand(tri->src2));
+                    printf("%s := %s %s %s", sprintOperand(tri->dest), sprintOperand(tri->src1), op, sprintOperand(tri->src2));
                     break;
                 case t_eq:
                     op = "==";
@@ -110,10 +116,10 @@ void printTripe(listHead* funcBlock){
                 case t_l:
                     op = "<";
                     label3:
-                    printf("IF %s%s%s GOTO %s", sprintOperand(tri->src1), sprintOperand(tri->src2), sprintOperand(tri->dest));
+                    printf("IF %s %s %s GOTO %s", sprintOperand(tri->src1), op, sprintOperand(tri->src2), sprintOperand(tri->dest));
                     break;
                 case t_call:
-                    printf("%s:=CALL %s", sprintOperand(tri->dest), sprintOperand(tri->src1));
+                    printf("%s := CALL %s", sprintOperand(tri->dest), sprintOperand(tri->src1));
                     break;
             }
             printf("\n");
@@ -127,10 +133,10 @@ void printCode(listHead* code){
             char* op = malloc(10);
             switch (tri->type){
                 case t_label:
-                    printf("LABEL %s:", sprintOperand(tri->dest));
+                    printf("LABEL %s :", sprintOperand(tri->dest));
                     break;
                 case t_func:
-                    printf("FUNCTION %s:", sprintOperand(tri->dest));
+                    printf("FUNCTION %s :", sprintOperand(tri->dest));
                     break;
                 case t_goto:
                     op = "GOTO";
@@ -157,7 +163,7 @@ void printCode(listHead* code){
                     printf("%s %s", op, sprintOperand(tri->dest));
                     break;
                 case t_assign:
-                    printf("%s:=%s", sprintOperand(tri->dest), sprintOperand(tri->src1));
+                    printf("%s := %s", sprintOperand(tri->dest), sprintOperand(tri->src1));
                     break;
                 case t_add:
                     op = "+";
@@ -171,7 +177,7 @@ void printCode(listHead* code){
                 case t_div:
                     op = "/";
                     label2:
-                    printf("%s:=%s%s%s", sprintOperand(tri->dest), sprintOperand(tri->src1), op, sprintOperand(tri->src2));
+                    printf("%s := %s %s %s", sprintOperand(tri->dest), sprintOperand(tri->src1), op, sprintOperand(tri->src2));
                     break;
                 case t_eq:
                     op = "==";
@@ -191,10 +197,10 @@ void printCode(listHead* code){
                 case t_l:
                     op = "<";
                     label3:
-                    printf("IF %s%s%s GOTO %s", sprintOperand(tri->src1), sprintOperand(tri->src2), sprintOperand(tri->dest));
+                    printf("IF %s %s %s GOTO %s", sprintOperand(tri->src1), sprintOperand(tri->src2), sprintOperand(tri->dest));
                     break;
                 case t_call:
-                    printf("%s:=CALL %s", sprintOperand(tri->dest), sprintOperand(tri->src1));
+                    printf("%s := CALL %s", sprintOperand(tri->dest), sprintOperand(tri->src1));
                     break;
             }
             printf("\n");

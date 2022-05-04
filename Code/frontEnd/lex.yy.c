@@ -961,97 +961,102 @@ YY_RULE_SETUP
 case 13:
 YY_RULE_SETUP
 #line 92 "./frontEnd/lexical.l"
-{OUT(KEY, RELOP)}
+{make_node(yylval.node_type, makeType(KEY), "RELOP") 
+    int len = strlen(yytext);
+    yylval.node_type->opName = malloc(len + 1);
+    strcpy(yylval.node_type->opName, yytext);
+    return RELOP;
+}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 93 "./frontEnd/lexical.l"
+#line 98 "./frontEnd/lexical.l"
 {OUT(KEY, PLUS)}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 94 "./frontEnd/lexical.l"
+#line 99 "./frontEnd/lexical.l"
 {OUT(KEY, MINUS)}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 95 "./frontEnd/lexical.l"
+#line 100 "./frontEnd/lexical.l"
 {OUT(KEY, STAR)}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 96 "./frontEnd/lexical.l"
+#line 101 "./frontEnd/lexical.l"
 {OUT(KEY, DIV)}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 97 "./frontEnd/lexical.l"
+#line 102 "./frontEnd/lexical.l"
 {OUT(KEY, AND)}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 98 "./frontEnd/lexical.l"
+#line 103 "./frontEnd/lexical.l"
 {OUT(KEY, OR)}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 99 "./frontEnd/lexical.l"
+#line 104 "./frontEnd/lexical.l"
 {OUT(KEY, DOT)}
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 100 "./frontEnd/lexical.l"
+#line 105 "./frontEnd/lexical.l"
 {OUT(KEY, NOT)}
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 101 "./frontEnd/lexical.l"
+#line 106 "./frontEnd/lexical.l"
 {OUT(KEY, LP)}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 102 "./frontEnd/lexical.l"
+#line 107 "./frontEnd/lexical.l"
 {OUT(KEY, RP)}
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 103 "./frontEnd/lexical.l"
+#line 108 "./frontEnd/lexical.l"
 {OUT(KEY, LB)}
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 104 "./frontEnd/lexical.l"
+#line 109 "./frontEnd/lexical.l"
 {OUT(KEY, RB)}
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 105 "./frontEnd/lexical.l"
+#line 110 "./frontEnd/lexical.l"
 {OUT(KEY, LC)}
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 106 "./frontEnd/lexical.l"
+#line 111 "./frontEnd/lexical.l"
 {OUT(KEY, RC)}
 	YY_BREAK
 case 28:
 /* rule 28 can match eol */
 YY_RULE_SETUP
-#line 107 "./frontEnd/lexical.l"
+#line 112 "./frontEnd/lexical.l"
 {yycolumn = 1;}
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 108 "./frontEnd/lexical.l"
+#line 113 "./frontEnd/lexical.l"
 {}
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 109 "./frontEnd/lexical.l"
+#line 114 "./frontEnd/lexical.l"
 {errorHandle();}
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 111 "./frontEnd/lexical.l"
+#line 116 "./frontEnd/lexical.l"
 {
     char ch = input();
     while(ch != '\n') ch = input();
@@ -1059,7 +1064,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 115 "./frontEnd/lexical.l"
+#line 120 "./frontEnd/lexical.l"
 {
     char pre = 0;
     while(1){
@@ -1075,10 +1080,10 @@ YY_RULE_SETUP
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 127 "./frontEnd/lexical.l"
+#line 132 "./frontEnd/lexical.l"
 ECHO;
 	YY_BREAK
-#line 1082 "./frontEnd/lex.yy.c"
+#line 1087 "./frontEnd/lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2091,7 +2096,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 127 "./frontEnd/lexical.l"
+#line 132 "./frontEnd/lexical.l"
 
 
 void errorHandle(){

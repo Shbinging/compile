@@ -127,6 +127,9 @@ void addAssignR(listHead* code, Operand dest, Operand src){
     push_back(code, getTriple(t_assign, dest, src, NULL));
 }
 
+void addGoto(listHead* code, Operand dest){
+    push_back(code, getTriple(t_goto, dest, NULL, NULL ));
+}
 void addCode(listHead* src, listHead* dest){
     append_list(src, dest);
 }
@@ -413,7 +416,8 @@ gen_StmtList(0) {
 }
 
 gen_StmtList(1) { 
-    Stmt0(ONE(rt));
+    list code = Stmt0(ONE(rt));
+    addCode(tripleList, code);
     StmtList0(TWO(rt));
 }
 
@@ -433,29 +437,62 @@ gen_Stmt(0) {
 }
 
 gen_Stmt(1) { 
-    Operand tmp = new_tmp();
-    listHead* code = Exp0(ONE(rt), tmp);
-    addCode(tripleList, code);
+    return Exp0(ONE(rt), getOperand(o_tmpVar, o_normal, -1));
 }
 
 gen_Stmt(2) { 
-
+    Compst0(ONE(rt));
 }
 
 gen_Stmt(3) { 
-
+    Operand t1 = new_tmp();
+    list code1 = Exp0(TWO(rt), t1);
+    push_back(code1, getTriple(t_return, t1, NULL, NULL));
+    return code1;
 }
 
 gen_Stmt(4) { 
-
+    Operand label1, label2;
+    label1 = new_label();
+    label2 = new_label();
+    list code1 = ExpCond0(THREE(rt), label1, label2);
+    list code2 = Stmt0(FIVE(rt));
+    addLabel(code1, label1);
+    addCode(code1, code2);
+    addLabel(code1, label2);
+    return code1;
 }
 
 gen_Stmt(5) { 
-
+    Operand label1, label2, label3;
+    label1 = new_label();
+    label2 = new_label();
+    label3 = new_label();
+    list code1 = ExpCond0(THREE(rt), label1, label2);
+    list code2 = Stmt0(FIVE(rt));
+    list code3 = Stmt0(FIVE(rt)->bro->bro);
+    addLabel(code1, label1);
+    addCode(code1, code2);
+    addGoto(code1, label3);
+    addLabel(code1, label2);
+    addCode(code1, code3);
+    addLabel(code1, label3);
+    return code1;
 }
 
 gen_Stmt(6) { 
-
+    Operand label1, label2, label3;
+    label1 = new_label();
+    label2 = new_label();
+    label3 = new_label();
+    list code1 = ExpCond0(THREE(rt), label2, label3);
+    list code2 = Stmt0(FIVE(rt));
+    push_front(code1, getTriple(t_label, label1, NULL, NULL));
+    addLabel(code1, label2);
+    addCode(code1, code2);
+    addGoto(code1, label1);
+    addLabel(code1, label3);
+    return code1;
 }
 
 gen_DefList(0) { 
@@ -627,11 +664,15 @@ gen_Exp(12){ //PLUS
 }
 gen_Exp(13) { //ID LP Args RP
     char* funcName = ID0(ONE(rt), 0, 0);
-    listHead* code;
-    createList(&code);
     listHead* paraList;
     createList(&paraList);
-    Args0(THREE(rt), paraList);
+    list code = Args0(THREE(rt), paraList);
+    if (strcmp(funcName, "write") == 0){
+        OperandNode p = paraList->head;
+        push_back(code, getTriple(t_write, p->val, NULL, NULL));
+        addAssignI(code, place, 0);
+        return code;
+    }
     for(OperandNode p = paraList->head; p; p = p->next){
         push_back(code, getTriple(t_arg, p->val, NULL, NULL));
     }
@@ -643,7 +684,11 @@ gen_Exp(14) { //ID LP RP
     char* funcName = ID0(ONE(rt), 0, 0);
     listHead* code;
     createList(&code);
-    push_back(code, getTriple(t_call, *map_get(&funcTable, funcName), NULL, NULL));
+    if (strcmp(funcName, "read") == 0){
+        push_back(code, getTriple(t_read, place, NULL, NULL));
+    }else{
+        push_back(code, getTriple(t_call, *map_get(&funcTable, funcName), NULL, NULL));
+    }
     return code;
 }
 
@@ -679,14 +724,17 @@ gen_Args(0) {
 }
 
 gen_Args(1) { 
-    Args2(rt, paraList);
-    Args0(THREE(rt), paraList);
+    list code1 = Args2(rt, paraList);
+    list code2 = Args0(THREE(rt), paraList);
+    addCode(code1, code2);
+    return code1;
 }
 
 gen_Args(2) { 
     Operand t1 = new_tmp();
-    append_list(tripleList, Exp0(ONE(rt), t1));
+    list code = Exp0(ONE(rt), t1);
     push_front(paraList, getOperandNode(t1));
+    return code;
 }
 
 gen_ExpCond(0){
@@ -706,29 +754,57 @@ gen_ExpCond(0){
     }
 }
 
+enum Ttype_ get_relop(char* st){
+    if (strcmp(st, "<") == 0) return t_l;
+    if (strcmp(st, ">") == 0) return t_g;
+    if (strcmp(st, "<=") == 0) return t_leq;
+    if (strcmp(st, ">=") == 0) return t_geq;
+    if (strcmp(st, "==") == 0) return t_eq;
+    if (strcmp(st, "!=") == 0) return t_neq;
+}
+
 gen_ExpCond(1){
     Operand t1 = new_tmp();
     Operand t2 = new_tmp();
     list code1 = Exp0(ONE(rt), t1);
     list code2 = Exp0(THREE(rt), t2);
-
+    enum Ttype_ ttype = get_relop(TWO(rt)->opName);
+    addCode(code1, code2);
+    push_back(code1, getTriple(ttype, labelTrue, t1, t2));
+    addGoto(code1, labelFalse);
+    return code1;
 }
 
 gen_ExpCond(2){
-    
+    return ExpCond0(TWO(rt), labelTrue, labelFalse);
 }
 
 gen_ExpCond(3){
-    
+    Operand label1 = new_label();
+    list code1 = ExpCond0(ONE(rt), label1, labelFalse);
+    list code2 = ExpCond0(THREE(rt), labelTrue, labelFalse);
+    addLabel(code1, label1);
+    addCode(code1, code2);
+    return code1;
 }
 
 gen_ExpCond(4){
-    
+    Operand label1 = new_label();
+    list code1 = ExpCond0(ONE(rt), labelTrue, label1);
+    list code2 = ExpCond0(THREE(rt), labelTrue, labelFalse);
+    addLabel(code1, label1);
+    addCode(code1, code2);
+    return code1;
 }
 
 gen_ExpCond(5){
-    
+    Operand t1 = new_tmp();
+    list code1 = Exp0(rt, t1);
+    push_back(code1, getTriple(t_neq, labelTrue, t1, op_Imm(0)));
+    addGoto(code1, labelFalse);
+    return code1;
 }
+
 gen_localVal{
     listHead* code;
     char* name;

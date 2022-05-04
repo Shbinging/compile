@@ -89,7 +89,12 @@ while {OUT(KEY, WHILE)}
 ; {OUT(KEY, SEMI)}
 , {OUT(KEY, COMMA)}
 = {OUT(KEY, ASSIGNOP)}
->|<|>=|<=|==|!= {OUT(KEY, RELOP)}
+>|<|>=|<=|==|!= {make_node(yylval.node_type, makeType(KEY), "RELOP") 
+    int len = strlen(yytext);
+    yylval.node_type->opName = malloc(len + 1);
+    strcpy(yylval.node_type->opName, yytext);
+    return RELOP;
+}
 \+ {OUT(KEY, PLUS)}
 - {OUT(KEY, MINUS)}
 \* {OUT(KEY, STAR)}

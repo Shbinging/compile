@@ -22,6 +22,7 @@ typedef struct TreeNode{
         char* type;
         char* varName;
     }info;
+    char* opName;
     struct TreeNode* son;
     struct TreeNode* bro;
 } TreeNode;
