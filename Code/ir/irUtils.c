@@ -120,3 +120,83 @@ void printTripe(listHead* funcBlock){
         }
     }
 }
+
+void printCode(listHead* code){
+        for(tripleNode q = (tripleNode)code->head; q; q = q->next){
+            TripleExp tri = q->val;
+            char* op = malloc(10);
+            switch (tri->type){
+                case t_label:
+                    printf("LABEL %s:", sprintOperand(tri->dest));
+                    break;
+                case t_func:
+                    printf("FUNCTION %s:", sprintOperand(tri->dest));
+                    break;
+                case t_goto:
+                    op = "GOTO";
+                    goto label1;
+                case t_return:
+                    op = "RETURN";
+                    goto label1;
+                case t_dec:
+                    op = "DEC";
+                    goto label1;
+                case t_arg:
+                    op = "ARG";
+                    goto label1;
+                case t_param:
+                    op = "PARAM";
+                    goto label1;
+                case t_read:
+                    op = "READ";
+                    goto label1;
+                case t_write:
+                    op = "WRITE";
+                    goto label1;
+                    label1:
+                    printf("%s %s", op, sprintOperand(tri->dest));
+                    break;
+                case t_assign:
+                    printf("%s:=%s", sprintOperand(tri->dest), sprintOperand(tri->src1));
+                    break;
+                case t_add:
+                    op = "+";
+                    goto label2;
+                case t_sub:
+                    op = "-";
+                    goto label2;
+                case t_star:
+                    op = "*";
+                    goto label2;
+                case t_div:
+                    op = "/";
+                    label2:
+                    printf("%s:=%s%s%s", sprintOperand(tri->dest), sprintOperand(tri->src1), op, sprintOperand(tri->src2));
+                    break;
+                case t_eq:
+                    op = "==";
+                    goto label3;
+                case t_neq:
+                    op = "!=";
+                    goto label3;
+                case t_geq:
+                    op = ">=";
+                    goto label3;
+                case t_leq:
+                    op = "<=";
+                    goto label3;
+                case t_g:
+                    op = ">";
+                    goto label3;
+                case t_l:
+                    op = "<";
+                    label3:
+                    printf("IF %s%s%s GOTO %s", sprintOperand(tri->src1), sprintOperand(tri->src2), sprintOperand(tri->dest));
+                    break;
+                case t_call:
+                    printf("%s:=CALL %s", sprintOperand(tri->dest), sprintOperand(tri->src1));
+                    break;
+            }
+            printf("\n");
+        }
+}

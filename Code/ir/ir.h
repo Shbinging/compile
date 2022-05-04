@@ -2,6 +2,7 @@
 #define __ir__
 #include "irUtils.h"
 
+typedef listHead* list;
 void printTripe(listHead* funcBlock);
 #define gen_Program(x) listHead* Program##x(TreeNode* rt)
 #define gen_ExtDefList(x) void ExtDefList##x(TreeNode* rt)
@@ -25,6 +26,8 @@ void printTripe(listHead* funcBlock);
 #define gen_Exp(x) listHead* Exp##x(TreeNode* rt, Operand place)
 #define gen_Args(x) void Args##x(TreeNode* rt, listHead* paraList)
 #define gen_ExpCond(x) listHead* ExpCond##x(TreeNode* rt, Operand label1, Operand label2)
+#define gen_leftVal(x) Type leftVal##x(TreeNode* rt, Operand place, listHead* code, varItem* array)
+#define gen_localVal listHead* localVal(TreeNode* rt, Operand place)
 
 #define call_Program(x) Program##x(rt)
 #define call_ExtDefList(x) ExtDefList##x(rt)
@@ -48,6 +51,7 @@ void printTripe(listHead* funcBlock);
 #define call_Exp(x) return Exp##x(rt, place)
 #define call_Args(x) Args##x(rt, paraList)
 #define call_ExpCond(x) return ExpCond##x(rt, label1, label2)
+#define call_leftVal(x) return leftVal##x(rt, place, code, array)
 
 gen_Program(0);
 static gen_Program(1);
@@ -131,4 +135,12 @@ static gen_Args(0);
 static gen_Args(1);
 static gen_Args(2);
 static gen_ExpCond(0);
+static gen_localVal;
+static Type ExpAddress(TreeNode* rt, int baseTmp, int offsetTmp, int isInterface, list code);
+static Type ExpArray0(TreeNode* rt, int baseTmp, int offsetTmp, list code);
+static Type ExpArray1(TreeNode* rt, int baseTmp, int offsetTmp, list code);
+static Type ExpStruct(TreeNode* rt, int baseTmp, int offsetTmp, list code);
+static Type ExpAddressID(TreeNode* rt, int baseTmp, int offsetTmp, list code);
+static list genExpAddress(TreeNode* rt, int valTmp);
+
 #endif

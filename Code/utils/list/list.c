@@ -75,7 +75,15 @@ void* find(void* lst1 , int(*func)(void*)){//TODO
 
 void append_list(void* a1, void* b1){
     listHeadTemplate* a = a1, *b = b1;
-    if (a->tail && b) a->tail->next = b->head;
-    if (b && b->head && a) b->head->pre = a->tail;
-    if (b) a->tail = b->tail;
+    if (a && b){
+        if (a->head == NULL){
+            a->head = b->head;
+            a->tail = b->tail;
+        }
+        if (b->head){
+            a->tail->next = b->head;
+            b->head->pre = a->tail;
+            a->tail = b->tail;
+        }
+    }
 }

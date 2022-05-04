@@ -4,7 +4,7 @@
 #include "../utils/list/list.h"
 typedef struct Operand_{
     enum Otype_ {o_label, o_const, o_var, o_tmpVar, o_func} type;
-    enum Oproperty_ {o_normal, o_address, o_point, o_size} property;
+    enum Oproperty_ {o_normal, o_address, o_point, o_size, o_offset} property;
     union {
         int tmpId;
         int constInt;
@@ -14,6 +14,10 @@ typedef struct Operand_{
     }u;
     union{
         int size;
+        struct offsetInfo_{
+            Type type;
+            int offset;
+        } arrayInfo;
     }addtion;
 } Operand_;
 
@@ -41,4 +45,5 @@ extern labelId labelSum;
 
 char* sprintOperand(Operand op);
 void printTripe(listHead* funcBlock);
+void printCode(listHead*);
 #endif

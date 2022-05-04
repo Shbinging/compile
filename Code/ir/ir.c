@@ -4,6 +4,10 @@
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <assert.h>
+
+
+
 listHead* funcBlock;
 listHead* tripleList;
 typedef unsigned int tmpId; 
@@ -77,6 +81,40 @@ Operand new_label(){
     return getOperand(o_label, o_normal, labelSum);
 }
 
+int newTmp(){
+    return ++tmpSum;
+}
+
+int newLabel(){
+    return ++labelSum;
+}
+
+Operand op_Imm(int val){
+    return getOperand(o_const, o_normal, val);
+}
+
+Operand op_Tmp(int val){
+    return getOperand(o_tmpVar, o_normal, val);
+}
+
+Operand op_Var(varItem var){
+    return getOperand(o_var, o_normal, var);
+}
+
+Operand op_Fun(funcItem func){
+    return getOperand(o_func, o_normal, func);
+}
+
+Operand op_Point(Operand op){
+    op->property = o_point;
+    return op;
+}
+
+Operand op_Address(Operand op){
+    op->property = o_address;
+    return op;
+}
+
 void addLabel(listHead* code, Operand a){
     push_back(code, getTriple(t_label, a, NULL, NULL));
 }
@@ -91,10 +129,6 @@ void addAssignR(listHead* code, Operand dest, Operand src){
 
 void addCode(listHead* src, listHead* dest){
     append_list(src, dest);
-}
-
-Operand getImm(int val){
-    return getOperand(o_const, o_normal, val);
 }
 
 size_t getStructureSize(Type t){
@@ -140,7 +174,22 @@ void getArraySize(Type t, size_t* totalSize, size_t* baseSize){
     }
 }
 
+size_t getTypeSize(Type type){
+    size_t totalSize, baseSize;
+    switch(type->kind){
+        case BASIC:
+            return 4;
+        case ARRAY:
+            getArraySize(type, &totalSize, &baseSize);
+            return totalSize;
+        case STRUCTURE:
+            return getStructureSize(type);
+    }
+}
+
 void genVarSize(){
+    map_varItem_t localVarTable1;
+    map_init(&localVarTable1);
     map_iter_t iter = map_iter(&localVarTable);
     char* key;
     while ((key = map_next(&localVarTable, &iter))) {
@@ -158,9 +207,10 @@ void genVarSize(){
                 var->baseSize = var->totalSize;
                 break;
         }
-        map_remove(&localVarTable, key);
-        map_set(&localVarTable, key, var);
+        map_set(&localVarTable1, key, var);
     }
+    map_deinit(&localVarTable);
+    memcpy(&localVarTable, &localVarTable1, sizeof(map_varItem_t));
 }
 
 gen_Program(0) { 
@@ -527,8 +577,8 @@ gen_Exp(0) {
 
 gen_Exp(1) { //ASSIGNOP
     Operand leftPlace = new_tmp();
-    listHead* left = Exp0(ONE(rt), leftPlace);
     Operand rightPlace = new_tmp();
+    listHead* left = localVal(ONE(rt), leftPlace);
     listHead* right = Exp0(THREE(rt), rightPlace);
     addCode(left, right);
     addAssignR(left, leftPlace, rightPlace);
@@ -592,7 +642,7 @@ gen_Exp(9) { //()
 gen_Exp(10) { //MINUS
     Operand t1 = new_tmp();
     listHead* code = Exp0(TWO(rt), t1);
-    push_back(code, getTriple(t_sub, place, getImm(0), t1));
+    push_back(code, getTriple(t_sub, place, op_Imm(0), t1));
     return code;
 }
 
@@ -603,7 +653,7 @@ gen_Exp(11) { //NOT
 gen_Exp(12){ //PLUS
     Operand t1 = new_tmp();
     listHead* code = Exp0(TWO(rt), t1);
-    push_back(code, getTriple(t_add, place, getImm(0), t1));
+    push_back(code, getTriple(t_add, place, op_Imm(0), t1));
     return code;
 }
 gen_Exp(13) { //ID LP Args RP
@@ -629,7 +679,7 @@ gen_Exp(14) { //ID LP RP
 }
 
 gen_Exp(15) { //Exp LB Exp RB
-
+    return localVal(rt, place);
 }
 
 gen_Exp(16) { //Exp DOT ID
@@ -637,11 +687,7 @@ gen_Exp(16) { //Exp DOT ID
 }
 
 gen_Exp(17) { //ID
-    char* name = ID0(ONE(rt), NULL, 0);
-    listHead* code;
-    createList(&code);
-    push_back(code, getTriple(t_assign, place, getOperand(o_var, o_normal, *map_get(&localVarTable, name)), NULL));
-    return code;
+    return localVal(rt, place);
 }
 
 gen_Exp(18) { //INT
@@ -677,3 +723,146 @@ gen_Args(2) {
 gen_ExpCond(0){
 
 }
+// gen_leftVal(0){
+//     switch(rt->no) {
+// 		case 15: 
+//             call_leftVal(1); 
+//             break; 
+// 		case 16: call_leftVal(2); break; 
+//         case 17: call_leftVal(3); break;
+// 	}
+// } 
+
+// gen_leftVal(1){
+//     Operand base = new_tmp();
+//     Type type = leftVal0(ONE(rt), base, code, array);
+//     Operand offset = new_tmp();
+//     listHead* code1 = Exp0(THREE(rt), offset);
+//     addCode(code, code1);
+//     push_back(code, getTriple(t_star, base, base, getOperand(o_const, o_normal, type->u.array.size)));
+//     push_back(code, getTriple(t_add, place, base, offset));
+//     return type->u.array.elem;
+// }
+
+// gen_leftVal(2){
+//     Type type = leftVal0(ONE(rt), place, code, array);
+//     char* name = ID0(THREE(rt), NULL, 0);
+//     assert(type->kind == STRUCTURE);
+//     int offset = 0;
+//     for(FieldList p = type->u.structure; p; p = p->tail){
+//         if (strcmp(p->name, name) == 0){
+//                 break;
+//         }else{
+//             offset += getTypeSize(p->type);
+//         }
+//     }
+// }
+
+// gen_leftVal(3){
+//     char* name = ID0(ONE(rt), NULL, 0);
+//     varItem var = *map_get(&localVarTable, name);
+//     assert(var->type != BASIC);
+//     push_back(code, getTriple(t_assign, place, op_Imm(0), NULL));
+//     (*array) = var;
+//     return var->type;
+// }
+
+// gen_leftVal(4){
+//     Type type = leftVal1(rt, place, code, array);
+//     push_back(code, getTriple(t_star, place, place, op_Imm((*array)->baseSize)));
+//     push_back(code, getTriple(t_add, place, place, getOperand(o_var, o_address, *array)));
+//     return type;
+// }
+
+
+
+gen_localVal{
+    listHead* code;
+    char* name;
+    Operand address = new_tmp();
+    switch(rt->no){
+        case 17:
+            name = ID0(ONE(rt), NULL, 0);
+            place->type = o_var;
+            place->property = o_normal;
+            place->u.varPoint = *map_get(&localVarTable, name);
+            createList(&code);
+            break;
+        case 15:
+        case 16:
+            code = genExpAddress(rt, place->u.tmpId);
+            place->property = o_point;
+            break;
+    }
+    return code;
+}
+
+Type ExpAddress(TreeNode* rt, int baseTmp, int offsetTmp, int isInterface, list code){
+    switch(rt->no){
+        case 15:
+            if (isInterface) return ExpArray0(rt, baseTmp, offsetTmp, code);
+            else return ExpArray1(rt, baseTmp, offsetTmp, code);
+            break;
+        case 16:
+            return ExpStruct(rt, baseTmp, offsetTmp, code);
+            break;
+        case 17:
+            return ExpAddressID(rt, baseTmp, offsetTmp, code);
+    }
+}
+
+Type ExpArray0(TreeNode* rt, int baseTmp, int offsetTmp, list code){
+    Type cur = ExpArray1(rt, baseTmp, offsetTmp, code);
+    push_back(code, getTriple(t_star, op_Tmp(offsetTmp), op_Tmp(offsetTmp), op_Imm(getTypeSize(cur))));
+    return cur;
+}
+
+Type ExpArray1(TreeNode* rt, int baseTmp, int offsetTmp, list code){
+    Type cur = ExpAddress(ONE(rt), baseTmp, offsetTmp, 0, code);
+    Operand id = new_tmp();
+    list codeid = Exp0(THREE(rt), id);
+    addCode(code, codeid);
+    push_back(code, getTriple(t_star, op_Tmp(offsetTmp), op_Tmp(offsetTmp), op_Imm(cur->u.array.size)));
+    push_back(code, getTriple(t_add, op_Tmp(offsetTmp), op_Tmp(offsetTmp), id));
+    return cur->u.array.elem;
+}
+
+Type ExpStruct(TreeNode* rt, int baseTmp, int offsetTmp, list code){
+    Type type = ExpAddress(ONE(rt), baseTmp, offsetTmp, 1, code);
+    char* name = ID0(THREE(rt), NULL, 0);
+    assert(type->kind == STRUCTURE);
+    int offset = 0;
+    FieldList p;
+    for(p = type->u.structure; p; p = p->tail){
+        if (strcmp(p->name, name) == 0){
+                push_back(code, getTriple(t_add, op_Tmp(offsetTmp), op_Tmp(offsetTmp), op_Imm(offset)));
+                push_back(code, getTriple(t_add, op_Tmp(baseTmp), op_Tmp(baseTmp), op_Tmp(offsetTmp)));
+                push_back(code, getTriple(t_assign, op_Tmp(offsetTmp), op_Imm(0), NULL));
+                break;
+        }else{
+            offset += getTypeSize(p->type);
+        }
+    }
+    return p->type;
+}
+
+Type ExpAddressID(TreeNode* rt, int baseTmp, int offsetTmp, list code){
+    char* name = ID0(ONE(rt), NULL, 0);
+    varItem var = *map_get(&localVarTable, name);
+    assert(var->type->kind != BASIC);
+    push_back(code, getTriple(t_assign, op_Tmp(offsetTmp), op_Imm(0), NULL));
+    push_back(code, getTriple(t_assign, op_Tmp(baseTmp), op_Address(op_Var(var)), NULL));
+    return var->type;
+}
+
+list genExpAddress(TreeNode* rt, int valTmp){
+    int baseTmp = newTmp(), offsetTmp = newTmp();
+    list code;
+    createList(&code);
+    ExpAddress(rt, baseTmp, offsetTmp, 1, code);
+    push_back(code, getTriple(t_add, op_Tmp(valTmp), op_Tmp(baseTmp), op_Tmp(offsetTmp)));
+    return code;
+}
+
+
+

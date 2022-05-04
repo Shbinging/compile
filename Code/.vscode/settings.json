@@ -32,7 +32,8 @@
         "utility": "c",
         "ir.h": "c",
         "stdarg.h": "c",
-        "irutils.h": "c"
+        "irutils.h": "c",
+        "initializer_list": "c"
     },
     "C_Cpp.errorSquiggles": "Disabled"
 }
