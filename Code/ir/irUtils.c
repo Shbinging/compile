@@ -22,7 +22,7 @@ char* sprintOperand(Operand op){
                     sprintf(st, "*%s", varname);
                     break;
                 case o_size:
-                    sprintf(st, "%s [%d]", varname, op->addtion.size);
+                    sprintf(st, "%s %d", varname, op->addtion.size);
                     break;
             }
             break;

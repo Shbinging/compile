@@ -1,6 +1,12 @@
-int main(int a, int b){
-    int d, e;
-    int c = d + 2 + b;
-    e = main(1, 2);
+struct ee{
+    int f;
+    int g[100];
+};
+struct a{
+    int c;
+    struct ee h[10];
+};
+int main(int f, int b){
+    struct a d, e[1][2][5];
     return 0;
 }

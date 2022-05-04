@@ -97,15 +97,84 @@ Operand getImm(int val){
     return getOperand(o_const, o_normal, val);
 }
 
+size_t getStructureSize(Type t){
+    size_t size = 0;
+    FieldList p = t->u.structure;
+    while(p){
+        Type item = p->type;
+        size_t totalSize, baseSize;
+        switch(item->kind){
+            case BASIC:
+                size += 4;
+                break;
+            case ARRAY:
+                getArraySize(item, &totalSize, &baseSize);
+                size += totalSize;
+                //size += getArraySize(item);
+                break;
+            case STRUCTURE:
+                size += getStructureSize(item);
+                break;
+        }
+        p = p->tail;
+    }
+    return size;
+}
+
+
+void getArraySize(Type t, size_t* totalSize, size_t* baseSize){
+    size_t size = 1;
+    Type p = t;
+    while(p->kind == ARRAY){
+        size = size * p->u.array.size;
+        p = p->u.array.elem;
+    }
+    if (p->kind == BASIC){
+        (*baseSize) = 4;
+        size *= (*baseSize);
+        (*totalSize) = size;
+    }else{
+        (*baseSize) = getStructureSize(p);
+        size *= (*baseSize);
+        (*totalSize) = size;
+    }
+}
+
+void genVarSize(){
+    map_iter_t iter = map_iter(&localVarTable);
+    char* key;
+    while ((key = map_next(&localVarTable, &iter))) {
+        varItem var = *map_get(&localVarTable, key);
+        switch(var->type->kind){
+            case BASIC:
+                var->totalSize = 4;
+                var->baseSize = 4;
+                break;
+            case ARRAY:
+                getArraySize(var->type, &(var->totalSize), &(var->baseSize));
+                break;
+            case STRUCTURE:
+                var->totalSize = getStructureSize(var->type);
+                var->baseSize = var->totalSize;
+                break;
+        }
+        map_remove(&localVarTable, key);
+        map_set(&localVarTable, key, var);
+    }
+}
+
 gen_Program(0) { 
     createList(&funcBlock);
+    genVarSize();
 	 switch(rt->no) {
 		case 1: call_Program(1); break; 
 	}
+    return funcBlock;
 }
 
 gen_Program(1) { 
     ExtDefList0(ONE(rt));
+    return NULL;
 }
 
 gen_ExtDefList(0) { 
@@ -117,6 +186,7 @@ gen_ExtDefList(0) {
 
 gen_ExtDefList(1) { 
     ExtDef0(ONE(rt));
+    ExtDefList0(TWO(rt));
 }
 
 gen_ExtDefList(2) { 
@@ -142,7 +212,7 @@ gen_ExtDef(2) {
 void generateFuncHead(char* funcName){
     funcItem func = *map_get(&funcTable, funcName);
     addTriple(t_func, getOperand(o_func, o_normal, func), NULL, NULL);
-    for(FieldList p = func->para; p; p = p->tail){
+    for(FieldList p = func->para; p; p = p->tail){;
         addTriple(t_param, getOperand(o_var, o_normal, *map_get(&localVarTable, p->name)), NULL, NULL);
     }
 }
@@ -160,12 +230,12 @@ gen_ExtDef(3) {
     }
 
     Compst0(THREE(rt));
-    {
-        funcNode node = malloc(sizeof(funcNode_));
-        node->val = tripleList;
-        node->property = *map_get(&funcTable, funName);
-        push_back(funcBlock, node);
-    }
+    
+    funcNode node = malloc(sizeof(funcNode_));
+    node->val = tripleList;
+    node->property = *map_get(&funcTable, funName);
+    push_back(funcBlock, node);
+    
 }
 
 gen_ExtDecList(0) { 
@@ -246,11 +316,17 @@ gen_VarDec(0) {
 }
 
 gen_VarDec(1) { 
+    char* varName = ID0(ONE(rt), NULL, 0);
+    if (isLocalDef){
+        varItem var = *map_get(&localVarTable, varName);
+        if (var->type->kind != BASIC)
+            addTriple(t_dec, getOperand(o_var, o_size, var, var->totalSize), NULL, NULL);
+    }
     return ID0(ONE(rt), NULL,0);
 }
 
 gen_VarDec(2) { 
-    return VarDec0(ONE(rt));
+    return VarDec0(ONE(rt), isLocalDef);
 }
 
 gen_FunDec(0) { 
@@ -306,6 +382,7 @@ gen_Compst(0) {
 
 gen_Compst(1) { 
     DefList0(TWO(rt));
+
     StmtList0(THREE(rt));
 }
 
@@ -412,11 +489,11 @@ gen_Dec(0) {
 }
 
 gen_Dec(1) { 
-
+    VarDec0(ONE(rt), 1);
 }
 
 gen_Dec(2) { 
-    char* varName = VarDec0(ONE(rt));
+    char* varName = VarDec0(ONE(rt), 1);
     Operand tmpVar = new_tmp();
     listHead* exp = Exp0(THREE(rt), tmpVar);
     varItem var = *map_get(&localVarTable, varName);

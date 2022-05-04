@@ -13,9 +13,15 @@
 #define strCopy(a, b) a = malloc(strlen(b) + 1);\
 strcpy(a, b)
 //#define preWORK(rt) print(rt, depth);
+#ifdef DEBUG
+#define preWORK(rt) print(rt, depth); if (rt->type == makeType(YFFULL)){\
+        lineNo = rt->info.lineNo;\
+    }
+#else
 #define preWORK(rt) if (rt->type == makeType(YFFULL)){\
         lineNo = rt->info.lineNo;\
     }
+#endif
 typedef struct Type_* Type;
 typedef struct FieldList_* FieldList;
 typedef struct varItem_* varItem;

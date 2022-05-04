@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Mon May  2 14:10:24 2022
+# Make data base, printed on Wed May  4 05:55:58 2022
 
 # Variables
 
@@ -39,7 +39,7 @@ VSCODE_NLS_CONFIG = {"locale":"zh-cn","availableLanguages":{"*":"zh-cn"},"_langu
 # environment
 _ = /bin/cat
 # makefile (from 'Makefile', line 8)
-CFLAGS = -std=c99 -g
+CFLAGS = -std=c99 -g $(d)
 # makefile (from 'Makefile', line 1)
 MAKEFILE_LIST :=  Makefile
 # 'override' directive
@@ -67,7 +67,7 @@ YFC = $(shell find ./ -name "*.y" | sed s/[^/]*\\.y/syntax.tab.c/)
 # makefile (from 'Makefile', line 15)
 LFC = $(shell find ./ -name "*.l" | sed s/[^/]*\\.l/lex.yy.c/)
 # environment
-SSH_AUTH_SOCK = /tmp/vscode-ssh-auth-996b408f278b4009238634096ada0bb9efca1026.sock
+SSH_AUTH_SOCK = /tmp/vscode-ssh-auth-0072c62517eb7aba7e933ab5e68c462eeaaee126.sock
 # automatic
 %F = $(notdir $%)
 # environment
@@ -75,7 +75,7 @@ VSCODE_PIPE_LOGGING = true
 # environment
 PWD = /root/Lab/Code
 # environment
-VSCODE_IPC_HOOK_CLI = /tmp/vscode-ipc-0ff682df-31e6-4c64-b709-33bc41f54f23.sock
+VSCODE_IPC_HOOK_CLI = /tmp/vscode-ipc-7d8d0395-f3cf-4783-b385-1b04d980ca30.sock
 # environment
 VSCODE_AMD_ENTRYPOINT = vs/workbench/api/node/extensionHostProcess
 # environment
@@ -113,7 +113,7 @@ YFO = $(YFC:.c=.o)
 # makefile (from 'Makefile', line 7)
 BISON = bison
 # environment
-REMOTE_CONTAINERS_IPC = /tmp/vscode-remote-containers-ipc-996b408f278b4009238634096ada0bb9efca1026.sock
+REMOTE_CONTAINERS_IPC = /tmp/vscode-remote-containers-ipc-0072c62517eb7aba7e933ab5e68c462eeaaee126.sock
 # default
 MAKE_COMMAND := make
 # default
@@ -145,7 +145,7 @@ LC_ALL = C
 # default
 SUFFIXES := 
 # environment
-REMOTE_CONTAINERS_SOCKETS = ["/tmp/vscode-ssh-auth-996b408f278b4009238634096ada0bb9efca1026.sock"]
+REMOTE_CONTAINERS_SOCKETS = ["/tmp/vscode-ssh-auth-0072c62517eb7aba7e933ab5e68c462eeaaee126.sock"]
 # default
 .INCLUDE_DIRS = /usr/include /usr/local/include /usr/include
 # default
@@ -163,15 +163,21 @@ VSCODE_EXTHOST_WILL_SEND_SOCKET = true
 
 # Directories
 
-# . (device 2064, inode 170253): 24 files, no impossibilities.
+# . (device 2064, inode 170253): 14 files, no impossibilities.
 
-# 24 files, no impossibilities in 1 directories.
+# 14 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
 # No implicit rules.
 
 # Files
+
+# Not a target:
+utils/list/list.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
 
 tryF:
 #  Implicit rule search has not been done.
@@ -181,16 +187,17 @@ tryF:
 	@flex lexicalTry.l && g++ lex.yy.c -lfl -o lex && ./lex test.txt
 
 # Not a target:
+utils/map/map.d:
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
+
+# Not a target:
 all:
 #  Command line target.
 #  Implicit rule search has been done.
 #  File does not exist.
-#  File has not been updated.
-
-# Not a target:
-syntax.tab.o:
-#  Implicit rule search has not been done.
-#  Modification time never checked.
 #  File has not been updated.
 
 .PHONY: clean test testB
@@ -198,7 +205,14 @@ syntax.tab.o:
 #  Modification time never checked.
 #  File has not been updated.
 
-syntax-c: syntax.y
+# Not a target:
+ir/ir.d:
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
+
+syntax-c: frontEnd/syntax.y
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
@@ -206,16 +220,27 @@ syntax-c: syntax.y
 	$(BISON) -o $(YFC) -d -v -t $(YFILE)
 
 # Not a target:
-sdt.d:
-#  Implicit rule search has been done.
-#  File does not exist.
-#  File has been updated.
-#  Failed to be updated.
+ir/irUtils.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+sdt/sdt.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+frontEnd/lexical.l:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
 
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-04-09 07:33:48.545643218
+#  Last modified 2022-05-04 05:54:25.433569285
 #  File has been updated.
 #  Successfully updated.
 
@@ -228,14 +253,27 @@ test:
 	./parser ./test/test1.txt
 
 # Not a target:
-map/map.d:
+utils/syntaxTree/tree.d:
 #  Implicit rule search has been done.
 #  File does not exist.
 #  File has been updated.
 #  Failed to be updated.
 
 # Not a target:
-sdt.o:
+utils/map/map.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+frontEnd/lex.yy.d:
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
+
+# Not a target:
+ir/ir.o:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
@@ -245,15 +283,10 @@ main.d:
 #  Implicit rule search has been done.
 #  File does not exist.
 #  File has been updated.
+ 
 #  Failed to be updated.
 
-# Not a target:
-lexical.l:
-#  Implicit rule search has not been done.
-#  Modification time never checked.
-#  File has not been updated.
-
-parser: syntax tree.o syntax.tab.o map/map.o sdt.o main.o
+parser: syntax ir/ir.o ir/irUtils.o utils/syntaxTree/tree.o utils/map/map.o utils/list/list.o frontEnd/syntax.tab.o main.o sdt/sdt.o
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
@@ -267,7 +300,20 @@ parser: syntax tree.o syntax.tab.o map/map.o sdt.o main.o
 #  File has not been updated.
 
 # Not a target:
-tree.o:
+frontEnd/syntax.y:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+frontEnd/syntax.tab.d:
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
+
+# Not a target:
+utils/syntaxTree/tree.o:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
@@ -284,21 +330,21 @@ clean:
 	rm -f *~
 
 # Not a target:
-map/map.o:
-#  Implicit rule search has not been done.
-#  Modification time never checked.
-#  File has not been updated.
+utils/list/list.d:
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
 
 testB:
 #  Phony target (prerequisite of .PHONY).
 #  Implicit rule search has not been done.
 #  File does not exist.
 #  File has not been updated.
- 
 #  recipe to execute (from 'Makefile', line 41):
 	./parser test.txt
 
-lexical: lexical.l
+lexical: frontEnd/lexical.l
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
@@ -313,37 +359,30 @@ syntax: lexical syntax-c
 	$(CC) -c $(YFC) -o $(YFO)
 
 # Not a target:
-syntax.y:
-#  Implicit rule search has not been done.
-#  Modification time never checked.
-#  File has not been updated.
-
-# Not a target:
 main.o:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
 
 # Not a target:
-syntax.tab.d:
+ir/irUtils.d:
 #  Implicit rule search has been done.
 #  File does not exist.
 #  File has been updated.
 #  Failed to be updated.
 
 # Not a target:
-lex.yy.d:
+sdt/sdt.d:
 #  Implicit rule search has been done.
 #  File does not exist.
 #  File has been updated.
 #  Failed to be updated.
 
 # Not a target:
-tree.d:
-#  Implicit rule search has been done.
-#  File does not exist.
-#  File has been updated.
-#  Failed to be updated.
+frontEnd/syntax.tab.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
 
 tryB:
 #  Implicit rule search has not been done.
@@ -353,19 +392,19 @@ tryB:
 	cd ../backup && flex -o lexTry.yy.c lexicalTry.l && bison -d -t syntax1.y && gcc syntax1.tab.c -lfl -ly -o parser && ./parser ../Code/test.txt
 
 # files hash-table stats:
-# Load=27/1024=3%, Rehash=0, Collisions=4/61=7%
+# Load=33/1024=3%, Rehash=0, Collisions=0/73=0%
 # VPATH Search Paths
 
 # No 'vpath' search paths.
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 44 / storage = 366 B / avg = 8 B
-# current buf: size = 8162 B / used = 366 B / count = 44 / avg = 8 B
+# strcache buffers: 1 (0) / strings = 45 / storage = 482 B / avg = 10 B
+# current buf: size = 8162 B / used = 482 B / count = 45 / avg = 10 B
 
-# strcache performance: lookups = 78 / hit rate = 43%
+# strcache performance: lookups = 77 / hit rate = 41%
 # hash-table stats:
-# Load=44/8192=1%, Rehash=0, Collisions=4/78=5%
-# Finished Make data base on Mon May  2 14:10:24 2022
+# Load=45/8192=1%, Rehash=0, Collisions=1/77=1%
+# Finished Make data base on Wed May  4 05:55:58 2022
 
  
