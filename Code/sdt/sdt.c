@@ -673,6 +673,9 @@ expVal Exp(TreeNode* rt, TreeNode* fa, int depth){
         }
         MT3("Args"){//ID0 LP Args RP
             //检查函数是否存在
+            if (strcmp(name, "write") == 0 || strcmp(name , "read") == 0){
+                return NULL;
+            }
             if (isVar(res)){
                 error(11, rt->info.lineNo);
                 return NULL;

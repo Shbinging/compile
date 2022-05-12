@@ -43,6 +43,7 @@ char* sprintOperand(Operand op){
 }
 
 void printTripe(listHead* funcBlock){
+    if (funcBlock == NULL) return;
     for(funcNode p = (funcNode)funcBlock->head; p; p = p->next){
         for(tripleNode q = (tripleNode)p->val->head; q; q = q->next){
             TripleExp tri = q->val;

@@ -8,6 +8,7 @@
 int parseOK;
 TreeNode* parseTreeRoot;
 int main(int argc, char** argv){
+    freopen(argv[2], "w", stdout);
     if (argc <= 1) return 1;
     FILE* f = fopen(argv[1], "r");
     if (!f){
@@ -24,6 +25,6 @@ int main(int argc, char** argv){
     }
     printTripe(Program0(parseTreeRoot));
     //for(int i = 0; i < 20; i++) yylex();
+    fclose(stdout);
     return 0;
-
 }

@@ -14,7 +14,9 @@ typedef unsigned int tmpId;
 typedef unsigned int labelId;
 tmpId tmpSum = 0;
 labelId labelSum = 0;
-
+map_int_t paraTable;
+int findWrong = 0;
+//typedef map_t(int) map_int_t;
 tripleNode getTriple(enum Ttype_ type, Operand dest, Operand src1, Operand src2){
     TripleExp tri = malloc(sizeof(TripleExp_));
     tri->type = type;
@@ -194,9 +196,11 @@ size_t getTypeSize(Type type){
 
 gen_Program(0) { 
     createList(&funcBlock);
+    map_init(&paraTable);
 	 switch(rt->no) {
 		case 1: call_Program(1); break; 
 	}
+    if (findWrong) return NULL;
     return funcBlock;
 }
 
@@ -240,7 +244,8 @@ gen_ExtDef(2) {
 void generateFuncHead(char* funcName){
     funcItem func = *map_get(&funcTable, funcName);
     addTriple(t_func, getOperand(o_func, o_normal, func), NULL, NULL);
-    for(FieldList p = func->para; p; p = p->tail){;
+    for(FieldList p = func->para; p; p = p->tail){
+        map_set(&paraTable, p->name, 1);
         addTriple(t_param, getOperand(o_var, o_normal, *map_get(&localVarTable, p->name)), NULL, NULL);
     }
 }
@@ -687,7 +692,10 @@ gen_Exp(13) { //ID LP Args RP
         return code;
     }
     for(OperandNode p = paraList->head; p; p = p->next){
-        push_back(code, getTriple(t_arg, p->val, NULL, NULL));
+        if (p->val->u.varPoint->type != BASIC){
+            push_back(code, getTriple(t_arg, op_Address(p->val), NULL, NULL));
+        }
+        else push_back(code, getTriple(t_arg, p->val, NULL, NULL));
     }
     push_back(code, getTriple(t_call, place, getOperand(o_func, o_normal, *map_get(&funcTable, funcName)), NULL));
     return code;
@@ -861,6 +869,10 @@ Type ExpArray0(TreeNode* rt, int baseTmp, int offsetTmp, list code){
 
 Type ExpArray1(TreeNode* rt, int baseTmp, int offsetTmp, list code){
     Type cur = ExpAddress(ONE(rt), baseTmp, offsetTmp, 0, code);
+    if (cur->u.array.elem->kind != BASIC){
+        findWrong = 1;
+        printf("Cannot translate: Code contains variables of multi-dimensional array type or parameters of array type.\n");
+    }
     Operand id = new_tmp();
     list codeid = Exp0(THREE(rt), id);
     addCode(code, codeid);
@@ -893,7 +905,9 @@ Type ExpAddressID(TreeNode* rt, int baseTmp, int offsetTmp, list code){
     varItem var = *map_get(&localVarTable, name);
     assert(var->type->kind != BASIC);
     push_back(code, getTriple(t_assign, op_Tmp(offsetTmp), op_Imm(0), NULL));
-    push_back(code, getTriple(t_assign, op_Tmp(baseTmp), op_Address(op_Var(var)), NULL));
+    if (map_get(&paraTable, name) != NULL){
+        push_back(code, getTriple(t_assign, op_Tmp(baseTmp), op_Var(var), NULL));
+    }else push_back(code, getTriple(t_assign, op_Tmp(baseTmp), op_Address(op_Var(var)), NULL));
     return var->type;
 }
 

@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Wed May  4 05:55:58 2022
+# Make data base, printed on Thu May 12 12:09:18 2022
 
 # Variables
 
@@ -67,7 +67,7 @@ YFC = $(shell find ./ -name "*.y" | sed s/[^/]*\\.y/syntax.tab.c/)
 # makefile (from 'Makefile', line 15)
 LFC = $(shell find ./ -name "*.l" | sed s/[^/]*\\.l/lex.yy.c/)
 # environment
-SSH_AUTH_SOCK = /tmp/vscode-ssh-auth-0072c62517eb7aba7e933ab5e68c462eeaaee126.sock
+SSH_AUTH_SOCK = /tmp/vscode-ssh-auth-10ac83e169e7d4f1dfe137fefc52a8fc880326a8.sock
 # automatic
 %F = $(notdir $%)
 # environment
@@ -75,7 +75,7 @@ VSCODE_PIPE_LOGGING = true
 # environment
 PWD = /root/Lab/Code
 # environment
-VSCODE_IPC_HOOK_CLI = /tmp/vscode-ipc-7d8d0395-f3cf-4783-b385-1b04d980ca30.sock
+VSCODE_IPC_HOOK_CLI = /tmp/vscode-ipc-58126b2f-95f5-49f5-be92-e25f8072da03.sock
 # environment
 VSCODE_AMD_ENTRYPOINT = vs/workbench/api/node/extensionHostProcess
 # environment
@@ -113,7 +113,7 @@ YFO = $(YFC:.c=.o)
 # makefile (from 'Makefile', line 7)
 BISON = bison
 # environment
-REMOTE_CONTAINERS_IPC = /tmp/vscode-remote-containers-ipc-0072c62517eb7aba7e933ab5e68c462eeaaee126.sock
+REMOTE_CONTAINERS_IPC = /tmp/vscode-remote-containers-ipc-10ac83e169e7d4f1dfe137fefc52a8fc880326a8.sock
 # default
 MAKE_COMMAND := make
 # default
@@ -145,7 +145,7 @@ LC_ALL = C
 # default
 SUFFIXES := 
 # environment
-REMOTE_CONTAINERS_SOCKETS = ["/tmp/vscode-ssh-auth-0072c62517eb7aba7e933ab5e68c462eeaaee126.sock"]
+REMOTE_CONTAINERS_SOCKETS = ["/tmp/vscode-ssh-auth-10ac83e169e7d4f1dfe137fefc52a8fc880326a8.sock"]
 # default
 .INCLUDE_DIRS = /usr/include /usr/local/include /usr/include
 # default
@@ -163,9 +163,9 @@ VSCODE_EXTHOST_WILL_SEND_SOCKET = true
 
 # Directories
 
-# . (device 2064, inode 170253): 14 files, no impossibilities.
+# . (device 2064, inode 170253): 17 files, no impossibilities.
 
-# 14 files, no impossibilities in 1 directories.
+# 17 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -240,7 +240,7 @@ frontEnd/lexical.l:
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-05-04 05:54:25.433569285
+#  Last modified 2022-05-12 12:09:14.334466238
 #  File has been updated.
 #  Successfully updated.
 
@@ -250,7 +250,7 @@ test:
 #  File does not exist.
 #  File has not been updated.
 #  recipe to execute (from 'Makefile', line 46):
-	./parser ./test/test1.txt
+	./parser ./test/test1.txt test.ir
 
 # Not a target:
 utils/syntaxTree/tree.d:
@@ -283,7 +283,6 @@ main.d:
 #  Implicit rule search has been done.
 #  File does not exist.
 #  File has been updated.
- 
 #  Failed to be updated.
 
 parser: syntax ir/ir.o ir/irUtils.o utils/syntaxTree/tree.o utils/map/map.o utils/list/list.o frontEnd/syntax.tab.o main.o sdt/sdt.o
@@ -294,6 +293,7 @@ parser: syntax ir/ir.o ir/irUtils.o utils/syntaxTree/tree.o utils/map/map.o util
 	$(CC) -o parser $(filter-out $(LFO),$(OBJS)) -lfl -ly
 
 # Not a target:
+ 
 .DEFAULT:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
@@ -323,7 +323,7 @@ clean:
 #  Implicit rule search has not been done.
 #  File does not exist.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 48):
+#  recipe to execute (from 'Makefile', line 51):
 	rm -f parser lex.yy.c syntax.tab.c syntax.tab.h syntax.output
 	rm -f $(OBJS) $(OBJS:.o=.d)
 	rm -f $(LFC) $(YFC) $(YFC:.c=.h)
@@ -378,6 +378,13 @@ sdt/sdt.d:
 #  File has been updated.
 #  Failed to be updated.
 
+testFile:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 49):
+	./parser ./test/test1.txt test.ir
+
 # Not a target:
 frontEnd/syntax.tab.o:
 #  Implicit rule search has not been done.
@@ -392,19 +399,19 @@ tryB:
 	cd ../backup && flex -o lexTry.yy.c lexicalTry.l && bison -d -t syntax1.y && gcc syntax1.tab.c -lfl -ly -o parser && ./parser ../Code/test.txt
 
 # files hash-table stats:
-# Load=33/1024=3%, Rehash=0, Collisions=0/73=0%
+# Load=34/1024=3%, Rehash=0, Collisions=0/74=0%
 # VPATH Search Paths
 
 # No 'vpath' search paths.
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 45 / storage = 482 B / avg = 10 B
-# current buf: size = 8162 B / used = 482 B / count = 45 / avg = 10 B
+# strcache buffers: 1 (0) / strings = 49 / storage = 512 B / avg = 10 B
+# current buf: size = 8162 B / used = 512 B / count = 49 / avg = 10 B
 
-# strcache performance: lookups = 77 / hit rate = 41%
+# strcache performance: lookups = 82 / hit rate = 40%
 # hash-table stats:
-# Load=45/8192=1%, Rehash=0, Collisions=1/77=1%
-# Finished Make data base on Wed May  4 05:55:58 2022
+# Load=49/8192=1%, Rehash=0, Collisions=1/82=1%
+# Finished Make data base on Thu May 12 12:09:18 2022
 
  
