@@ -217,6 +217,21 @@ Type TYPE(TreeNode* rt, TreeNode* fa, int depth){
 
 void Program(TreeNode* rt, TreeNode* fa, int depth){
     preWORK(rt)
+    Type type = malloc(sizeof(Type_));
+    type->kind = BASIC;
+    funcItem func = new(funcItem_);
+    func->name = "read";
+    func->para = NULL;
+    func->retType = type;
+    map_set(&funcTable, "read", func);
+    func = new(funcItem_);
+    func->name = "write";
+    FieldList f = malloc(sizeof(FieldList_));
+    f->tail = NULL;
+    f->type = type;
+    func->para = f;
+    func->retType = type;
+     map_set(&funcTable, "write", func);
     ExtDefList(ONE(rt), rt, depth + 1);
 }
 
@@ -363,6 +378,7 @@ void FunDec(TreeNode* rt, TreeNode* fa, int depth, Type type, int isDef){
         return;
     }
     if (map_get(&funcTable, name) != NULL){
+        if (strcmp(name, "write") == 0 || strcmp(name, "read") == 0) return;
         funcItem func = *map_get(&funcTable, name);
         if (isDef && func->isDef){
             error(4, rt->info.lineNo);
@@ -673,9 +689,6 @@ expVal Exp(TreeNode* rt, TreeNode* fa, int depth){
         }
         MT3("Args"){//ID0 LP Args RP
             //检查函数是否存在
-            if (strcmp(name, "write") == 0 || strcmp(name , "read") == 0){
-                return NULL;
-            }
             if (isVar(res)){
                 error(11, rt->info.lineNo);
                 return NULL;

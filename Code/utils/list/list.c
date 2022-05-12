@@ -79,8 +79,7 @@ void append_list(void* a1, void* b1){
         if (a->head == NULL){
             a->head = b->head;
             a->tail = b->tail;
-        }
-        if (b->head){
+        }else if (b->head){
             a->tail->next = b->head;
             b->head->pre = a->tail;
             a->tail = b->tail;

@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Thu May 12 12:09:18 2022
+# Make data base, printed on Thu May 12 16:11:29 2022
 
 # Variables
 
@@ -67,7 +67,7 @@ YFC = $(shell find ./ -name "*.y" | sed s/[^/]*\\.y/syntax.tab.c/)
 # makefile (from 'Makefile', line 15)
 LFC = $(shell find ./ -name "*.l" | sed s/[^/]*\\.l/lex.yy.c/)
 # environment
-SSH_AUTH_SOCK = /tmp/vscode-ssh-auth-10ac83e169e7d4f1dfe137fefc52a8fc880326a8.sock
+SSH_AUTH_SOCK = /tmp/vscode-ssh-auth-a4a843e6b34fd8486f746b56ef3da13b0f1595a9.sock
 # automatic
 %F = $(notdir $%)
 # environment
@@ -75,7 +75,7 @@ VSCODE_PIPE_LOGGING = true
 # environment
 PWD = /root/Lab/Code
 # environment
-VSCODE_IPC_HOOK_CLI = /tmp/vscode-ipc-58126b2f-95f5-49f5-be92-e25f8072da03.sock
+VSCODE_IPC_HOOK_CLI = /tmp/vscode-ipc-71e81494-f7f8-4ddb-a3b5-79d21fee475f.sock
 # environment
 VSCODE_AMD_ENTRYPOINT = vs/workbench/api/node/extensionHostProcess
 # environment
@@ -83,7 +83,7 @@ HOME = /root
 # environment
 REMOTE_CONTAINERS = true
 # environment
-APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = true
+APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = 1
 # automatic
 +F = $(notdir $+)
 # environment
@@ -113,7 +113,7 @@ YFO = $(YFC:.c=.o)
 # makefile (from 'Makefile', line 7)
 BISON = bison
 # environment
-REMOTE_CONTAINERS_IPC = /tmp/vscode-remote-containers-ipc-10ac83e169e7d4f1dfe137fefc52a8fc880326a8.sock
+REMOTE_CONTAINERS_IPC = /tmp/vscode-remote-containers-ipc-a4a843e6b34fd8486f746b56ef3da13b0f1595a9.sock
 # default
 MAKE_COMMAND := make
 # default
@@ -145,7 +145,7 @@ LC_ALL = C
 # default
 SUFFIXES := 
 # environment
-REMOTE_CONTAINERS_SOCKETS = ["/tmp/vscode-ssh-auth-10ac83e169e7d4f1dfe137fefc52a8fc880326a8.sock"]
+REMOTE_CONTAINERS_SOCKETS = ["/tmp/vscode-ssh-auth-a4a843e6b34fd8486f746b56ef3da13b0f1595a9.sock"]
 # default
 .INCLUDE_DIRS = /usr/include /usr/local/include /usr/include
 # default
@@ -240,7 +240,7 @@ frontEnd/lexical.l:
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-05-12 12:09:14.334466238
+#  Last modified 2022-05-12 16:11:17.514311175
 #  File has been updated.
 #  Successfully updated.
 
@@ -250,7 +250,7 @@ test:
 #  File does not exist.
 #  File has not been updated.
 #  recipe to execute (from 'Makefile', line 46):
-	./parser ./test/test1.txt test.ir
+	./parser ../Test/tests/E2-1.cmm ./test/test.ir
 
 # Not a target:
 utils/syntaxTree/tree.d:
@@ -293,13 +293,13 @@ parser: syntax ir/ir.o ir/irUtils.o utils/syntaxTree/tree.o utils/map/map.o util
 	$(CC) -o parser $(filter-out $(LFO),$(OBJS)) -lfl -ly
 
 # Not a target:
- 
 .DEFAULT:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
 
 # Not a target:
+ 
 frontEnd/syntax.y:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
@@ -412,6 +412,6 @@ tryB:
 # strcache performance: lookups = 82 / hit rate = 40%
 # hash-table stats:
 # Load=49/8192=1%, Rehash=0, Collisions=1/82=1%
-# Finished Make data base on Thu May 12 12:09:18 2022
+# Finished Make data base on Thu May 12 16:11:29 2022
 
  

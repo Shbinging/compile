@@ -26,6 +26,8 @@ tripleNode getTriple(enum Ttype_ type, Operand dest, Operand src1, Operand src2)
     tripleNode triNode = malloc(sizeof(tripleNode_));
     triNode->val = tri;
     triNode->property = NULL;
+    triNode->next = NULL;
+    triNode->pre = NULL;
     return triNode;
 }
 
@@ -246,6 +248,10 @@ void generateFuncHead(char* funcName){
     addTriple(t_func, getOperand(o_func, o_normal, func), NULL, NULL);
     for(FieldList p = func->para; p; p = p->tail){
         map_set(&paraTable, p->name, 1);
+        if (p->type->kind == ARRAY){
+            if (!findWrong) printf("Cannot translate: Code contains variables of multi-dimensional array type or parameters of array type.\n");
+            findWrong = 1;
+        }
         addTriple(t_param, getOperand(o_var, o_normal, *map_get(&localVarTable, p->name)), NULL, NULL);
     }
 }
@@ -445,7 +451,8 @@ gen_Stmt(0) {
 }
 
 gen_Stmt(1) { 
-    return Exp0(ONE(rt), getOperand(o_tmpVar, o_normal, -1));
+    Operand t1 = new_tmp();
+    return Exp0(ONE(rt), t1);
 }
 
 gen_Stmt(2) { 
@@ -692,10 +699,12 @@ gen_Exp(13) { //ID LP Args RP
         return code;
     }
     for(OperandNode p = paraList->head; p; p = p->next){
-        if (p->val->u.varPoint->type != BASIC){
+        if (p->val->type == o_var && map_get(&paraTable, p->val->u.varPoint->name) == NULL && p->val->u.varPoint->type->kind != BASIC){
             push_back(code, getTriple(t_arg, op_Address(p->val), NULL, NULL));
         }
-        else push_back(code, getTriple(t_arg, p->val, NULL, NULL));
+        else{
+            push_back(code, getTriple(t_arg, p->val, NULL, NULL));
+        }
     }
     push_back(code, getTriple(t_call, place, getOperand(o_func, o_normal, *map_get(&funcTable, funcName)), NULL));
     return code;
@@ -830,6 +839,7 @@ gen_localVal{
     listHead* code;
     char* name;
     Operand address = new_tmp();
+    Type type;
     switch(rt->no){
         case 17:
             name = ID0(ONE(rt), NULL, 0);
@@ -840,8 +850,9 @@ gen_localVal{
             break;
         case 15:
         case 16:
-            code = genExpAddress(rt, place->u.tmpId);
-            place->property = o_point;
+            code = genExpAddress(rt, place->u.tmpId, &type);
+            if (type->kind != BASIC) place->property = o_normal;
+            else place->property = o_point;
             break;
     }
     return code;
@@ -869,9 +880,9 @@ Type ExpArray0(TreeNode* rt, int baseTmp, int offsetTmp, list code){
 
 Type ExpArray1(TreeNode* rt, int baseTmp, int offsetTmp, list code){
     Type cur = ExpAddress(ONE(rt), baseTmp, offsetTmp, 0, code);
-    if (cur->u.array.elem->kind != BASIC){
+    if (cur->u.array.elem->kind == ARRAY){
+        if (!findWrong) printf("Cannot translate: Code contains variables of multi-dimensional array type or parameters of array type.\n");
         findWrong = 1;
-        printf("Cannot translate: Code contains variables of multi-dimensional array type or parameters of array type.\n");
     }
     Operand id = new_tmp();
     list codeid = Exp0(THREE(rt), id);
@@ -911,11 +922,11 @@ Type ExpAddressID(TreeNode* rt, int baseTmp, int offsetTmp, list code){
     return var->type;
 }
 
-list genExpAddress(TreeNode* rt, int valTmp){
+list genExpAddress(TreeNode* rt, int valTmp, Type* type){
     int baseTmp = newTmp(), offsetTmp = newTmp();
     list code;
     createList(&code);
-    ExpAddress(rt, baseTmp, offsetTmp, 1, code);
+    *type = ExpAddress(rt, baseTmp, offsetTmp, 1, code);
     push_back(code, getTriple(t_add, op_Tmp(valTmp), op_Tmp(baseTmp), op_Tmp(offsetTmp)));
     return code;
 }
