@@ -147,5 +147,5 @@ static Type ExpArray1(TreeNode* rt, int baseTmp, int offsetTmp, list code);
 static Type ExpStruct(TreeNode* rt, int baseTmp, int offsetTmp, list code);
 static Type ExpAddressID(TreeNode* rt, int baseTmp, int offsetTmp, list code);
 static list genExpAddress(TreeNode* rt, int valTmp, Type* type);
-
+Operand op_Imm(int val);
 #endif

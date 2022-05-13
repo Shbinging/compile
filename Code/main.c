@@ -4,7 +4,7 @@
 #include "utils/list/list.h"
 #include <stdio.h>
 #include "ir/ir.h"
-
+#include "ir/irOptimization.h"
 int parseOK;
 TreeNode* parseTreeRoot;
 int main(int argc, char** argv){
@@ -23,7 +23,11 @@ int main(int argc, char** argv){
         //printTree(parseTreeRoot, 0);
         sdtTree(parseTreeRoot, 0);
     }
-    printTripe(Program0(parseTreeRoot));
+    list irOri = Program0(parseTreeRoot);
+
+    constLiminate(irOri);
+    //deadVarLiminate(irOri);    
+    printTripe(irOri);
     //for(int i = 0; i < 20; i++) yylex();
     fclose(stdout);
     return 0;

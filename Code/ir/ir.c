@@ -249,7 +249,7 @@ void generateFuncHead(char* funcName){
     for(FieldList p = func->para; p; p = p->tail){
         map_set(&paraTable, p->name, 1);
         if (p->type->kind == ARRAY){
-            if (!findWrong) printf("Cannot translate: Code contains variables of multi-dimensional array type or parameters of array type.\n");
+            if (!findWrong) fprintf(stderr, "Cannot translate: Code contains variables of multi-dimensional array type or parameters of array type.\n");
             findWrong = 1;
         }
         addTriple(t_param, getOperand(o_var, o_normal, *map_get(&localVarTable, p->name)), NULL, NULL);
@@ -607,13 +607,13 @@ gen_Exp(0) {
 }
 
 gen_Exp(1) { //ASSIGNOP
-    Operand leftPlace = new_tmp();
+    //Operand leftPlace = new_tmp();
     Operand rightPlace = new_tmp();
-    listHead* left = localVal(ONE(rt), leftPlace);
+    listHead* left = localVal(ONE(rt), place);
     listHead* right = Exp0(THREE(rt), rightPlace);
     addCode(left, right);
-    addAssignR(left, leftPlace, rightPlace);
-    addAssignR(left, place, leftPlace);
+    addAssignR(left, place, rightPlace);
+    //addAssignR(left, place, leftPlace);
     return left;
 }
 
@@ -881,7 +881,7 @@ Type ExpArray0(TreeNode* rt, int baseTmp, int offsetTmp, list code){
 Type ExpArray1(TreeNode* rt, int baseTmp, int offsetTmp, list code){
     Type cur = ExpAddress(ONE(rt), baseTmp, offsetTmp, 0, code);
     if (cur->u.array.elem->kind == ARRAY){
-        if (!findWrong) printf("Cannot translate: Code contains variables of multi-dimensional array type or parameters of array type.\n");
+        if (!findWrong) fprintf(stderr, "Cannot translate: Code contains variables of multi-dimensional array type or parameters of array type.\n");
         findWrong = 1;
     }
     Operand id = new_tmp();

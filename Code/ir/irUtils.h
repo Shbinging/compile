@@ -46,4 +46,5 @@ extern labelId labelSum;
 char* sprintOperand(Operand op);
 void printTripe(listHead* funcBlock);
 void printCode(listHead*);
+void debugCode(TripleExp tri);
 #endif

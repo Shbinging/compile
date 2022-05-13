@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Thu May 12 16:11:29 2022
+# Make data base, printed on Thu May 12 16:32:12 2022
 
 # Variables
 
@@ -240,7 +240,7 @@ frontEnd/lexical.l:
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-05-12 16:11:17.514311175
+#  Last modified 2022-05-12 16:30:17.004299009
 #  File has been updated.
 #  Successfully updated.
 
@@ -250,7 +250,7 @@ test:
 #  File does not exist.
 #  File has not been updated.
 #  recipe to execute (from 'Makefile', line 46):
-	./parser ../Test/tests/E2-1.cmm ./test/test.ir
+	./parser ./test/test1.txt ./test/test.ir
 
 # Not a target:
 utils/syntaxTree/tree.d:
@@ -285,6 +285,7 @@ main.d:
 #  File has been updated.
 #  Failed to be updated.
 
+ 
 parser: syntax ir/ir.o ir/irUtils.o utils/syntaxTree/tree.o utils/map/map.o utils/list/list.o frontEnd/syntax.tab.o main.o sdt/sdt.o
 #  Implicit rule search has not been done.
 #  Modification time never checked.
@@ -299,7 +300,6 @@ parser: syntax ir/ir.o ir/irUtils.o utils/syntaxTree/tree.o utils/map/map.o util
 #  File has not been updated.
 
 # Not a target:
- 
 frontEnd/syntax.y:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
@@ -412,6 +412,6 @@ tryB:
 # strcache performance: lookups = 82 / hit rate = 40%
 # hash-table stats:
 # Load=49/8192=1%, Rehash=0, Collisions=1/82=1%
-# Finished Make data base on Thu May 12 16:11:29 2022
+# Finished Make data base on Thu May 12 16:32:12 2022
 
  
