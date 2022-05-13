@@ -677,11 +677,11 @@ gen_Exp(10) { //MINUS
     return code;
 }
 
-gen_Exp(11) { //NOT
+gen_Exp(12) { //NOT
     call_Exp(2);
 }
 
-gen_Exp(12){ //PLUS
+gen_Exp(11){ //PLUS
     Operand t1 = new_tmp();
     listHead* code = Exp0(TWO(rt), t1);
     push_back(code, getTriple(t_add, place, op_Imm(0), t1));
@@ -770,17 +770,17 @@ gen_Args(2) {
 gen_ExpCond(0){
     switch(rt->no){
         case 4:
-            call_ExpCond(1);
+            call_ExpCond(1);//RELOP
             break;
-        case 11:
-            call_ExpCond(2);
+        case 12:
+            call_ExpCond(2);//NOT
             break;
         case 2:
-            call_ExpCond(3);
+            call_ExpCond(3);//AND
         case 3:
-            call_ExpCond(4);
+            call_ExpCond(4);//OR
         default:
-            call_ExpCond(5);
+            call_ExpCond(5);//other
     }
 }
 
@@ -806,7 +806,7 @@ gen_ExpCond(1){
 }
 
 gen_ExpCond(2){
-    return ExpCond0(TWO(rt), labelTrue, labelFalse);
+    return ExpCond0(TWO(rt), labelFalse, labelTrue);
 }
 
 gen_ExpCond(3){

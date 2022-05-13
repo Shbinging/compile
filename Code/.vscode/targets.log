@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Fri May 13 11:10:50 2022
+# Make data base, printed on Fri May 13 11:58:52 2022
 
 # Variables
 
@@ -247,7 +247,7 @@ ir/irOptimization.d:
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-05-13 11:07:14.893583466
+#  Last modified 2022-05-13 11:49:49.963556186
 #  File has been updated.
 #  Successfully updated.
 
@@ -281,7 +281,6 @@ frontEnd/lex.yy.d:
 
 # Not a target:
 ir/ir.o:
- 
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
@@ -310,6 +309,7 @@ parser: syntax ir/ir.o ir/irOptimization.o ir/irUtils.o utils/syntaxTree/tree.o 
 .DEFAULT:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
+ 
 #  File has not been updated.
 
 # Not a target:
@@ -425,6 +425,6 @@ tryB:
 # strcache performance: lookups = 85 / hit rate = 40%
 # hash-table stats:
 # Load=51/8192=1%, Rehash=0, Collisions=1/85=1%
-# Finished Make data base on Fri May 13 11:10:50 2022
+# Finished Make data base on Fri May 13 11:58:52 2022
 
  

@@ -1,6 +1,5 @@
 make parser --dry-run --keep-going --print-directory
 make: Entering directory '/root/Lab/Code'
- 
 flex -o ./frontEnd/lex.yy.c ./frontEnd/lexical.l
  
 bison -o ./frontEnd/syntax.tab.c -d -v -t ./frontEnd/syntax.y
