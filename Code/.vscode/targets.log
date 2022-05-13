@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Thu May 12 16:32:12 2022
+# Make data base, printed on Fri May 13 11:10:50 2022
 
 # Variables
 
@@ -238,9 +238,16 @@ frontEnd/lexical.l:
 #  File has not been updated.
 
 # Not a target:
+ir/irOptimization.d:
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
+
+# Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-05-12 16:30:17.004299009
+#  Last modified 2022-05-13 11:07:14.893583466
 #  File has been updated.
 #  Successfully updated.
 
@@ -274,6 +281,13 @@ frontEnd/lex.yy.d:
 
 # Not a target:
 ir/ir.o:
+ 
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+ir/irOptimization.o:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
@@ -285,8 +299,7 @@ main.d:
 #  File has been updated.
 #  Failed to be updated.
 
- 
-parser: syntax ir/ir.o ir/irUtils.o utils/syntaxTree/tree.o utils/map/map.o utils/list/list.o frontEnd/syntax.tab.o main.o sdt/sdt.o
+parser: syntax ir/ir.o ir/irOptimization.o ir/irUtils.o utils/syntaxTree/tree.o utils/map/map.o utils/list/list.o frontEnd/syntax.tab.o main.o sdt/sdt.o
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
@@ -399,19 +412,19 @@ tryB:
 	cd ../backup && flex -o lexTry.yy.c lexicalTry.l && bison -d -t syntax1.y && gcc syntax1.tab.c -lfl -ly -o parser && ./parser ../Code/test.txt
 
 # files hash-table stats:
-# Load=34/1024=3%, Rehash=0, Collisions=0/74=0%
+# Load=36/1024=4%, Rehash=0, Collisions=0/78=0%
 # VPATH Search Paths
 
 # No 'vpath' search paths.
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 49 / storage = 512 B / avg = 10 B
-# current buf: size = 8162 B / used = 512 B / count = 49 / avg = 10 B
+# strcache buffers: 1 (0) / strings = 51 / storage = 552 B / avg = 10 B
+# current buf: size = 8162 B / used = 552 B / count = 51 / avg = 10 B
 
-# strcache performance: lookups = 82 / hit rate = 40%
+# strcache performance: lookups = 85 / hit rate = 40%
 # hash-table stats:
-# Load=49/8192=1%, Rehash=0, Collisions=1/82=1%
-# Finished Make data base on Thu May 12 16:32:12 2022
+# Load=51/8192=1%, Rehash=0, Collisions=1/85=1%
+# Finished Make data base on Fri May 13 11:10:50 2022
 
  

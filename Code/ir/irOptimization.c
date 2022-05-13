@@ -71,7 +71,7 @@ void constLiminate(list funcBlock){
         }
     }
     //printTripe(funcBlock);
-    return;
+    //return;
     while(1){
         int isModify = 0;
         //printf("NEW ROUND!\n");
@@ -83,14 +83,14 @@ void constLiminate(list funcBlock){
                     int needDel = 0;
                     for(tripleNode m = q->next; m; m = m ->next){
                         TripleExp tri1 = m->val;
-                        //  if (tri1->type == t_arg || tri1->type == t_return || tri1->type == t_write){
-                        //      if (equalOperand(tri->dest, tri1->dest)){
-                        //          needDel = 1;
-                        //          isModify = 1;
-                        //          tri1->dest = op_Imm(tri->src1->u.constInt);
-                        //     }
-                        //     if (tri1->type != t_arg) break;
-                         //}else{
+                         if (tri1->type == t_arg || tri1->type == t_return || tri1->type == t_write){
+                             if (equalOperand(tri->dest, tri1->dest)){
+                                 needDel = 1;
+                                 isModify = 1;
+                                 tri1->dest = op_Imm(tri->src1->u.constInt);
+                            }
+                            if (tri1->type != t_arg) break;
+                         }else{
                             if (equalOperand(tri->dest, tri1->src1)){
                                 needDel = 1;
                                 isModify = 1;
@@ -105,7 +105,7 @@ void constLiminate(list funcBlock){
                                 break;
                             }
                             if (isBreakPoint(tri1)) break;
-                       // }
+                         }
                     }
                     if (needDel && tri->dest->type == o_tmpVar){
                         q->property = 0;

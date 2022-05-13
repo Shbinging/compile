@@ -43,7 +43,7 @@ testB:
 .PHONY: clean test testB
 
 test:
-	./parser ./test/test1.txt ./test/test.ir
+	./parser ../Test/tests/E2-3.cmm ./test/test.ir
 
 testFile:
 	./parser ./test/test1.txt test.ir
