@@ -1,192 +1,138 @@
-FUNCTION fact :
-PARAM i1
-IF i1 <= #0 GOTO label1
-GOTO label2
+FUNCTION cal_bmi :
+PARAM g
+tmp5 := #0
+tmp4 := g
+tmp5 := tmp5 + #16
+tmp4 := tmp4 + tmp5
+tmp5 := #0
+tmp1 := tmp4 + tmp5
+tmp10 := #0
+tmp9 := g
+tmp10 := tmp10 + #12
+tmp9 := tmp9 + tmp10
+tmp10 := #0
+tmp6 := tmp9 + tmp10
+tmp15 := #0
+tmp14 := g
+tmp15 := tmp15 + #8
+tmp14 := tmp14 + tmp15
+tmp15 := #0
+tmp11 := tmp14 + tmp15
+tmp18 := #0
+tmp17 := g
+tmp18 := tmp18 + #8
+tmp17 := tmp17 + tmp18
+tmp18 := #0
+tmp12 := tmp17 + tmp18
+tmp7 := *tmp11 * *tmp12
+tmp2 := *tmp6 / tmp7
+*tmp1 := tmp2
+tmp19 := #0
+RETURN tmp19
+FUNCTION main :
+tmp20 := #0
+i := tmp20
+tmp21 := #10
+n := tmp21
+DEC giants 200
 LABEL label1 :
-tmp4 := #1
-RETURN tmp4
+IF i < n GOTO label2
 GOTO label3
 LABEL label2 :
-tmp9 := i1 - #1
-ARG tmp9
-tmp7 := CALL fact
-tmp5 := i1 * tmp7
-RETURN tmp5
+tmp30 := #0
+tmp29 := &giants
+tmp30 := tmp30 * #10
+tmp30 := tmp30 + i
+tmp30 := tmp30 * #20
+tmp30 := tmp30 + #0
+tmp29 := tmp29 + tmp30
+tmp30 := #0
+tmp26 := tmp29 + tmp30
+*tmp26 := i
+tmp38 := #0
+tmp37 := &giants
+tmp38 := tmp38 * #10
+tmp38 := tmp38 + i
+tmp38 := tmp38 * #20
+tmp38 := tmp38 + #4
+tmp37 := tmp37 + tmp38
+tmp38 := #0
+tmp34 := tmp37 + tmp38
+tmp41 := #20
+tmp35 := tmp41 + i
+*tmp34 := tmp35
+tmp48 := #0
+tmp47 := &giants
+tmp48 := tmp48 * #10
+tmp48 := tmp48 + i
+tmp48 := tmp48 * #20
+tmp48 := tmp48 + #8
+tmp47 := tmp47 + tmp48
+tmp48 := #0
+tmp44 := tmp47 + tmp48
+tmp51 := #2
+tmp45 := tmp51 + i
+*tmp44 := tmp45
+tmp58 := #0
+tmp57 := &giants
+tmp58 := tmp58 * #10
+tmp58 := tmp58 + i
+tmp58 := tmp58 * #20
+tmp58 := tmp58 + #12
+tmp57 := tmp57 + tmp58
+tmp58 := #0
+tmp54 := tmp57 + tmp58
+tmp61 := #90
+tmp65 := i * i
+tmp63 := tmp65 * i
+tmp62 := tmp63 * i
+tmp55 := tmp61 + tmp62
+*tmp54 := tmp55
+tmp77 := #1
+tmp74 := i + tmp77
+i := tmp74
+GOTO label1
 LABEL label3 :
-FUNCTION isqrt :
-PARAM i2
-c1 := #0
+tmp80 := #0
+i := tmp80
 LABEL label4 :
-IF #0 < i2 GOTO label5
+IF i < n GOTO label5
 GOTO label6
 LABEL label5 :
-tmp18 := c1 * c1
-IF tmp18 <= i2 GOTO label9
-GOTO label8
-LABEL label9 :
-tmp27 := c1 + #1
-tmp28 := c1 + #1
-tmp25 := tmp27 * tmp28
-IF tmp25 > i2 GOTO label7
-GOTO label8
-LABEL label7 :
-RETURN c1
-LABEL label8 :
-tmp39 := c1 + #1
-c1 := tmp39
+tmp90 := #0
+tmp89 := &giants
+tmp90 := tmp90 * #10
+tmp90 := tmp90 + i
+tmp90 := tmp90 * #20
+tmp87 := tmp89 + tmp90
+ARG tmp87
+tmp86 := CALL cal_bmi
+tmp97 := #1
+tmp94 := i + tmp97
+i := tmp94
 GOTO label4
 LABEL label6 :
-tmp44 := #-1
-RETURN tmp44
-FUNCTION mod :
-PARAM i3
-PARAM i4
-tmp50 := i3 / i4
-tmp48 := tmp50 * i4
-tmp46 := i3 - tmp48
-RETURN tmp46
-FUNCTION main :
-a := #1331
-b := #1217
-c := #-22121
-d := #5
-i := #7
-j := #16
-k := #0
-l := #0
-m := #0
-DEC arr 4000
-LABEL label10 :
-ARG b
-tmp101 := CALL isqrt
-ARG tmp101
-tmp100 := CALL isqrt
-ARG tmp100
-tmp98 := CALL fact
-IF k < tmp98 GOTO label11
-GOTO label12
-LABEL label11 :
-tmp107 := &arr
-tmp108 := #0 + k
-tmp108 := tmp108 * #4
-tmp104 := tmp107 + tmp108
-tmp114 := #4
-ARG tmp114
-ARG k
-tmp111 := CALL mod
-ARG tmp111
-tmp105 := CALL fact
-*tmp104 := tmp105
-tmp121 := k / #4
-tmp119 := tmp121 * #4
-tmp116 := k + tmp119
-a := tmp116
-tmp132 := k / #4
-tmp130 := tmp132 * #4
-tmp127 := a + tmp130
-a := tmp127
-tmp143 := k / #4
-tmp141 := tmp143 * #4
-tmp138 := a + tmp141
-a := tmp138
-tmp154 := k / #4
-tmp152 := tmp154 * #4
-tmp149 := a + tmp152
-a := tmp149
-LABEL label13 :
-tmp162 := d * d
-tmp160 := tmp162 * d
-IF c < tmp160 GOTO label14
-GOTO label15
-LABEL label14 :
-tmp184 := #10
-ARG tmp184
-ARG a
-tmp180 := CALL mod
-tmp178 := tmp180 + #10
-tmp176 := tmp178 + c
-tmp174 := tmp176 + #1
-tmp172 := tmp174 + i
-tmp170 := tmp172 - j
-c := tmp170
-GOTO label13
-LABEL label15 :
-ARG c
-tmp195 := CALL isqrt
-tmp198 := #10
-ARG tmp198
-ARG tmp195
-tmp194 := CALL mod
-ARG tmp194
-tmp192 := CALL fact
-tmp189 := c + tmp192
-c := tmp189
-tmp200 := k + #1
-k := tmp200
-GOTO label10
-LABEL label12 :
-k := #0
-LABEL label16 :
-IF #0 < #10 GOTO label17
-GOTO label18
-LABEL label17 :
-l := #0
-LABEL label19 :
-IF #0 < #10 GOTO label20
-GOTO label21
-LABEL label20 :
-IF k == #0 GOTO label25
-GOTO label23
-LABEL label25 :
-IF l == #0 GOTO label22
-GOTO label23
-LABEL label22 :
-m := #1
-GOTO label24
-LABEL label23 :
-m := #0
-LABEL label24 :
-LABEL label26 :
-IF #0 < #10 GOTO label27
-GOTO label28
-LABEL label27 :
-tmp241 := &arr
-tmp248 := k * #10
-tmp246 := tmp248 * #10
-tmp247 := l * #10
-tmp244 := tmp246 + tmp247
-tmp243 := tmp244 + m
-tmp242 := #0 + tmp243
-tmp242 := tmp242 * #4
-tmp238 := tmp241 + tmp242
-tmp235 := d + *tmp238
-tmp258 := &arr
-tmp267 := k * #10
-tmp265 := tmp267 * #10
-tmp266 := l * #10
-tmp263 := tmp265 + tmp266
-tmp261 := tmp263 + m
-tmp260 := tmp261 - #1
-tmp259 := #0 + tmp260
-tmp259 := tmp259 * #4
-tmp236 := tmp258 + tmp259
-tmp233 := tmp235 - *tmp236
-d := tmp233
-tmp277 := m + #1
-m := tmp277
-GOTO label26
-LABEL label28 :
-tmp283 := l + #1
-l := tmp283
-GOTO label19
-LABEL label21 :
-tmp289 := k + #1
-k := tmp289
-GOTO label16
-LABEL label18 :
-tmp295 := d + c
-k := tmp295
-WRITE k
-tmp301 := #0
-tmp304 := #0
-RETURN tmp304
+tmp100 := #0
+i := tmp100
+LABEL label7 :
+IF i < n GOTO label8
+GOTO label9
+LABEL label8 :
+tmp110 := #0
+tmp109 := &giants
+tmp110 := tmp110 * #10
+tmp110 := tmp110 + i
+tmp110 := tmp110 * #20
+tmp110 := tmp110 + #16
+tmp109 := tmp109 + tmp110
+tmp110 := #0
+tmp107 := tmp109 + tmp110
+WRITE *tmp107
+tmp106 := #0
+tmp117 := #1
+tmp114 := i + tmp117
+i := tmp114
+GOTO label7
+LABEL label9 :
+tmp119 := #0
+RETURN tmp119

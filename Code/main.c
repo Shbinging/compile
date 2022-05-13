@@ -22,7 +22,7 @@ int main(int argc, char** argv){
     if (parseOK){
         //printTree(parseTreeRoot, 0);
         sdtTree(parseTreeRoot, 0);
-    }
+    }else return 0;
     list irOri = Program0(parseTreeRoot);
 
     constLiminate(irOri);

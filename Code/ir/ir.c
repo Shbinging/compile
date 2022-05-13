@@ -607,7 +607,7 @@ gen_Exp(0) {
 }
 
 gen_Exp(1) { //ASSIGNOP
-    //Operand leftPlace = new_tmp();
+   //Operand leftPlace = new_tmp();
     Operand rightPlace = new_tmp();
     listHead* left = localVal(ONE(rt), place);
     listHead* right = Exp0(THREE(rt), rightPlace);
@@ -717,7 +717,7 @@ gen_Exp(14) { //ID LP RP
     if (strcmp(funcName, "read") == 0){
         push_back(code, getTriple(t_read, place, NULL, NULL));
     }else{
-        push_back(code, getTriple(t_call, *map_get(&funcTable, funcName), NULL, NULL));
+        push_back(code, getTriple(t_call, place, getOperand(o_func, o_normal, *map_get(&funcTable, funcName)), NULL));
     }
     return code;
 }

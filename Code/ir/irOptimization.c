@@ -13,6 +13,7 @@ int isBreakPoint(TripleExp m){
     case t_leq:
     case t_neq:
     case t_return:
+    case t_label:
         return 1;
     default:
         return 0;
@@ -27,8 +28,8 @@ int equalOperand(Operand a, Operand b){
         //XXX::只考虑tmpVar
         case o_tmpVar:
             return a->u.tmpId == b->u.tmpId;
-        case o_var:
-           return a->u.varPoint == b->u.varPoint;
+        // case o_var:
+        //    return a->u.varPoint == b->u.varPoint;
         default:
             return 0;
     }
@@ -70,7 +71,7 @@ void constLiminate(list funcBlock){
         }
     }
     //printTripe(funcBlock);
-    //return;
+    return;
     while(1){
         int isModify = 0;
         //printf("NEW ROUND!\n");
@@ -82,50 +83,40 @@ void constLiminate(list funcBlock){
                     int needDel = 0;
                     for(tripleNode m = q->next; m; m = m ->next){
                         TripleExp tri1 = m->val;
-                        if (equalOperand(tri->dest, tri1->src1)){
-                            // printf("from:\n");
-                            // debugCode(tri1);
-                            //printf("\n");
-                            needDel = 1;
-                            isModify = 1;
-                            tri1->src1 = op_Imm(tri->src1->u.constInt);
-                            // printf("to:\n");
-                            // debugCode(tri1);
-                            //printf("\n");
-                        }
-                        if (equalOperand(tri->dest, tri1->src2)){
-                            // printf("from:\n");
-                            // debugCode(tri1);
-                            //printf("\n");
-                            needDel = 1;
-                            isModify = 1;
-                            tri1->src2 = op_Imm(tri->src1->u.constInt);
-                            // printf("to:\n");
-                            // debugCode(tri1);
-                            //printf("\n");
-                        }
-                        if (equalOperand(tri->dest, tri1->dest)){
-                            break;
-                        }
-                        if (isBreakPoint(tri1)) break;
+                        //  if (tri1->type == t_arg || tri1->type == t_return || tri1->type == t_write){
+                        //      if (equalOperand(tri->dest, tri1->dest)){
+                        //          needDel = 1;
+                        //          isModify = 1;
+                        //          tri1->dest = op_Imm(tri->src1->u.constInt);
+                        //     }
+                        //     if (tri1->type != t_arg) break;
+                         //}else{
+                            if (equalOperand(tri->dest, tri1->src1)){
+                                needDel = 1;
+                                isModify = 1;
+                                tri1->src1 = op_Imm(tri->src1->u.constInt);
+                            }
+                            if (equalOperand(tri->dest, tri1->src2)){
+                                needDel = 1;
+                                isModify = 1;
+                                tri1->src2 = op_Imm(tri->src1->u.constInt);
+                            }
+                            if (equalOperand(tri->dest, tri1->dest)){
+                                break;
+                            }
+                            if (isBreakPoint(tri1)) break;
+                       // }
                     }
                     if (needDel && tri->dest->type == o_tmpVar){
                         q->property = 0;
                     }
-                    if (isModify) break;
                 }
-                if (isCalc(tri) && tri->src1->type == o_const && tri->src2->type == o_const){
+                if (isCalc(tri) && tri->dest->type == o_tmpVar && tri->src1->type == o_const && tri->src2->type == o_const){
                     isModify = 1;
-                    // printf("from:\n");
-                    // debugCode(tri);
                     int ans = opCalc(tri);
                     tri->src2 = NULL;
                     tri->src1 = op_Imm(ans);
-                    //tri->src1->u.constInt = ans;
                     tri->type = t_assign;
-                    // printf("to:\n");
-                    // debugCode(tri);
-                    break;
                 }
             }
         }
