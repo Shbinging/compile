@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Sat Apr  9 07:00:07 2022
+# Make data base, printed on Mon May 30 08:47:24 2022
 
 # Variables
 
@@ -33,7 +33,7 @@ CURDIR := /root/Lab
 # makefile
 SHELL = /bin/sh
 # environment
-VSCODE_NLS_CONFIG = {"locale":"zh-cn","availableLanguages":{"*":"zh-cn"},"_languagePackId":"2d459c3c1e4312b6770e21efe80cc342.zh-cn","_translationsConfigFile":"/root/.vscode-server/data/clp/2d459c3c1e4312b6770e21efe80cc342.zh-cn/tcf.json","_cacheRoot":"/root/.vscode-server/data/clp/2d459c3c1e4312b6770e21efe80cc342.zh-cn","_resolvedLanguagePackCoreLocation":"/root/.vscode-server/data/clp/2d459c3c1e4312b6770e21efe80cc342.zh-cn/e18005f0f1b33c29e81d732535d8c0e47cafb0b5","_corruptedFile":"/root/.vscode-server/data/clp/2d459c3c1e4312b6770e21efe80cc342.zh-cn/corrupted.info","_languagePackSupport":true}
+VSCODE_NLS_CONFIG = {"locale":"zh-cn","availableLanguages":{"*":"zh-cn"},"_languagePackId":"42e84e0914b17800d483f69e299e1b00.zh-cn","_translationsConfigFile":"/root/.vscode-server/data/clp/42e84e0914b17800d483f69e299e1b00.zh-cn/tcf.json","_cacheRoot":"/root/.vscode-server/data/clp/42e84e0914b17800d483f69e299e1b00.zh-cn","_resolvedLanguagePackCoreLocation":"/root/.vscode-server/data/clp/42e84e0914b17800d483f69e299e1b00.zh-cn/e18005f0f1b33c29e81d732535d8c0e47cafb0b5","_corruptedFile":"/root/.vscode-server/data/clp/42e84e0914b17800d483f69e299e1b00.zh-cn/corrupted.info","_languagePackSupport":true}
 # environment
 _ = /bin/cat
 # makefile
@@ -53,7 +53,7 @@ VSCODE_LOG_STACK = false
 # default
 .FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell archives jobserver output-sync check-symlink load
 # environment
-SSH_AUTH_SOCK = /tmp/vscode-ssh-auth-b50dd14f65ce8ee2962818571f52986d9d50ae15.sock
+SSH_AUTH_SOCK = /tmp/vscode-ssh-auth-8e930b7509b47767dfe0c8e863ed9ed924152f3b.sock
 # automatic
 %F = $(notdir $%)
 # environment
@@ -61,7 +61,7 @@ VSCODE_PIPE_LOGGING = true
 # environment
 PWD = /root/Lab
 # environment
-VSCODE_IPC_HOOK_CLI = /tmp/vscode-ipc-44d1f8c2-5def-4d64-9d34-3f4527a2a33e.sock
+VSCODE_IPC_HOOK_CLI = /tmp/vscode-ipc-2e59d9c2-d556-4052-b121-e6bbf18978fc.sock
 # environment
 VSCODE_AMD_ENTRYPOINT = vs/workbench/api/node/extensionHostProcess
 # environment
@@ -93,7 +93,7 @@ MAKE_VERSION := 4.1
 # automatic
 %D = $(patsubst %/,%,$(dir $%))
 # environment
-REMOTE_CONTAINERS_IPC = /tmp/vscode-remote-containers-ipc-b50dd14f65ce8ee2962818571f52986d9d50ae15.sock
+REMOTE_CONTAINERS_IPC = /tmp/vscode-remote-containers-ipc-8e930b7509b47767dfe0c8e863ed9ed924152f3b.sock
 # default
 MAKE_COMMAND := make
 # default
@@ -121,7 +121,7 @@ LC_ALL = C
 # default
 SUFFIXES := 
 # environment
-REMOTE_CONTAINERS_SOCKETS = ["/tmp/vscode-ssh-auth-b50dd14f65ce8ee2962818571f52986d9d50ae15.sock"]
+REMOTE_CONTAINERS_SOCKETS = ["/tmp/vscode-ssh-auth-8e930b7509b47767dfe0c8e863ed9ed924152f3b.sock"]
 # default
 .INCLUDE_DIRS = /usr/include /usr/local/include /usr/include
 # default
@@ -197,6 +197,6 @@ GNUmakefile:
 # strcache performance: lookups = 21 / hit rate = 14%
 # hash-table stats:
 # Load=18/8192=0%, Rehash=0, Collisions=1/21=5%
-# Finished Make data base on Sat Apr  9 07:00:07 2022
+# Finished Make data base on Mon May 30 08:47:24 2022
 
  

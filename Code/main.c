@@ -25,8 +25,9 @@ int main(int argc, char** argv){
     }else return 0;
     list irOri = Program0(parseTreeRoot);
 
-    constLiminate(irOri);
-    //deadVarLiminate(irOri);    
+    getOptIr(irOri);
+    //deadVarLiminate(irOri); 
+       
     printTripe(irOri);
     //for(int i = 0; i < 20; i++) yylex();
     fclose(stdout);

@@ -135,6 +135,19 @@ int isOpUse(list funcBlock, Operand op){
     }
     return 0;
 }
+
+void getOptIr(list funcBlock){
+    if (funcBlock == NULL) return;
+    constLiminate(funcBlock);
+    for(funcNode p = (funcNode)funcBlock->head; p; p = p->next){
+        for(tripleNode q = (tripleNode) p->val->head; q; q = q->next){
+            if(!q->property){
+                del(p->val, q);
+            }
+        }
+    }
+}
+
 void deadVarLiminate(list funcBlock){
     while(1){
         int isModify = 0;

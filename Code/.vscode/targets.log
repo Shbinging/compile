@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Fri May 13 11:58:52 2022
+# Make data base, printed on Mon May 30 09:00:44 2022
 
 # Variables
 
@@ -35,7 +35,7 @@ CURDIR := /root/Lab/Code
 # makefile
 SHELL = /bin/sh
 # environment
-VSCODE_NLS_CONFIG = {"locale":"zh-cn","availableLanguages":{"*":"zh-cn"},"_languagePackId":"1a7316c624e1dd66d26cf581ee0fb4ca.zh-cn","_translationsConfigFile":"/root/.vscode-server/data/clp/1a7316c624e1dd66d26cf581ee0fb4ca.zh-cn/tcf.json","_cacheRoot":"/root/.vscode-server/data/clp/1a7316c624e1dd66d26cf581ee0fb4ca.zh-cn","_resolvedLanguagePackCoreLocation":"/root/.vscode-server/data/clp/1a7316c624e1dd66d26cf581ee0fb4ca.zh-cn/dfd34e8260c270da74b5c2d86d61aee4b6d56977","_corruptedFile":"/root/.vscode-server/data/clp/1a7316c624e1dd66d26cf581ee0fb4ca.zh-cn/corrupted.info","_languagePackSupport":true}
+VSCODE_NLS_CONFIG = {"locale":"zh-cn","availableLanguages":{"*":"zh-cn"},"_languagePackId":"42e84e0914b17800d483f69e299e1b00.zh-cn","_translationsConfigFile":"/root/.vscode-server/data/clp/42e84e0914b17800d483f69e299e1b00.zh-cn/tcf.json","_cacheRoot":"/root/.vscode-server/data/clp/42e84e0914b17800d483f69e299e1b00.zh-cn","_resolvedLanguagePackCoreLocation":"/root/.vscode-server/data/clp/42e84e0914b17800d483f69e299e1b00.zh-cn/e18005f0f1b33c29e81d732535d8c0e47cafb0b5","_corruptedFile":"/root/.vscode-server/data/clp/42e84e0914b17800d483f69e299e1b00.zh-cn/corrupted.info","_languagePackSupport":true}
 # environment
 _ = /bin/cat
 # makefile (from 'Makefile', line 8)
@@ -53,11 +53,11 @@ LFILE = $(shell find ./ -name "*.l")
 # makefile (from 'Makefile', line 12)
 OBJS = $(CFILES:.c=.o)
 # environment
-VSCODE_CWD = /root/.vscode-server/bin/dfd34e8260c270da74b5c2d86d61aee4b6d56977
+VSCODE_CWD = /root/.vscode-server/bin/e18005f0f1b33c29e81d732535d8c0e47cafb0b5
 # default
 MAKE_HOST := x86_64-pc-linux-gnu
 # environment
-PATH = /root/.vscode-server/bin/dfd34e8260c270da74b5c2d86d61aee4b6d56977/bin/remote-cli:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+PATH = /root/.vscode-server/bin/e18005f0f1b33c29e81d732535d8c0e47cafb0b5/bin/remote-cli:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 # environment
 VSCODE_LOG_STACK = false
 # makefile (from 'Makefile', line 16)
@@ -67,7 +67,7 @@ YFC = $(shell find ./ -name "*.y" | sed s/[^/]*\\.y/syntax.tab.c/)
 # makefile (from 'Makefile', line 15)
 LFC = $(shell find ./ -name "*.l" | sed s/[^/]*\\.l/lex.yy.c/)
 # environment
-SSH_AUTH_SOCK = /tmp/vscode-ssh-auth-a4a843e6b34fd8486f746b56ef3da13b0f1595a9.sock
+SSH_AUTH_SOCK = /tmp/vscode-ssh-auth-6e60f904b14a0e484509ea4de4b36f547e9e9e8d.sock
 # automatic
 %F = $(notdir $%)
 # environment
@@ -75,7 +75,7 @@ VSCODE_PIPE_LOGGING = true
 # environment
 PWD = /root/Lab/Code
 # environment
-VSCODE_IPC_HOOK_CLI = /tmp/vscode-ipc-71e81494-f7f8-4ddb-a3b5-79d21fee475f.sock
+VSCODE_IPC_HOOK_CLI = /tmp/vscode-ipc-1cb8b49f-d005-4e2b-9a7c-f6cdace28310.sock
 # environment
 VSCODE_AMD_ENTRYPOINT = vs/workbench/api/node/extensionHostProcess
 # environment
@@ -83,7 +83,7 @@ HOME = /root
 # environment
 REMOTE_CONTAINERS = true
 # environment
-APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = 1
+APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = true
 # automatic
 +F = $(notdir $+)
 # environment
@@ -113,7 +113,7 @@ YFO = $(YFC:.c=.o)
 # makefile (from 'Makefile', line 7)
 BISON = bison
 # environment
-REMOTE_CONTAINERS_IPC = /tmp/vscode-remote-containers-ipc-a4a843e6b34fd8486f746b56ef3da13b0f1595a9.sock
+REMOTE_CONTAINERS_IPC = /tmp/vscode-remote-containers-ipc-6e60f904b14a0e484509ea4de4b36f547e9e9e8d.sock
 # default
 MAKE_COMMAND := make
 # default
@@ -131,7 +131,7 @@ MFLAGS = -pqrR
 # automatic
 +D = $(patsubst %/,%,$(dir $+))
 # environment
-BROWSER = /root/.vscode-server/bin/dfd34e8260c270da74b5c2d86d61aee4b6d56977/bin/helpers/browser.sh
+BROWSER = /root/.vscode-server/bin/e18005f0f1b33c29e81d732535d8c0e47cafb0b5/bin/helpers/browser.sh
 # default
 MAKEFILES := 
 # automatic
@@ -145,7 +145,7 @@ LC_ALL = C
 # default
 SUFFIXES := 
 # environment
-REMOTE_CONTAINERS_SOCKETS = ["/tmp/vscode-ssh-auth-a4a843e6b34fd8486f746b56ef3da13b0f1595a9.sock"]
+REMOTE_CONTAINERS_SOCKETS = ["/tmp/vscode-ssh-auth-6e60f904b14a0e484509ea4de4b36f547e9e9e8d.sock"]
 # default
 .INCLUDE_DIRS = /usr/include /usr/local/include /usr/include
 # default
@@ -163,9 +163,9 @@ VSCODE_EXTHOST_WILL_SEND_SOCKET = true
 
 # Directories
 
-# . (device 2064, inode 170253): 17 files, no impossibilities.
+# . (device 2064, inode 170253): 18 files, no impossibilities.
 
-# 17 files, no impossibilities in 1 directories.
+# 18 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -247,7 +247,7 @@ ir/irOptimization.d:
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-05-13 11:49:49.963556186
+#  Last modified 2022-05-13 14:03:21.493470647
 #  File has been updated.
 #  Successfully updated.
 
@@ -257,7 +257,7 @@ test:
 #  File does not exist.
 #  File has not been updated.
 #  recipe to execute (from 'Makefile', line 46):
-	./parser ./test/test1.txt ./test/test.ir
+	./parser ../Test/tests/A-1.cmm ./test/test.ir
 
 # Not a target:
 utils/syntaxTree/tree.d:
@@ -309,11 +309,11 @@ parser: syntax ir/ir.o ir/irOptimization.o ir/irUtils.o utils/syntaxTree/tree.o 
 .DEFAULT:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
- 
 #  File has not been updated.
 
 # Not a target:
 frontEnd/syntax.y:
+ 
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
@@ -419,12 +419,12 @@ tryB:
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 51 / storage = 552 B / avg = 10 B
-# current buf: size = 8162 B / used = 552 B / count = 51 / avg = 10 B
+# strcache buffers: 1 (0) / strings = 52 / storage = 560 B / avg = 10 B
+# current buf: size = 8162 B / used = 560 B / count = 52 / avg = 10 B
 
-# strcache performance: lookups = 85 / hit rate = 40%
+# strcache performance: lookups = 86 / hit rate = 39%
 # hash-table stats:
-# Load=51/8192=1%, Rehash=0, Collisions=1/85=1%
-# Finished Make data base on Fri May 13 11:58:52 2022
+# Load=52/8192=1%, Rehash=0, Collisions=1/86=1%
+# Finished Make data base on Mon May 30 09:00:44 2022
 
  

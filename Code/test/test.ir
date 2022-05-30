@@ -1,99 +1,36 @@
-FUNCTION Joseph :
-PARAM LEN
-DEC a 400
-i := #0
-leftCount := LEN
-index := #0
-count := #0
-LABEL label1 :
-IF i < LEN GOTO label2
-GOTO label3
-LABEL label2 :
-tmp13 := &a
-tmp14 := #0 + i
-tmp14 := tmp14 * #4
-tmp10 := tmp13 + tmp14
-*tmp10 := #1
-tmp18 := i + #1
-i := tmp18
-GOTO label1
-LABEL label3 :
-LABEL label4 :
-IF leftCount > #2 GOTO label5
-GOTO label6
-LABEL label5 :
-tmp29 := &a
-tmp30 := #0 + index
-tmp30 := tmp30 * #4
-tmp26 := tmp29 + tmp30
-IF *tmp26 == #1 GOTO label7
-GOTO label8
-LABEL label7 :
-tmp34 := count + #1
-count := tmp34
-IF #3 == count GOTO label9
-GOTO label10
-LABEL label9 :
-tmp45 := &a
-tmp46 := #0 + index
-tmp46 := tmp46 * #4
-tmp42 := tmp45 + tmp46
-*tmp42 := #0
-count := #0
-tmp53 := leftCount - #1
-leftCount := tmp53
-LABEL label10 :
-LABEL label8 :
-tmp59 := index + #1
-index := tmp59
-IF index == LEN GOTO label11
-GOTO label12
-LABEL label11 :
-index := #0
-LABEL label12 :
-GOTO label4
-LABEL label6 :
-i := #0
-LABEL label13 :
-IF i < LEN GOTO label14
-GOTO label15
-LABEL label14 :
-tmp81 := &a
-tmp82 := #0 + i
-tmp82 := tmp82 * #4
-tmp79 := tmp81 + tmp82
-IF #1 == *tmp79 GOTO label16
-GOTO label17
-LABEL label16 :
-tmp86 := i + #1
-WRITE tmp86
-tmp85 := #0
-LABEL label17 :
-tmp91 := i + #1
-i := tmp91
-GOTO label13
-LABEL label15 :
-RETURN #0
 FUNCTION main :
-READ tmp98
-N := tmp98
-tmp100 := #0
-IF N > #3 GOTO label23
-GOTO label22
-LABEL label23 :
-IF N <= #100 GOTO label21
-GOTO label22
-LABEL label21 :
-tmp100 := #1
-LABEL label22 :
-IF tmp100 != #0 GOTO label19
-GOTO label18
-LABEL label18 :
-WRITE #-1
-tmp107 := #0
-GOTO label20
-LABEL label19 :
-ARG N
-tmp110 := CALL Joseph
-LABEL label20 :
+i := #1
+j := #11
+k := #39
+result := #0
+tmp10 := #0 - i
+tmp8 := tmp10 + k
+tmp15 := #17 * i
+tmp9 := #0 - tmp15
+tmp6 := tmp8 + tmp9
+i := tmp6
+WRITE i
+tmp19 := #0
+tmp25 := #11 * j
+tmp33 := i * i
+tmp30 := k + tmp33
+tmp26 := tmp30 * i
+tmp23 := tmp25 - tmp26
+j := tmp23
+WRITE j
+tmp40 := #0
+tmp49 := i / j
+tmp46 := i * tmp49
+tmp44 := tmp46 + k
+k := tmp44
+WRITE k
+tmp56 := #0
+tmp64 := #4 * i
+tmp65 := j / #17
+tmp62 := tmp64 + tmp65
+tmp63 := i * k
+tmp60 := tmp62 + tmp63
+result := tmp60
+WRITE result
+tmp76 := #0
 RETURN #0

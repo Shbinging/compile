@@ -65,9 +65,22 @@ void pop_back(void* lst1){
 void insert(void* lst1, void* pos, void* node){//TODO
 
 }
-void del(void*lst1 , void* pos){//TODO
 
+void del(void*lst1 , void* pos1){//TODO
+    listHeadTemplate* lst = lst1;
+    listNodeTemplate* pos = pos1;
+    if (lst->head == pos){
+        pop_front(lst);
+        return;
+    }
+    if (lst->tail == pos){
+        pop_back(lst);
+        return;
+    }
+    pos->pre->next = pos->next;
+    pos->next->pre = pos->pre;
 }
+
 void* find(void* lst1 , int(*func)(void*)){//TODO
 
 }

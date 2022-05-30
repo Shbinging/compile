@@ -51,7 +51,6 @@ void printTripe(listHead* funcBlock){
             if (!isOperandValid(tri->dest)) continue;
             if (!isOperandValid(tri->src1)) continue;
             if (!isOperandValid(tri->src2)) continue;
-            if (!q->property) continue;
             switch (tri->type){
                 case t_label:
                     printf("LABEL %s :", sprintOperand(tri->dest));

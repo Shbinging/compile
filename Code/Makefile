@@ -43,10 +43,14 @@ testB:
 .PHONY: clean test testB
 
 test:
-	./parser ./test/test1.txt ./test/test.ir
+	./parser ../Test/tests/A-1.cmm ./test/test.ir
 
 testFile:
 	./parser ./test/test1.txt test.ir
+
+ta:
+	sh /root/test/compilers-tests/run.sh /root/Lab/Code/parser
+	
 clean:
 	rm -f parser lex.yy.c syntax.tab.c syntax.tab.h syntax.output
 	rm -f $(OBJS) $(OBJS:.o=.d)
