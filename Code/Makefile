@@ -38,12 +38,12 @@ tryB:
 	cd ../backup && flex -o lexTry.yy.c lexicalTry.l && bison -d -t syntax1.y && gcc syntax1.tab.c -lfl -ly -o parser && ./parser ../Code/test.txt
 
 testB:
-	./parser test.txt
+	./parser test.txt test.out
 # 定义的一些伪目标
 .PHONY: clean test testB
 
 test:
-	./parser ../Test/tests/A-1.cmm ./test/test.ir
+	./parser test/test1.txt /root/Lab/Code/test.out
 
 testFile:
 	./parser ./test/test1.txt test.ir

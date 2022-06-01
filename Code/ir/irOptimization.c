@@ -148,6 +148,7 @@ void getOptIr(list funcBlock){
     }
 }
 
+
 void deadVarLiminate(list funcBlock){
     while(1){
         int isModify = 0;

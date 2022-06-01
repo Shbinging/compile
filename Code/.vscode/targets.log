@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Mon May 30 09:00:44 2022
+# Make data base, printed on Wed Jun  1 11:59:02 2022
 
 # Variables
 
@@ -35,7 +35,7 @@ CURDIR := /root/Lab/Code
 # makefile
 SHELL = /bin/sh
 # environment
-VSCODE_NLS_CONFIG = {"locale":"zh-cn","availableLanguages":{"*":"zh-cn"},"_languagePackId":"42e84e0914b17800d483f69e299e1b00.zh-cn","_translationsConfigFile":"/root/.vscode-server/data/clp/42e84e0914b17800d483f69e299e1b00.zh-cn/tcf.json","_cacheRoot":"/root/.vscode-server/data/clp/42e84e0914b17800d483f69e299e1b00.zh-cn","_resolvedLanguagePackCoreLocation":"/root/.vscode-server/data/clp/42e84e0914b17800d483f69e299e1b00.zh-cn/e18005f0f1b33c29e81d732535d8c0e47cafb0b5","_corruptedFile":"/root/.vscode-server/data/clp/42e84e0914b17800d483f69e299e1b00.zh-cn/corrupted.info","_languagePackSupport":true}
+VSCODE_NLS_CONFIG = {"locale":"zh-cn","availableLanguages":{"*":"zh-cn"},"_languagePackId":"42e84e0914b17800d483f69e299e1b00.zh-cn","_translationsConfigFile":"/root/.vscode-server/data/clp/42e84e0914b17800d483f69e299e1b00.zh-cn/tcf.json","_cacheRoot":"/root/.vscode-server/data/clp/42e84e0914b17800d483f69e299e1b00.zh-cn","_resolvedLanguagePackCoreLocation":"/root/.vscode-server/data/clp/42e84e0914b17800d483f69e299e1b00.zh-cn/c3511e6c69bb39013c4a4b7b9566ec1ca73fc4d5","_corruptedFile":"/root/.vscode-server/data/clp/42e84e0914b17800d483f69e299e1b00.zh-cn/corrupted.info","_languagePackSupport":true}
 # environment
 _ = /bin/cat
 # makefile (from 'Makefile', line 8)
@@ -53,11 +53,11 @@ LFILE = $(shell find ./ -name "*.l")
 # makefile (from 'Makefile', line 12)
 OBJS = $(CFILES:.c=.o)
 # environment
-VSCODE_CWD = /root/.vscode-server/bin/e18005f0f1b33c29e81d732535d8c0e47cafb0b5
+VSCODE_CWD = /root/.vscode-server/bin/c3511e6c69bb39013c4a4b7b9566ec1ca73fc4d5
 # default
 MAKE_HOST := x86_64-pc-linux-gnu
 # environment
-PATH = /root/.vscode-server/bin/e18005f0f1b33c29e81d732535d8c0e47cafb0b5/bin/remote-cli:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+PATH = /root/.vscode-server/bin/c3511e6c69bb39013c4a4b7b9566ec1ca73fc4d5/bin/remote-cli:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 # environment
 VSCODE_LOG_STACK = false
 # makefile (from 'Makefile', line 16)
@@ -67,7 +67,7 @@ YFC = $(shell find ./ -name "*.y" | sed s/[^/]*\\.y/syntax.tab.c/)
 # makefile (from 'Makefile', line 15)
 LFC = $(shell find ./ -name "*.l" | sed s/[^/]*\\.l/lex.yy.c/)
 # environment
-SSH_AUTH_SOCK = /tmp/vscode-ssh-auth-6e60f904b14a0e484509ea4de4b36f547e9e9e8d.sock
+SSH_AUTH_SOCK = /tmp/vscode-ssh-auth-97f5a8e339d83af2caae0dc1549513140bab391f.sock
 # automatic
 %F = $(notdir $%)
 # environment
@@ -75,7 +75,7 @@ VSCODE_PIPE_LOGGING = true
 # environment
 PWD = /root/Lab/Code
 # environment
-VSCODE_IPC_HOOK_CLI = /tmp/vscode-ipc-1cb8b49f-d005-4e2b-9a7c-f6cdace28310.sock
+VSCODE_IPC_HOOK_CLI = /tmp/vscode-ipc-879ed495-c2e1-4a71-b79d-552682b8fc15.sock
 # environment
 VSCODE_AMD_ENTRYPOINT = vs/workbench/api/node/extensionHostProcess
 # environment
@@ -113,7 +113,7 @@ YFO = $(YFC:.c=.o)
 # makefile (from 'Makefile', line 7)
 BISON = bison
 # environment
-REMOTE_CONTAINERS_IPC = /tmp/vscode-remote-containers-ipc-6e60f904b14a0e484509ea4de4b36f547e9e9e8d.sock
+REMOTE_CONTAINERS_IPC = /tmp/vscode-remote-containers-ipc-97f5a8e339d83af2caae0dc1549513140bab391f.sock
 # default
 MAKE_COMMAND := make
 # default
@@ -131,7 +131,9 @@ MFLAGS = -pqrR
 # automatic
 +D = $(patsubst %/,%,$(dir $+))
 # environment
-BROWSER = /root/.vscode-server/bin/e18005f0f1b33c29e81d732535d8c0e47cafb0b5/bin/helpers/browser.sh
+BROWSER = /root/.vscode-server/bin/c3511e6c69bb39013c4a4b7b9566ec1ca73fc4d5/bin/helpers/browser.sh
+# environment
+VSCODE_HANDLES_SIGPIPE = true
 # default
 MAKEFILES := 
 # automatic
@@ -145,7 +147,7 @@ LC_ALL = C
 # default
 SUFFIXES := 
 # environment
-REMOTE_CONTAINERS_SOCKETS = ["/tmp/vscode-ssh-auth-6e60f904b14a0e484509ea4de4b36f547e9e9e8d.sock"]
+REMOTE_CONTAINERS_SOCKETS = ["/tmp/vscode-ssh-auth-97f5a8e339d83af2caae0dc1549513140bab391f.sock"]
 # default
 .INCLUDE_DIRS = /usr/include /usr/local/include /usr/include
 # default
@@ -155,7 +157,7 @@ LANG = C
 # environment
 VSCODE_EXTHOST_WILL_SEND_SOCKET = true
 # variable set hash-table stats:
-# Load=71/1024=7%, Rehash=0, Collisions=8/119=7%
+# Load=72/1024=7%, Rehash=0, Collisions=8/120=7%
 
 # Pattern-specific Variable Values
 
@@ -163,15 +165,22 @@ VSCODE_EXTHOST_WILL_SEND_SOCKET = true
 
 # Directories
 
-# . (device 2064, inode 170253): 18 files, no impossibilities.
+# . (device 2064, inode 170253): 19 files, no impossibilities.
 
-# 18 files, no impossibilities in 1 directories.
+# 19 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
 # No implicit rules.
 
 # Files
+
+# Not a target:
+objcode/objUtil.d:
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
 
 # Not a target:
 utils/list/list.o:
@@ -247,9 +256,23 @@ ir/irOptimization.d:
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-05-13 14:03:21.493470647
+#  Last modified 2022-06-01 11:41:31.725678714
 #  File has been updated.
 #  Successfully updated.
+
+# Not a target:
+objcode/objUtil.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+ta:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 52):
+	sh /root/test/compilers-tests/run.sh /root/Lab/Code/parser
+	
 
 test:
 #  Phony target (prerequisite of .PHONY).
@@ -257,7 +280,7 @@ test:
 #  File does not exist.
 #  File has not been updated.
 #  recipe to execute (from 'Makefile', line 46):
-	./parser ../Test/tests/A-1.cmm ./test/test.ir
+	./parser test/test1.txt /root/Lab/Code/test.out
 
 # Not a target:
 utils/syntaxTree/tree.d:
@@ -275,6 +298,7 @@ utils/map/map.o:
 # Not a target:
 frontEnd/lex.yy.d:
 #  Implicit rule search has been done.
+ 
 #  File does not exist.
 #  File has been updated.
 #  Failed to be updated.
@@ -298,7 +322,14 @@ main.d:
 #  File has been updated.
 #  Failed to be updated.
 
-parser: syntax ir/ir.o ir/irOptimization.o ir/irUtils.o utils/syntaxTree/tree.o utils/map/map.o utils/list/list.o frontEnd/syntax.tab.o main.o sdt/sdt.o
+# Not a target:
+objcode/graph.d:
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
+
+parser: syntax ir/ir.o ir/irOptimization.o ir/irUtils.o utils/syntaxTree/tree.o utils/map/map.o utils/list/list.o frontEnd/syntax.tab.o objcode/objUtil.o objcode/graph.o main.o sdt/sdt.o
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
@@ -313,7 +344,6 @@ parser: syntax ir/ir.o ir/irOptimization.o ir/irUtils.o utils/syntaxTree/tree.o 
 
 # Not a target:
 frontEnd/syntax.y:
- 
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
@@ -336,7 +366,7 @@ clean:
 #  Implicit rule search has not been done.
 #  File does not exist.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 51):
+#  recipe to execute (from 'Makefile', line 55):
 	rm -f parser lex.yy.c syntax.tab.c syntax.tab.h syntax.output
 	rm -f $(OBJS) $(OBJS:.o=.d)
 	rm -f $(LFC) $(YFC) $(YFC:.c=.h)
@@ -355,7 +385,7 @@ testB:
 #  File does not exist.
 #  File has not been updated.
 #  recipe to execute (from 'Makefile', line 41):
-	./parser test.txt
+	./parser test.txt test.out
 
 lexical: frontEnd/lexical.l
 #  Implicit rule search has not been done.
@@ -373,6 +403,12 @@ syntax: lexical syntax-c
 
 # Not a target:
 main.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+objcode/graph.o:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
@@ -412,19 +448,19 @@ tryB:
 	cd ../backup && flex -o lexTry.yy.c lexicalTry.l && bison -d -t syntax1.y && gcc syntax1.tab.c -lfl -ly -o parser && ./parser ../Code/test.txt
 
 # files hash-table stats:
-# Load=36/1024=4%, Rehash=0, Collisions=0/78=0%
+# Load=41/1024=4%, Rehash=0, Collisions=0/87=0%
 # VPATH Search Paths
 
 # No 'vpath' search paths.
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 52 / storage = 560 B / avg = 10 B
-# current buf: size = 8162 B / used = 560 B / count = 52 / avg = 10 B
+# strcache buffers: 1 (0) / strings = 58 / storage = 640 B / avg = 11 B
+# current buf: size = 8162 B / used = 640 B / count = 58 / avg = 11 B
 
-# strcache performance: lookups = 86 / hit rate = 39%
+# strcache performance: lookups = 95 / hit rate = 38%
 # hash-table stats:
-# Load=52/8192=1%, Rehash=0, Collisions=1/86=1%
-# Finished Make data base on Mon May 30 09:00:44 2022
+# Load=58/8192=1%, Rehash=0, Collisions=1/95=1%
+# Finished Make data base on Wed Jun  1 11:59:02 2022
 
  

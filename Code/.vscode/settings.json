@@ -34,7 +34,8 @@
         "stdarg.h": "c",
         "irutils.h": "c",
         "initializer_list": "c",
-        "iroptimization.h": "c"
+        "iroptimization.h": "c",
+        "objutil.h": "c"
     },
     "C_Cpp.errorSquiggles": "Disabled"
 }

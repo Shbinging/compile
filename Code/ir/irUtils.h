@@ -47,4 +47,6 @@ char* sprintOperand(Operand op);
 void printTripe(listHead* funcBlock);
 void printCode(listHead*);
 void debugCode(TripleExp tri);
+char* sprintOperand(Operand op);
+int isOperandValid(Operand op);
 #endif
