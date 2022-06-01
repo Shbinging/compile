@@ -5,43 +5,9 @@ int isBranch(enum Ttype_  type){
     return (type == t_eq) || (type == t_geq) || (type == t_g) || (type == t_leq) || (type == t_l) || (type == t_goto);
 }
 
-list genBlock(list funcBlock){
-    int s = 0;
-    if (funcBlock == NULL) return NULL;
-    list blockList = malloc(sizeof(listHead));
-    for(funcNode p = (funcNode)funcBlock->head; p; p = p->next){
-        tripleNode pre = NULL;
-        listItem b = malloc(sizeof(listItem_));
-        list curBlockList = malloc(sizeof(listHead));
-        blockItem curBlock = NULL;
-        tripleNode q;
-        for(q = (tripleNode) p->val->head; q; q = q->next){
-            if (pre == NULL || isBranch(pre->val->type) || q->val->type == t_label){
-                if (curBlock){
-                    curBlock->val->tail = q;
-                    push_back(curBlockList, curBlock);
-                }
-                s++;
-                curBlock = malloc(sizeof(blockItem_));
-                curBlock->val = malloc(sizeof(blockInfo_));
-                curBlock->val->head = q;
-                curBlock->val->id = s;
-            }
-            pre = q;
-        }
-        if (curBlock){
-            curBlock->val->tail = q;
-            push_back(curBlockList, curBlock);
-        }
-        b->val = curBlockList;
-        push_back(blockList, b);
-    }
-    return blockList;
-}
 
-void printBlock(list funcBlock){
-    for(listItem p = ((list)(funcBlock))->head; p; p = p->next){
-        for(blockItem q = p->val->head; q; q = q->next){
+void printBlock(list p){
+        for(blockItem q = p->head; q; q = q->next){
             printf("========\nBLOCK %d\n", q->val->id);
             for(tripleNode m = q->val->head; m != q->val->tail; m = m->next){
                  TripleExp tri = m->val;
@@ -124,7 +90,6 @@ void printBlock(list funcBlock){
                 printf("\n");
             }
         }
-    }   
 }
 
 #define BEGIN(x) (x->head)
@@ -153,6 +118,38 @@ static char* getVar(Operand o){
 map_int_t varTable, labelTable;
 int blockNum, tripleNum, varNum, funcNum;
 cfg CFG;
+
+list genBlock(tripleNode q){
+    tripleNode pre = NULL;
+    list curBlockList;
+    createList(&curBlockList);
+    curBlockList->head = NULL;
+    curBlockList->tail = NULL;
+    blockItem curBlock = NULL;
+    int s = 0;
+        for(; q; q = q->next){
+            //debugCode(q->val);
+            if (pre == NULL || isBranch(pre->val->type) || q->val->type == t_label){
+                if (curBlock){
+                    curBlock->val->tail = q;
+                    push_back(curBlockList, curBlock);
+                }
+                s++;
+                curBlock = malloc(sizeof(blockItem_));
+                curBlock->val = malloc(sizeof(blockInfo_));
+                curBlock->val->head = q;
+                curBlock->val->id = s;
+            }
+            pre = q;
+        }
+        if (curBlock){
+            curBlock->val->tail = q;
+            push_back(curBlockList, curBlock);
+        }  
+    return curBlockList;  
+}
+
+
 static void addVar(char* varName){
     if (!map_get(&varTable, varName)){
         map_set(&varTable, varName, 1);
@@ -165,30 +162,24 @@ static void addVar(char* varName){
     }
 }
 
-void countBlock(list funcBlock){
-        for(listItem p = BEGIN(funcBlock); p; p = p->next){
-            funcNum++;
-            for(blockItem q = BEGIN(GET(p)); q; q= q->next){
-                blockNum++;
-                for(tripleNode m = GET(q)->head; m != GET(q)->tail; m = m->next){
-                    TripleExp exp = m->val;
-                    tripleNum++;
-                    if (exp->type == t_label){
-                        map_set(&labelTable, getLabel(exp->dest->u.labelId), q->val->id);
-                    }
-                    if (isVar(exp->dest)) addVar(getVar(exp->dest));
-                    if (isVar(exp->src1)) addVar(getVar(exp->src1));
-                    if (isVar(exp->src2)) addVar(getVar(exp->src2));
-                }
+void countBlock(list p){
+    for(blockItem q = p->head; q; q= q->next){
+        blockNum++;
+        for(tripleNode m = GET(q)->head;  m != GET(q)->tail; m = m->next){
+            TripleExp exp = m->val;
+            tripleNum++;
+            if (exp->type == t_label){
+                map_set(&labelTable, getLabel(exp->dest->u.labelId), q->val->id);
             }
+            if (isVar(exp->dest)) addVar(getVar(exp->dest));
+            if (isVar(exp->src1)) addVar(getVar(exp->src1));
+            if (isVar(exp->src2)) addVar(getVar(exp->src2));
         }
+    }
 }
 
-void buildEdge(list funcBlock){
-    int s = 0;
-    for(listItem p = BEGIN(funcBlock); p; p = p->next){
-        s++;
-        for(blockItem q = BEGIN(GET(p)); q; q= q->next){
+void buildEdge(list p){
+        for(blockItem q = p->head; q; q= q->next){
                 //printf("block %d\n", q->val->id);
                 if (q->pre && ((tripleNode)(q->pre->val->tail->pre))->val->type != t_goto){
                     //debugCode(q->pre->val->tail->pre->val);
@@ -200,28 +191,45 @@ void buildEdge(list funcBlock){
                         addEdge(CFG, from , to);
                     }
                     if (m->val->type == t_return){
-                        addEdge(CFG, blockNum + s, q->val->id);
+                        addEdge(CFG, blockNum + 1, q->val->id);
                     }
                 }
         }
-    }
 }
 
-void buildCFG(list funcBlock){
+
+int maxVar = 0;
+int max(int a, int b){
+    return a >= b ? a : b;
+}
+
+void buildCFG(tripleNode funcBlock){
+    list c = genBlock(funcBlock);
     CFG = malloc(sizeof(cfg));
     map_init(&labelTable);
     map_init(&varTable);
     blockNum = 0;
     tripleNum = 0;
     varNum = 0;
-    countBlock(funcBlock);
+    countBlock(c);
     initGraph(CFG, blockNum + funcNum, tripleNum * 2);
-    buildEdge(funcBlock);
-    printf("%d %d %d\n", blockNum, tripleNum, varNum);
-    // for(int i = 1; i <= blockNum + funcNum; i++){
-    //     for(int p = CFG->head[i]; p; p = CFG->edgeList[p].next){
-    //         printf("%d->%d\n", CFG->edgeList[p].to, i);
-    //     }
-    // }
+    maxVar = max(maxVar, blockNum + funcNum);
+    printf("=======\n");
+    printBlock(c);
+    buildEdge(c);
+    //printf("%d %d %d\n", blockNum, tripleNum, varNum);
+    printf("\n");
+    for(int i = 1; i <= blockNum + funcNum; i++){
+        for(int p = CFG->head[i]; p; p = CFG->edgeList[p].next){
+            printf("%d->%d\n", CFG->edgeList[p].to, i);
+        }
+    }
 }
 
+
+void testCFG(list funcBlock){
+    for(funcNode p = (funcNode)funcBlock->head; p; p = p->next){
+        buildCFG(p->val->head);
+    }
+    printf("%d\n", maxVar);
+}

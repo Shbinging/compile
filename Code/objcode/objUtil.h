@@ -18,5 +18,6 @@ typedef listItem_* listItem;
 typedef listHead* list;
 
 list voidSplitList(list funcBlock);
-void buildCFG(list funcBlock);
+void buildCFG(tripleNode funcBlock);
+void testCFG(list funcBlock);
 #endif
