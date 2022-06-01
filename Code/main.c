@@ -6,6 +6,7 @@
 #include "ir/ir.h"
 #include "ir/irOptimization.h"
 #include "objcode/objUtil.h"
+#include "objcode/bitmap.h"
 int parseOK;
 TreeNode* parseTreeRoot;
 int main(int argc, char** argv){
@@ -28,12 +29,12 @@ int main(int argc, char** argv){
 
     getOptIr(irOri);
     //deadVarLiminate(irOri); 
-    //printTripe(irOri);
-    list c = genBlock(irOri);
+    printTripe(irOri);
     //printBlock(c);
-    buildCFG(c);
+    testCFG(irOri);
     
-
+    bitmap bt = initBitMap(128);
+    set
     //for(int i = 0; i < 20; i++) yylex();
     fclose(stdout);
     return 0;
