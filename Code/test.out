@@ -1,96 +1,21 @@
-./parser test/test1.txt /root/Lab/Code/test.out
-FUNCTION fact :
-PARAM n
-IF n == #1 GOTO label1
+FUNCTION main :
+DEC a 40
+tmp4 := &a
+tmp1 := tmp4 + #4
+*tmp1 := #1
+tmp10 := &a
+tmp7 := tmp10 + #8
+tmp16 := &a
+tmp13 := tmp16 + #4
+tmp27 := *tmp13
+tmp8 := tmp27 + #1
+*tmp7 := tmp8
+tmp22 := &a
+tmp19 := tmp22 + #4
+tmp28 := *tmp19
+IF tmp28 > #1 GOTO label1
 GOTO label2
 LABEL label1 :
-RETURN n
-GOTO label3
+WRITE #1
+tmp25 := #0
 LABEL label2 :
-tmp10 := n - #1
-ARG tmp10
-tmp8 := CALL fact
-tmp6 := n * tmp8
-RETURN tmp6
-LABEL label3 :
-FUNCTION main :
-READ tmp15
-m := tmp15
-IF m > #1 GOTO label4
-GOTO label5
-LABEL label4 :
-ARG m
-tmp21 := CALL fact
-result := tmp21
-GOTO label6
-LABEL label5 :
-result := #1
-LABEL label6 :
-WRITE result
-tmp28 := #0
-RETURN #0
-=======
-========
-BLOCK 1
-FUNCTION fact :
-PARAM n
-IF n == #1 GOTO label1
-========
-BLOCK 2
-GOTO label2
-========
-BLOCK 3
-LABEL label1 :
-RETURN n
-GOTO label3
-========
-BLOCK 4
-LABEL label2 :
-tmp10 := n - #1
-ARG tmp10
-tmp8 := CALL fact
-tmp6 := n * tmp8
-RETURN tmp6
-========
-BLOCK 5
-LABEL label3 :
-
-1->2
-1->3
-2->4
-4->5
-3->5
-=======
-========
-BLOCK 1
-FUNCTION main :
-READ tmp15
-m := tmp15
-IF m > #1 GOTO label4
-========
-BLOCK 2
-GOTO label5
-========
-BLOCK 3
-LABEL label4 :
-ARG m
-tmp21 := CALL fact
-result := tmp21
-GOTO label6
-========
-BLOCK 4
-LABEL label5 :
-result := #1
-========
-BLOCK 5
-LABEL label6 :
-WRITE result
-tmp28 := #0
-RETURN #0
-
-1->2
-1->3
-2->4
-4->5
-3->5
-5

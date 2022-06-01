@@ -10,7 +10,7 @@
 int parseOK;
 TreeNode* parseTreeRoot;
 int main(int argc, char** argv){
-    //freopen(argv[2], "w", stdout);
+    freopen(argv[2], "w", stdout);
     if (argc <= 1) return 1;
     FILE* f = fopen(argv[1], "r");
     if (!f){
@@ -31,10 +31,9 @@ int main(int argc, char** argv){
     //deadVarLiminate(irOri); 
     printTripe(irOri);
     //printBlock(c);
-    testCFG(irOri);
+    //testCFG(irOri);
     
-    bitmap bt = initBitMap(128);
-    set
+    //bitmap bt = initBitMap(128);
     //for(int i = 0; i < 20; i++) yylex();
     fclose(stdout);
     return 0;

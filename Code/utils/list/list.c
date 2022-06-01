@@ -62,8 +62,21 @@ void pop_back(void* lst1){
     }
 }
 
-void insert(void* lst1, void* pos, void* node){//TODO
-
+void insert(void* lst1, void* pos1, void* node1){//TODO
+    listHeadTemplate* lst = lst1;
+    listNodeTemplate* pos = pos1;
+    listNodeTemplate* node = node1;
+    if (pos1 == NULL){
+        push_front(lst, node1);
+        return;
+    }
+    if (lst->tail == pos) push_back(lst, node1);
+    else{
+        node->next = pos->next;
+        pos->next->pre = node;
+        node->pre = pos;
+        pos->next = node;
+    }
 }
 
 void del(void*lst1 , void* pos1){//TODO

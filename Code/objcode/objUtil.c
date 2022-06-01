@@ -2,7 +2,7 @@
 #include "graph.h"
 #include <stdio.h>
 int isBranch(enum Ttype_  type){
-    return (type == t_eq) || (type == t_geq) || (type == t_g) || (type == t_leq) || (type == t_l) || (type == t_goto);
+    return (type == t_eq) || (type == t_geq) || (type == t_g) || (type == t_leq) || (type == t_l) || (type == t_goto) || (type == t_call) || (type == t_return);
 }
 
 
@@ -129,7 +129,7 @@ list genBlock(tripleNode q){
     int s = 0;
         for(; q; q = q->next){
             //debugCode(q->val);
-            if (pre == NULL || isBranch(pre->val->type) || q->val->type == t_label){
+            if (pre == NULL || isBranch(pre->val->type) || q->val->type == t_label || q->val->type == t_call){
                 if (curBlock){
                     curBlock->val->tail = q;
                     push_back(curBlockList, curBlock);
@@ -181,12 +181,12 @@ void countBlock(list p){
 void buildEdge(list p){
         for(blockItem q = p->head; q; q= q->next){
                 //printf("block %d\n", q->val->id);
-                if (q->pre && ((tripleNode)(q->pre->val->tail->pre))->val->type != t_goto){
+                if (q->pre && ((tripleNode)(q->pre->val->tail->pre))->val->type != t_goto && ((tripleNode)(q->pre->val->tail->pre))->val->type != t_return){
                     //debugCode(q->pre->val->tail->pre->val);
                     addEdge(CFG, q->val->id, q->val->id - 1);
                 }
                 for(tripleNode m = GET(q)->head; m != GET(q)->tail; m = m->next){
-                    if (isBranch(m->val->type)){
+                    if (isBranch(m->val->type) && m->val->type != t_call && m->val->type != t_return){
                         int from = *map_get(&labelTable, getLabel(m->val->dest->u.labelId)), to = q->val->id;
                         addEdge(CFG, from , to);
                     }

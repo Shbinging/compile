@@ -203,6 +203,30 @@ gen_Program(0) {
 		case 1: call_Program(1); break; 
 	}
     if (findWrong) return NULL;
+    if (funcBlock){
+        for(funcNode p = (funcNode)funcBlock->head; p; p = p->next){
+            for(tripleNode q = (tripleNode)p->val->head; q; q = q->next){
+                TripleExp exp = q->val;
+                if (exp->type == t_label || exp->type == t_func ||exp->type == t_goto ||exp->type == t_dec ||exp->type == t_param) continue;
+                tripleNode pre = q->pre;
+                if (exp->src1 && exp->src1->property == o_point){
+                    Operand tmp = new_tmp();
+                    insert(p, pre, getTriple(t_assign, tmp, exp->src1, NULL));
+                    exp->src1 = tmp;
+                }
+                if (exp->src2 && exp->src2->property == o_point){
+                    Operand tmp = new_tmp();
+                    insert(p, pre, getTriple(t_assign, tmp, exp->src2, NULL));
+                    exp->src2 = tmp;
+                }
+                if (exp->type != t_assign && exp->dest && exp->dest->property == o_point){
+                    Operand tmp = new_tmp();
+                    insert(p, pre, getTriple(t_assign, tmp, exp->dest, NULL));
+                    exp->dest = tmp;
+                }
+            }
+        }
+    }
     return funcBlock;
 }
 
@@ -840,6 +864,7 @@ gen_localVal{
     char* name;
     Operand address = new_tmp();
     Type type;
+    Operand place1 = place;
     switch(rt->no){
         case 17:
             name = ID0(ONE(rt), NULL, 0);
@@ -850,9 +875,11 @@ gen_localVal{
             break;
         case 15:
         case 16:
-            code = genExpAddress(rt, place->u.tmpId, &type);
-            if (type->kind != BASIC) place->property = o_normal;
-            else place->property = o_point;
+           // place = new_tmp();
+            code = genExpAddress(rt, place1->u.tmpId, &type);
+            if (type->kind != BASIC) place1->property = o_normal;
+            else place1->property = o_point;
+            //push_back(code, getTriple(t_assign, place, place1, NULL));
             break;
     }
     return code;
