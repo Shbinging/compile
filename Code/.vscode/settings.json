@@ -35,7 +35,11 @@
         "irutils.h": "c",
         "initializer_list": "c",
         "iroptimization.h": "c",
-        "objutil.h": "c"
+        "objutil.h": "c",
+        "set.h": "c",
+        "string": "c",
+        "vector": "c",
+        "heap.h": "c"
     },
     "C_Cpp.errorSquiggles": "Disabled"
 }

@@ -1,21 +1,2 @@
-FUNCTION main :
-DEC a 40
-tmp4 := &a
-tmp1 := tmp4 + #4
-*tmp1 := #1
-tmp10 := &a
-tmp7 := tmp10 + #8
-tmp16 := &a
-tmp13 := tmp16 + #4
-tmp27 := *tmp13
-tmp8 := tmp27 + #1
-*tmp7 := tmp8
-tmp22 := &a
-tmp19 := tmp22 + #4
-tmp28 := *tmp19
-IF tmp28 > #1 GOTO label1
-GOTO label2
-LABEL label1 :
-WRITE #1
-tmp25 := #0
-LABEL label2 :
+0
+

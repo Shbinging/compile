@@ -21,6 +21,9 @@ typedef struct listHeadTemplate{
     listNodeTemplate* head, *tail;
 } listHeadTemplate;
 
+
+#define push_back_l(lst, type, val) push_back_use(lst, sizeof(type), val)
+void push_back_use(void*lst1, size_t node, void* val);
 void createList(void**);
 void push_front(void*, void*);
 void push_back(void*, void*);
@@ -32,4 +35,6 @@ void insert(void*, void* pos, void* node);
 void del(void*, void* pos);
 void* find(void*, int(*)(void*));
 void append_list(void* a, void* b);
+void* getIndex_l(void* a, int index);
+typedef listHead* list;
 #endif

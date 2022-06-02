@@ -5,4 +5,5 @@ int main(){
     if (a[1] > 1){
         write(1);
     }
+    return a[1];
 }

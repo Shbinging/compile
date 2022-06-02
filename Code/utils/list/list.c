@@ -20,6 +20,12 @@ void push_front(void* lst1, void* node){
     lst->head = nodeUse;   
 }
 
+void push_back_use(void*lst1, size_t size, void* val){
+    listNodeTemplate* nodeUse = malloc(size);
+    nodeUse->val = val;
+    push_back(lst1, nodeUse);
+}
+
 void push_back(void* lst1, void* node){
     toTem;
     nodeUse->pre = lst->tail;
@@ -111,4 +117,16 @@ void append_list(void* a1, void* b1){
             a->tail = b->tail;
         }
     }
+}
+
+
+void* getIndex_l(void* a, int index){
+    listHeadTemplate* aa = a;
+    for(listNodeTemplate* item = aa->head; item; item = item->next){
+        if (!index){
+            return item;
+        }
+        index--;
+    }
+    return NULL;
 }

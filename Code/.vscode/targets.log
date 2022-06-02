@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Wed Jun  1 11:59:02 2022
+# Make data base, printed on Thu Jun  2 21:31:07 2022
 
 # Variables
 
@@ -67,7 +67,7 @@ YFC = $(shell find ./ -name "*.y" | sed s/[^/]*\\.y/syntax.tab.c/)
 # makefile (from 'Makefile', line 15)
 LFC = $(shell find ./ -name "*.l" | sed s/[^/]*\\.l/lex.yy.c/)
 # environment
-SSH_AUTH_SOCK = /tmp/vscode-ssh-auth-97f5a8e339d83af2caae0dc1549513140bab391f.sock
+SSH_AUTH_SOCK = /tmp/vscode-ssh-auth-02c170b141d8e0866344a852e3b39faa84321014.sock
 # automatic
 %F = $(notdir $%)
 # environment
@@ -75,7 +75,7 @@ VSCODE_PIPE_LOGGING = true
 # environment
 PWD = /root/Lab/Code
 # environment
-VSCODE_IPC_HOOK_CLI = /tmp/vscode-ipc-879ed495-c2e1-4a71-b79d-552682b8fc15.sock
+VSCODE_IPC_HOOK_CLI = /tmp/vscode-ipc-c6d126d2-fa98-4da0-b381-c4ce2577dccb.sock
 # environment
 VSCODE_AMD_ENTRYPOINT = vs/workbench/api/node/extensionHostProcess
 # environment
@@ -113,7 +113,7 @@ YFO = $(YFC:.c=.o)
 # makefile (from 'Makefile', line 7)
 BISON = bison
 # environment
-REMOTE_CONTAINERS_IPC = /tmp/vscode-remote-containers-ipc-97f5a8e339d83af2caae0dc1549513140bab391f.sock
+REMOTE_CONTAINERS_IPC = /tmp/vscode-remote-containers-ipc-02c170b141d8e0866344a852e3b39faa84321014.sock
 # default
 MAKE_COMMAND := make
 # default
@@ -147,7 +147,7 @@ LC_ALL = C
 # default
 SUFFIXES := 
 # environment
-REMOTE_CONTAINERS_SOCKETS = ["/tmp/vscode-ssh-auth-97f5a8e339d83af2caae0dc1549513140bab391f.sock"]
+REMOTE_CONTAINERS_SOCKETS = ["/tmp/vscode-ssh-auth-02c170b141d8e0866344a852e3b39faa84321014.sock"]
 # default
 .INCLUDE_DIRS = /usr/include /usr/local/include /usr/include
 # default
@@ -187,6 +187,13 @@ utils/list/list.o:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
+
+# Not a target:
+objcode/bitmap.d:
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
 
 tryF:
 #  Implicit rule search has not been done.
@@ -280,7 +287,21 @@ test:
 #  File does not exist.
 #  File has not been updated.
 #  recipe to execute (from 'Makefile', line 46):
+ 
 	./parser test/test1.txt /root/Lab/Code/test.out
+
+# Not a target:
+objcode/bitmap.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+objcode/obj.d:
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
 
 # Not a target:
 utils/syntaxTree/tree.d:
@@ -298,7 +319,6 @@ utils/map/map.o:
 # Not a target:
 frontEnd/lex.yy.d:
 #  Implicit rule search has been done.
- 
 #  File does not exist.
 #  File has been updated.
 #  Failed to be updated.
@@ -329,7 +349,7 @@ objcode/graph.d:
 #  File has been updated.
 #  Failed to be updated.
 
-parser: syntax ir/ir.o ir/irOptimization.o ir/irUtils.o utils/syntaxTree/tree.o utils/map/map.o utils/list/list.o frontEnd/syntax.tab.o objcode/objUtil.o objcode/graph.o main.o sdt/sdt.o
+parser: syntax ir/ir.o ir/irOptimization.o ir/irUtils.o utils/syntaxTree/tree.o utils/map/map.o utils/list/list.o frontEnd/syntax.tab.o objcode/bitmap.o objcode/obj.o objcode/objUtil.o objcode/graph.o main.o sdt/sdt.o
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
@@ -344,6 +364,12 @@ parser: syntax ir/ir.o ir/irOptimization.o ir/irUtils.o utils/syntaxTree/tree.o 
 
 # Not a target:
 frontEnd/syntax.y:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+objcode/obj.o:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
@@ -448,19 +474,19 @@ tryB:
 	cd ../backup && flex -o lexTry.yy.c lexicalTry.l && bison -d -t syntax1.y && gcc syntax1.tab.c -lfl -ly -o parser && ./parser ../Code/test.txt
 
 # files hash-table stats:
-# Load=41/1024=4%, Rehash=0, Collisions=0/87=0%
+# Load=45/1024=4%, Rehash=0, Collisions=0/95=0%
 # VPATH Search Paths
 
 # No 'vpath' search paths.
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 58 / storage = 640 B / avg = 11 B
-# current buf: size = 8162 B / used = 640 B / count = 58 / avg = 11 B
+# strcache buffers: 1 (0) / strings = 62 / storage = 702 B / avg = 11 B
+# current buf: size = 8162 B / used = 702 B / count = 62 / avg = 11 B
 
-# strcache performance: lookups = 95 / hit rate = 38%
+# strcache performance: lookups = 101 / hit rate = 38%
 # hash-table stats:
-# Load=58/8192=1%, Rehash=0, Collisions=1/95=1%
-# Finished Make data base on Wed Jun  1 11:59:02 2022
+# Load=62/8192=1%, Rehash=0, Collisions=1/101=1%
+# Finished Make data base on Thu Jun  2 21:31:07 2022
 
  
