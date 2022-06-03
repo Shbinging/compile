@@ -203,30 +203,6 @@ gen_Program(0) {
 		case 1: call_Program(1); break; 
 	}
     if (findWrong) return NULL;
-    if (funcBlock){
-        for(funcNode p = (funcNode)funcBlock->head; p; p = p->next){
-            for(tripleNode q = (tripleNode)p->val->head; q; q = q->next){
-                TripleExp exp = q->val;
-                if (exp->type == t_label || exp->type == t_func ||exp->type == t_goto ||exp->type == t_dec ||exp->type == t_param) continue;
-                tripleNode pre = q->pre;
-                if (exp->src1 && exp->src1->property == o_point){
-                    Operand tmp = new_tmp();
-                    insert(p, pre, getTriple(t_assign, tmp, exp->src1, NULL));
-                    exp->src1 = tmp;
-                }
-                if (exp->src2 && exp->src2->property == o_point){
-                    Operand tmp = new_tmp();
-                    insert(p, pre, getTriple(t_assign, tmp, exp->src2, NULL));
-                    exp->src2 = tmp;
-                }
-                if (exp->type != t_assign && exp->dest && exp->dest->property == o_point){
-                    Operand tmp = new_tmp();
-                    insert(p, pre, getTriple(t_assign, tmp, exp->dest, NULL));
-                    exp->dest = tmp;
-                }
-            }
-        }
-    }
     return funcBlock;
 }
 

@@ -32,6 +32,7 @@ void init_s(set* ss){
     map_init(&(s->h));
     map_init(&(s->hNum));
     s->next = 0; 
+    s->num = 0;
 }
 
 void addNum_s(set s, int num){
@@ -44,6 +45,7 @@ void addStr_s(set s, char* st){
         map_set(&(s->h), st, s->next);
         map_set(&(s->hNum), st, 1);
         s->next++;
+        s->num++;
     }else{
         int num = *map_get(&(s->hNum), st);
         map_remove(&(s->hNum), st);
@@ -52,6 +54,23 @@ void addStr_s(set s, char* st){
     }
 }
 
+int indexStr_s(set s, char* st){
+    if (findStr_s(s, st)) return *map_get(&(s->h), st);
+    else return -1;
+}
+
+void setCountStr_s(set s, char*st, int num){
+    map_remove(&(s->hNum), st);
+    map_set(&(s->hNum), st, num);
+}
+
+void setCountInt_s(set s, int num1, int num){
+    char* st = itoa(num1);
+    setCountStr_s(s, st, num);
+}
+int indexInt_s(set s, int num){
+    return indexStr_s(s, itoa(num));
+}
 
 int countInt_s(set s, int num){
     char* st = itoa(num);
@@ -77,6 +96,7 @@ void delStr_s(set s, char* st){
     if (findStr_s(s, st)){
         map_remove(&(s->hNum), st);
         map_remove(&(s->h), st);
+        s->num--;
     }
 }
 
@@ -96,4 +116,8 @@ list getStr_s(set s){
         push_back_l(l, strItem_, key);
     }
     return l;
+}
+
+int getNum_s(set s){
+    return s->num;
 }

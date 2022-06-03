@@ -1,6 +1,53 @@
 #include"objUtil.h"
 #include "graph.h"
 #include <stdio.h>
+#include "../ir/ir.h"
+void modifyIr(list funcBlock){
+    if (funcBlock){
+        for(funcNode p = (funcNode)funcBlock->head; p; p = p->next){
+            for(tripleNode q = (tripleNode)p->val->head; q; q = q->next){
+                TripleExp exp = q->val;
+                if (exp->type == t_label || exp->type == t_func ||exp->type == t_goto ||exp->type == t_dec ||exp->type == t_param) continue;
+                tripleNode pre = q->pre;
+                while(pre->val->type == t_arg) pre = pre->pre;
+                if (exp->src1 && exp->src1->property == o_point){
+                    Operand tmp = new_tmp();
+                    insert(p, pre, getTriple(t_assign, tmp, exp->src1, NULL));
+                    exp->src1 = tmp;
+                }
+                if (exp->src2 && exp->src2->property == o_point){
+                    Operand tmp = new_tmp();
+                    insert(p, pre, getTriple(t_assign, tmp, exp->src2, NULL));
+                    exp->src2 = tmp;
+                }
+                if (exp->type != t_assign && exp->dest && exp->dest->property == o_point){
+                    Operand tmp = new_tmp();
+                    insert(p, pre, getTriple(t_assign, tmp, exp->dest, NULL));
+                    exp->dest = tmp;
+                }
+            }
+        }
+        for(funcNode p = (funcNode)funcBlock->head; p; p = p->next){
+            for(tripleNode q = (tripleNode)p->val->head; q; q = q->next){
+                TripleExp exp = q->val;
+                //debugCode(exp);
+                if (!((exp->type == t_star) || (exp->type == t_div))) continue;
+                tripleNode pre = q->pre;
+                while(pre->val->type == t_arg) pre = pre->pre;
+                if (exp->src1 && exp->src1->type == o_const){
+                    Operand tmp = new_tmp();
+                    insert(p, pre, getTriple(t_assign, tmp, exp->src1, NULL));
+                    exp->src1 = tmp;
+                }
+                if (exp->src2 && exp->src2->type == o_const){
+                    Operand tmp = new_tmp();
+                    insert(p, pre, getTriple(t_assign, tmp, exp->src2, NULL));
+                    exp->src2 = tmp;
+                }
+            }
+        }
+    }
+}
 int isBranch(enum Ttype_  type){
     return (type == t_eq) || (type == t_geq) || (type == t_g) || (type == t_leq) || (type == t_l) || (type == t_goto) || (type == t_call) || (type == t_return);
 }
@@ -129,7 +176,7 @@ list genBlock(tripleNode q){
     int s = 0;
         for(; q; q = q->next){
             //debugCode(q->val);
-            if (pre == NULL || isBranch(pre->val->type) || q->val->type == t_label || q->val->type == t_call){
+            if (pre == NULL || isBranch(pre->val->type) || q->val->type == t_label || ((q->val->type == t_arg) && (pre->val->type != t_arg))){
                 if (curBlock){
                     curBlock->val->tail = q;
                     push_back(curBlockList, curBlock);

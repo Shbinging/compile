@@ -43,3 +43,10 @@ void setBitMapOne(bitmap bm){
 void setBitMapZero(bitmap bm){
     memset(bm->map, 0, sizeof(int) * bm->size);
 }
+
+bitmap getCopyBitMap(bitmap src){
+    bitmap dest;
+    initBitMap(dest, src->size);
+    for(int i = 0; i < src->size; i++) dest->map[i] = src->map[i];
+    return dest;
+}

@@ -9,10 +9,11 @@
 #include "objcode/bitmap.h"
 #include "objcode/set.h"
 #include "objcode/heap.h"
+#include "objcode/objUtil.h"
 int parseOK;
 TreeNode* parseTreeRoot;
 int main(int argc, char** argv){
-    //freopen(argv[2], "w", stdout);
+    freopen(argv[2], "w", stdout);
     if (argc <= 1) return 1;
     FILE* f = fopen(argv[1], "r");
     if (!f){
@@ -31,8 +32,9 @@ int main(int argc, char** argv){
 
     getOptIr(irOri);
     //deadVarLiminate(irOri); 
-    //printTripe(irOri);
-
+    
+    modifyIr(irOri);
+    printTripe(irOri);
     //testCFG(irOri);
 
     //printf("%s\n", itoa(0));

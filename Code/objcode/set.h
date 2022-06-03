@@ -12,6 +12,7 @@ typedef struct set_
     map_int_t h;
     map_int_t hNum;
     int next;
+    int num;
 }set_;
 
 typedef set_* set;
@@ -26,7 +27,11 @@ void delNum_s(set s, int num);
 list getStr_s(set s);
 int countInt_s(set s, int num);
 int countStr_s(set s, char*st);
-
+int indexStr_s(set s, char* st);
+int indexInt_s(set s, int num);
+int getNum_s(set s);
+void setCountStr_s(set s, char*st, int num);
+void setCountInt_s(set s, int num1, int num);
 typedef listNode(char* , int, strItem_) strItem_;
 typedef strItem_* strItem;
 #endif
