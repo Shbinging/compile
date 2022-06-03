@@ -1,8 +1,9 @@
 #include "bitmap.h"
 
-bitmap initBitMap(int length){
-    int size = (length + 31) / 32 * 32;
-    bitmap bm = malloc(sizeof(bitmap_));
+void initBitMap(bitmap* bmm, int length){
+    *bmm = malloc(sizeof(bitmap_));
+    bitmap bm = *bmm;
+    int size = (length + 31) / 32;
     bm->size = size;
     bm->map = malloc(sizeof(int) * size);
     memset(bm->map, 0, sizeof(int) * size);
@@ -40,5 +41,5 @@ void setBitMapOne(bitmap bm){
 }
 
 void setBitMapZero(bitmap bm){
-    memset(bm->map, 0, sizeof(bm->size));
+    memset(bm->map, 0, sizeof(int) * bm->size);
 }

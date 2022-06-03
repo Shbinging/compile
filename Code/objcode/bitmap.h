@@ -7,7 +7,7 @@ typedef struct bitmap_{
 } bitmap_;
 typedef bitmap_* bitmap;
 
-bitmap initBitMap(int length);
+void initBitMap(bitmap* bmm, int length);
 void setBitMap(bitmap bm, int index, int val);
 void joinBitMap(bitmap destbm, bitmap bm1);
 void unionBitMap(bitmap destbm, bitmap bm1);

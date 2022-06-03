@@ -39,7 +39,8 @@
         "set.h": "c",
         "string": "c",
         "vector": "c",
-        "heap.h": "c"
+        "heap.h": "c",
+        "bitmap.h": "c"
     },
     "C_Cpp.errorSquiggles": "Disabled"
 }

@@ -63,6 +63,14 @@ int main(int argc, char** argv){
     // printf("%d\n", countInt_s(s, 1));
     //bitmap bt = initBitMap(128);
     //for(int i = 0; i < 20; i++) yylex();
+    // bitmap b, b1;
+    // initBitMap(&b, 68);
+    // initBitMap(&b1, 68);
+    // setBitMap(b, 60, 1);
+    // setBitMap(b, 60, 0);
+    // setBitMap(b, 40, 1);
+    // unionBitMap(b, b1);
+    // printf("%d\n", getBitMap(b, 40));
     fclose(stdout);
     return 0;
 }
