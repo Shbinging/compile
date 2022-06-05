@@ -143,6 +143,10 @@ void getOptIr(list funcBlock){
         for(tripleNode q = (tripleNode) p->val->head; q; q = q->next){
             if(!q->property){
                 del(p->val, q);
+            }else{
+                if (q->val->src1) q->val->src1->isDest = 0;
+                if (q->val->src2) q->val->src2->isDest = 0;
+                if (q->val->dest) q->val-
             }
         }
     }
