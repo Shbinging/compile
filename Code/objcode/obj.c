@@ -434,6 +434,11 @@ void emitCondGoto(int rs, int rt, int label, enum Ttype_ type){
     }
     addCode(a);
 }
+void emitInstrJal(char* funcName){
+    instr a = getInstr(i_jal);
+    a->iOp.f = funcName;
+    addCode(a);
+}
 void isConst(Operand op){
     return op->property == o_const;
 }
@@ -555,11 +560,33 @@ void genBlockFunc(blockInfo block){
     }
 }
 
+static max(int a, int b){
+    return (a >= b) ? a : b;
+}
 void genBlockCall(blockInfo block){
+    int s = 0;
     for(tripleNode i = block->head; i != block->tail; i = i->next){
         TripleExp exp = i->val;
-        
+        if (exp->type == t_arg){s++;}
     }    
+    int j = 0;
+    emitInstrAddi(sp, sp, -4 * max(0, s - 4));
+    for(tripleNode i = block->head; i != block->tail; i = i->next){
+        TripleExp exp = i->val;
+        if (exp->type == t_arg){
+            if (s > 4){
+                emitInstrStore(sp, j * 4, *map_get(varToR, getVar(exp->dest)));
+                j++;
+            }else{
+                emitInstrMove(a0 + s - 1, *map_get(varToR, getVar(exp->dest)));
+            }
+            s--;
+        }else if (exp->type == t_call){
+            emitInstrJal(exp->src1->u.funcPoint->name);
+            emitInstrMove(alloc(exp->dest))
+        }
+    }
+
 }
 void testBlockAliveAnalyze(list funcBlock){
     iterList(funcBlock, funcNode){
