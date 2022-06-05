@@ -5,7 +5,7 @@
 #include "../utils/list/list.h"
 
 char* itoa(int num);
-
+char* itoa(int num);
 
 typedef struct set_
 {

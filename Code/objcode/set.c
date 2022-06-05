@@ -1,5 +1,14 @@
 #include "set.h"
 
+
+int atoi(char* strNum){
+    int s = 0;
+    for(int i = 0; i < strlen(strNum);i++){
+        s = s * 10 + strNum[i] - '0';
+    }
+    return s;
+}
+
 char* itoa(int num){
     int n = num, s = 0;
     if (n == 0){
@@ -68,6 +77,7 @@ void setCountInt_s(set s, int num1, int num){
     char* st = itoa(num1);
     setCountStr_s(s, st, num);
 }
+
 int indexInt_s(set s, int num){
     return indexStr_s(s, itoa(num));
 }

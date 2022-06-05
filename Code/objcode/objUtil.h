@@ -33,10 +33,30 @@ typedef struct instr_{
         struct R1{
             int rs;
         }
+        struct R1I1{
+            int rs;
+            int imm;
+        }r1i1;
+        struct R1L1{
+            int rs;
+            char* varName;
+        }r1l1;
     }iOp;
     
 } instr_;
-
+typedef enum r_type{
+    zero,at,
+    v0,v1,
+    a0,a1,a2,a3,
+    t0,t1,t2,t3,t4,t5,t6,t7,
+    t8,t9,
+    s0,s1,s2,s3,s4,s5,s6,s7,
+    k0,k1,
+    gp,
+    sp,
+    fp,
+    ra
+} r_type;
 typedef instr_* instr;
 typedef listNode(instr_, int, instrItem_) instrItem_;
 typedef instrItem_* instrItem;
