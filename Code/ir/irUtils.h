@@ -26,7 +26,6 @@ typedef Operand_ * Operand;
 typedef struct TripleExp_{
     enum Ttype_ {t_label, t_func, t_assign, t_add, t_sub, t_star, t_div, t_goto, t_eq, t_neq, t_g, t_l, t_leq, t_geq, t_return ,t_dec, t_arg, t_call, t_param, t_read, t_write} type;
     Operand src1, src2, dest;
-    int isDest;
 } TripleExp_;
 typedef TripleExp_* TripleExp;
 
@@ -51,3 +50,16 @@ void debugCode(TripleExp tri);
 char* sprintOperand(Operand op);
 int isOperandValid(Operand op);
 #endif
+
+/*
+ t_label, t_func,
+ t_assign,
+ t_add, t_sub, t_star, t_div, 
+ t_goto, t_eq, t_neq, t_g, t_l, t_leq, t_geq, 
+ t_return ,
+ t_dec, 
+ t_arg, t_call, 
+ t_param, 
+ t_read, t_write
+ } type;
+*/
