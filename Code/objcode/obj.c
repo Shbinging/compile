@@ -335,9 +335,9 @@ int Ensure(char* name){
     }
 }
 
-void emitInstrLabel(Operand op){
+void emitInstrLabel(int dest){
     instr a = getInstr(i_label);
-    a->iOp.l1 = op;
+    a->iOp.l1.dest = op;
     addCode(a);
 }
 
@@ -381,41 +381,89 @@ void emitInstrSub(int rd, int rs, int rt){
     a->iOp.r3.rs = rs;
     a->iOp.r3.rt = rt;
     a->iOp.r3.rd = rd;
+    addCode(a);
 }
-void emitInstrSub
+void emitInstrStar(int rd, int rs, int rt){
+    instr a = getInstr(i_mul);
+    a->iOp.r3.rs = rs;
+    a->iOp.r3.rt = rt;
+    a->iOp.r3.rd = rd;
+    addCode(a);
+}
+
+void emitInstrDiv(int rs, int rt){
+    instr a = getInstr(i_div);
+    a->iOp.r2.rs = rs;
+    a->iOp.r2.rt = rt;
+    addCode(a);
+}
+
+void emitInstrMflo(int rs){
+    instr a = getInstr(i_mflo);
+    a->iOp.r1.rs = rs;
+    addCode(a);
+}
+void emitInstrGoto(int dest){
+    instr a = getInstr(i_j);
+    a->iOp.l1.dest = dest;
+    addCode(a);
+}
+void emitInstrJr(){
+    instr a = getInstr(i_jr);
+    a->iOp.r1.rs = ra;
+    addCode(a);
+}
+void emitCondGoto(int rs, int rt, int label, enum Ttype_ type){
+    instr a = getInstr(i_bge);
+    a->iOp.r2l1.rs = rs;
+    a->iOp.r2l1.rt = rt;
+    a->iOp.r2l1.dest = label;
+    switch (type){
+        t_eq:
+            a->iType = i_beq;break;
+        t_neq:
+            a->iType = i_bne;break;
+        t_g:
+            a->iType = i_bgt;break;
+        t_l:
+            a->iType = i_blt;break;
+        t_geq:
+            a->iType = i_bge;break;
+        t_leq:
+            a->iType = i_ble;break;
+    }
+    addCode(a);
+}
 void isConst(Operand op){
     return op->property == o_const;
 }
 #define FT canTrans = 1;
 #define alloc(x) Allocate(getVar(x))
-void genObj(TripleExp exp){
+void genObjNormal(TripleExp exp){
     int canTrans = 0;
-    Ttype_ type = exp->type;
+    enum Ttype_ type = exp->type;
     if (type == t_label){
-            emitInstrLabel(exp->dest);
+            emitInstrLabel(exp->dest->u.labelId);
             FT
     }
     if (type == t_assign){
             if (isPoint(exp->dest)){
-                int regx =Allocate(getVar(exp->dest)), regy = Allocate(getVar(exp->src1));
+                int regx = alloc(exp->dest), regy = alloc(exp->src1);
                 emitInstrStore(regx, 0, regy);
             }else{
+                int regx = alloc(exp->dest);
                 switch(exp->src1->type){
                     case o_const:
-                        int regx = Allocate(getVar(exp->dest));
                         emitInstrLi(regx, exp->src1->u.constInt);
                         FT
                     case o_point:
-                        int regx =Allocate(getVar(exp->dest)), regy = Allocate(getVar(exp->src1));
-                        emitInstrLoad(regy, 0, regx);
+                        emitInstrLoad(alloc(exp->src1), 0, regx);
                         FT
                     case o_address:
-                        int regx = Allocate(getVar(exp->dest));
                         emitInstrAddi(regx, fp, getVarAddress(getVar(exp->src1)));
                         FT
                     case o_normal:
-                        int regx =Allocate(getVar(exp->dest)), regy = Allocate(getVar(exp->src1));
-                        emitInstrMove(regx, regy);
+                        emitInstrMove(regx, alloc(exp->src1));
                         FT
                     default:
                     assert(0);
@@ -424,59 +472,94 @@ void genObj(TripleExp exp){
             FT
     }
     if (type == t_add){
-            int regx = Allocate(getVar(exp->dest));
-            if (isConst(exp->src1) && isConst(exp->src2)){
-                int val = exp->src1->u.constInt + exp->src2->u.constInt;
-                emitInstrLi(regx, val);
-                FT
-            }else{
-                Operand rs = NULL, imm;
-                if (isConst(exp->src1)){
-                    imm = exp->src1;
-                    rs = exp->src2;
-                }else if (isConst(exp->src2)){
-                    imm = exp->src2;
-                    rs = exp->src1;
-                }
-                if (!rs){
-                    int regy = alloc(exp->src1), regz = alloc(exp->src2);
-                    emitInstrAdd(regx, regy, regz);
-                    FT
-                }else{
-                    int regy = alloc(rs);
-                    emitInstrAddi(regx, regy, imm->u.constInt);
-                    FT
-                }
-            }
+        int regx = alloc(exp->dest), regy = alloc(exp->src1), regz = alloc(exp->src2);
+        emitInstrAdd(regx, regy, regz);
     }
     if (type == t_sub){
-                int regx = Allocate(getVar(exp->dest));
-                Operand rs = NULL, imm;
-                if (isConst(exp->src1)){
-                    imm = exp->src1;
-                    rs = exp->src2;
-                }else if (isConst(exp->src2)){
-                    imm = exp->src2;
-                    rs = exp->src1;
-                }
-                if (!rs){
-                    int regy = alloc(exp->src1), regz = alloc(exp->src2);
-                    emitInstrSub(regx, regy, regz);
-                }else{
-                    int regy = alloc(rs);
-                    emitInstrAddi(regx, regy, imm->u.constInt);
-                }
+        int regx = alloc(exp->dest), regy = alloc(exp->src1), regz = alloc(exp->src2);
+        emitInstrSub(regx, regy, regz);      
+    }
+    if (type == t_star){
+        int regx = alloc(exp->dest), regy = alloc(exp->src1), regz = alloc(exp->src2);
+        emitInstrStar(regx, regy, regz);  
+    }
+    if (type == t_div){
+        int regx = alloc(exp->dest), regy = alloc(exp->src1), regz = alloc(exp->src2);
+        emitInstrDiv(regy, regz);  
+        emitInstrMflo(regx);
+    }
+    if (type == t_goto){
+        emitInstrGoto(exp->dest->u.labelId);
+    }
+    if (type == t_return){
+        int regx = alloc(exp->dest);
+        emitInstrMove(v0, regx);
+        emitInstrJr();
+    }
+    if (type == t_eq){
+        int regx = alloc(exp->src1), regy = alloc(exp->src2);
+        emitCondGoto(regx, regy, exp->dest->u.labelId, t_eq);
+    }
+    if (type == t_neq){
+        int regx = alloc(exp->src1), regy = alloc(exp->src2);
+        emitCondGoto(regx, regy, exp->dest->u.labelId, t_neq);
+    }
+    if (type == t_g){
+        int regx = alloc(exp->src1), regy = alloc(exp->src2);
+        emitCondGoto(regx, regy, exp->dest->u.labelId, t_g);
+    }
+    if (type == t_geq){
+        int regx = alloc(exp->src1), regy = alloc(exp->src2);
+        emitCondGoto(regx, regy, exp->dest->u.labelId, t_geq);
+    }
+    if (type == t_l){
+        int regx = alloc(exp->src1), regy = alloc(exp->src2);
+        emitCondGoto(regx, regy, exp->dest->u.labelId, t_l);
+    }
+    if (type == t_leq){
+        int regx = alloc(exp->src1), regy = alloc(exp->src2);
+        emitCondGoto(regx, regy, exp->dest->u.labelId, t_leq);
     }
 }
-int genBlockObj(blockInfo block){
+
+void genBlockObjNormal(blockInfo block){
     struct blockAliveVarAnalyzeRes res = blockAliveVarAnalyze(i->val);
     varNum = res.varNum;
     list* varTimeStap = res.varTimestamp;
     initRegisterAlloc();
     for(tripleNode i = block->head; i != block->tail; i = i->next){
         TripleExp exp = i->val;
-        
+        genObjNormal(exp);
     }
+    list var = getStr_s(res.varSet);
+    iterList(var, strItem){
+        if (findStr_s(aliveSet, i->val)){
+            emitInstrStore(fp, getVarAddress(i->val), *map_get(stackTable, i->val));
+        }
+    }    
+}
+
+void genBlockFunc(blockInfo block){
+    for(tripleNode i = block->head; i != block->tail; i = i->next){
+        TripleExp exp = i->val;
+        int s = 0;
+        if (exp->type == t_param){
+            s++;
+            if (s <= 4){
+                emitInstrStore(fp, getVarAddress(getVar(exp->dest)), a0 + s - 1);
+            }else{
+                emitInstrLoad(fp, 4 * (s - 5), a0);
+                emitInstrStore(fp, getVarAddress(getVar(exp->dest)), s0);
+            }
+        }
+    }
+}
+
+void genBlockCall(blockInfo block){
+    for(tripleNode i = block->head; i != block->tail; i = i->next){
+        TripleExp exp = i->val;
+        
+    }    
 }
 void testBlockAliveAnalyze(list funcBlock){
     iterList(funcBlock, funcNode){

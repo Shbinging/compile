@@ -11,7 +11,7 @@ typedef struct blockInfo_{
     int id;
 } blockInfo_;
 typedef struct instr_{
-    enum instrType{i_li, i_la, i_move, i_bgt, i_bge, i_blt, i_ble, i_label, i_add, i_addi, i_sub, i_mul, i_div, i_mflo, i_lw, i_sw, i_j, i_jal} iType;
+    enum instrType{i_li, i_la, i_move, i_bgt, i_bge, i_blt, i_ble, i_label, i_add, i_addi, i_sub, i_mul, i_div, i_mflo, i_lw, i_sw, i_j, i_jal, i_jr, i_beq, i_bne,} iType;
     union oprand
     {
         struct R3{
@@ -21,18 +21,18 @@ typedef struct instr_{
             int rs, rt, imm;
         }r2i1;
         struct L1{
-            char* dest;
+            int dest;
         }l1;
         struct R2L1{
             int rs, rt;
-            char* dest;
+            int dest;
         }r2l1;
         struct R2{
             int rs, rt;
         }r2;
         struct R1{
             int rs;
-        }
+        }r1;
         struct R1I1{
             int rs;
             int imm;
