@@ -37,10 +37,9 @@ typedef struct instr_{
             int rs;
             int imm;
         }r1i1;
-        struct R1L1{
-            int rs;
-            char* varName;
-        }r1l1;
+        struct func{
+            char* funcName;
+        }func;
     }iOp;
     
 } instr_;

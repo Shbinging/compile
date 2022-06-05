@@ -236,6 +236,7 @@ map_int_t varToR;
 list objCode;
 map_int_t stackTable, stackTableTmp;
 int esp;
+int espFrame;
 int varNum;
 int totalVarNum;
 
@@ -278,17 +279,18 @@ void emitInstrStore(int base, int offset, int dest){
     a->iOp.r2i1.rt = dest;
     addCode(a);
 }
-void initFunc(){
-    totalVarNum = get_num_s(aliveSet);
-}
+
 
 void initRegisterAlloc(){
     map_init(&varToR);
     map_init(&stackTableTmp);
+    esp = espFrame;
     for(int i = 0; i < maxR; i++){
         init_s(&rTable[i]);
+        rTimeStap[i] = 0;
     }
 }
+
 #define SIZE(x) ((x) * 4)
 
 
@@ -315,9 +317,9 @@ int Allocate(char* name){
             return i;
         }
     }
-    int mi = 0, result;
+    int mi = 0, result = 0;
     for(int i = 0; i < maxR; i++){
-        if (rTimeStap[i] > mi){
+        if (rTimeStap[i] >= mi){
             mi = rTimeStap[i];
             result = i;
         }
@@ -554,7 +556,7 @@ void genBlockFunc(blockInfo block){
                 emitInstrStore(fp, getVarAddress(getVar(exp->dest)), a0 + s - 1);
             }else{
                 emitInstrLoad(fp, 4 * (s - 5), a0);
-                emitInstrStore(fp, getVarAddress(getVar(exp->dest)), s0);
+                emitInstrStore(fp, getVarAddress(getVar(exp->dest)), a0);
             }
         }
     }
@@ -570,6 +572,7 @@ void genBlockCall(blockInfo block){
         if (exp->type == t_arg){s++;}
     }    
     int j = 0;
+    int s1 = s;
     emitInstrAddi(sp, sp, -4 * max(0, s - 4));
     for(tripleNode i = block->head; i != block->tail; i = i->next){
         TripleExp exp = i->val;
@@ -583,11 +586,83 @@ void genBlockCall(blockInfo block){
             s--;
         }else if (exp->type == t_call){
             emitInstrJal(exp->src1->u.funcPoint->name);
-            emitInstrMove(alloc(exp->dest))
+            emitInstrMove(alloc(exp->dest), v0); //XXX:是否存在指针的情况？
         }
     }
-
+    emitInstrAddi(sp, sp, 4 * max(0, s1 - 4));
 }
+
+/*
+set rTable[maxR];
+int rTimeStap[maxR];
+map_int_t varToR;
+list objCode;
+map_int_t stackTable, stackTableTmp;
+int esp;//ok
+int espFrame;//ok
+int varNum;//
+int totalVarNum;//ok
+*/
+void genFunc(tripleNode funcBlock){
+    list c = genBlock(funcBlock);
+    aliveSet = simpleFuncAliveVarAnalyze(c);
+    set array;
+    init_s(array);
+    for(tripleNode q = funcBlock; q; q = q->next){
+        TripleExp exp = q->val;
+        if (exp->type == t_dec){
+            addStr_s(array, exp->dest->u.varPoint->name);
+            setCountStr_s(array, exp->dest->u.varPoint->name, exp->dest->addtion.size);
+        }
+        if (exp->type == t_param){
+            addStr_s(aliveSet, getVar(exp->dest));
+        }
+    }
+    list varList = getStr_s(aliveSet);
+    map_init(&stackTable);
+    espFrame = 2;
+    iterList(varList, strItem){
+        char* varName = i->val;
+        map_set(&stackTable, varName, espFrame);
+        if (!findStr_s(array, varName)){
+            espFrame++;
+        }else{
+            espFrame += countStr_s(array, varName);
+        }
+    }
+    int frameSize = espFrame * 4;
+    emitInstrAddi(sp, sp, -frameSize);
+    emitInstrStore(sp, frameSize -4, ra);
+    emitInstrStore(sp, frameSize - 8, fp);
+    emitInstrAddi(fp, sp, frameSize);
+    totalVarNum = get_num_s(aliveSet);
+    initRegisterAlloc();
+    iterList(c, blockItem){
+        Ttype_ type = ((tripleNode)(i->val->head))->val->type;
+        if (type == t_arg || type ==t_call){
+            genBlockCall(i->val);
+        }else if (type == t_func){
+            genBlockFunc(i->val);
+        }else genBlockObjNormal(i->val);
+    }
+    emitInstrLoad(sp, frameSize - 4, ra);
+    emitInstrLoad(sp, frameSize - 8, fp);
+    emitInstrAddi(sp, sp, frameSize);
+    emitInstrJr();
+}
+
+list genOBJ(list funcBlock){
+    list obj;
+    createList(&obj);
+    iterList(funcBlock, funcNode){
+        list objCode;
+        createList(&objCode);
+        genFunc(i->val->head);
+        append_list(obj, objCode);
+    }
+    return obj;
+}
+
 void testBlockAliveAnalyze(list funcBlock){
     iterList(funcBlock, funcNode){
         list c = genBlock(i->val->head);
