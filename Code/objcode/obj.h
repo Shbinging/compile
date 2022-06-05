@@ -9,4 +9,5 @@
 #include "bitmap.h"
 #include "heap.h" 
 #include "set.h"
+void testBlockAliveAnalyze(list funcBlock);
 #endif

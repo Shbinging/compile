@@ -37,4 +37,7 @@ void* find(void*, int(*)(void*));
 void append_list(void* a, void* b);
 void* getIndex_l(void* a, int index);
 typedef listHead* list;
+
+typedef listNode(int, int, intItem_) intItem_;
+typedef intItem_* intItem;
 #endif

@@ -46,7 +46,31 @@ void setBitMapZero(bitmap bm){
 
 bitmap getCopyBitMap(bitmap src){
     bitmap dest;
-    initBitMap(dest, src->size);
+    initBitMap(&dest, src->size);
     for(int i = 0; i < src->size; i++) dest->map[i] = src->map[i];
     return dest;
+}
+
+void printBitMap(bitmap bm){
+    printf("set bitmap\n");
+    char st[32];
+    for(int i = 0; i < bm->size; i++){
+        memset(st, 0, sizeof(st));
+        char* j = st + 31;
+        int tmp = bm->map[i];
+        while(tmp){
+            *j = (tmp % 2) + '0';
+            j--;
+            tmp /= 2;
+        }
+        for(int k = 0; k < 32; k++){
+            if(k % 8 == 7){
+                printf(" ");
+            }
+            if (st[k] == 0) printf("0");
+            printf("%c", st[k]);
+        }
+        printf(" ");
+    }
+    printf("\nend bitmap\n");
 }

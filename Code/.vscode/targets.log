@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Thu Jun  2 21:31:07 2022
+# Make data base, printed on Sun Jun  5 07:31:49 2022
 
 # Variables
 
@@ -39,7 +39,7 @@ VSCODE_NLS_CONFIG = {"locale":"zh-cn","availableLanguages":{"*":"zh-cn"},"_langu
 # environment
 _ = /bin/cat
 # makefile (from 'Makefile', line 8)
-CFLAGS = -std=c99 -g $(d)
+CFLAGS = -std=c99 -g $(d) -O0
 # makefile (from 'Makefile', line 1)
 MAKEFILE_LIST :=  Makefile
 # 'override' directive
@@ -67,7 +67,7 @@ YFC = $(shell find ./ -name "*.y" | sed s/[^/]*\\.y/syntax.tab.c/)
 # makefile (from 'Makefile', line 15)
 LFC = $(shell find ./ -name "*.l" | sed s/[^/]*\\.l/lex.yy.c/)
 # environment
-SSH_AUTH_SOCK = /tmp/vscode-ssh-auth-02c170b141d8e0866344a852e3b39faa84321014.sock
+SSH_AUTH_SOCK = /tmp/vscode-ssh-auth-e9bb24517187e017837d6c577ba88c5a140bb9f7.sock
 # automatic
 %F = $(notdir $%)
 # environment
@@ -75,7 +75,7 @@ VSCODE_PIPE_LOGGING = true
 # environment
 PWD = /root/Lab/Code
 # environment
-VSCODE_IPC_HOOK_CLI = /tmp/vscode-ipc-c6d126d2-fa98-4da0-b381-c4ce2577dccb.sock
+VSCODE_IPC_HOOK_CLI = /tmp/vscode-ipc-f59b0de1-4898-49e7-8232-b46e35041968.sock
 # environment
 VSCODE_AMD_ENTRYPOINT = vs/workbench/api/node/extensionHostProcess
 # environment
@@ -113,7 +113,7 @@ YFO = $(YFC:.c=.o)
 # makefile (from 'Makefile', line 7)
 BISON = bison
 # environment
-REMOTE_CONTAINERS_IPC = /tmp/vscode-remote-containers-ipc-02c170b141d8e0866344a852e3b39faa84321014.sock
+REMOTE_CONTAINERS_IPC = /tmp/vscode-remote-containers-ipc-e9bb24517187e017837d6c577ba88c5a140bb9f7.sock
 # default
 MAKE_COMMAND := make
 # default
@@ -147,7 +147,7 @@ LC_ALL = C
 # default
 SUFFIXES := 
 # environment
-REMOTE_CONTAINERS_SOCKETS = ["/tmp/vscode-ssh-auth-02c170b141d8e0866344a852e3b39faa84321014.sock"]
+REMOTE_CONTAINERS_SOCKETS = ["/tmp/vscode-ssh-auth-e9bb24517187e017837d6c577ba88c5a140bb9f7.sock"]
 # default
 .INCLUDE_DIRS = /usr/include /usr/local/include /usr/include
 # default
@@ -261,9 +261,16 @@ ir/irOptimization.d:
 #  Failed to be updated.
 
 # Not a target:
+objcode/heap.d:
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
+
+# Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-06-01 11:41:31.725678714
+#  Last modified 2022-06-05 07:31:44.228038634
 #  File has been updated.
 #  Successfully updated.
 
@@ -330,7 +337,20 @@ ir/ir.o:
 #  File has not been updated.
 
 # Not a target:
+objcode/set.d:
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
+
+# Not a target:
 ir/irOptimization.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+objcode/heap.o:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
@@ -349,7 +369,7 @@ objcode/graph.d:
 #  File has been updated.
 #  Failed to be updated.
 
-parser: syntax ir/ir.o ir/irOptimization.o ir/irUtils.o utils/syntaxTree/tree.o utils/map/map.o utils/list/list.o frontEnd/syntax.tab.o objcode/bitmap.o objcode/obj.o objcode/objUtil.o objcode/graph.o main.o sdt/sdt.o
+parser: syntax ir/ir.o ir/irOptimization.o ir/irUtils.o utils/syntaxTree/tree.o utils/map/map.o utils/list/list.o frontEnd/syntax.tab.o objcode/bitmap.o objcode/obj.o objcode/heap.o objcode/set.o objcode/objUtil.o objcode/graph.o main.o sdt/sdt.o
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
@@ -420,6 +440,12 @@ lexical: frontEnd/lexical.l
 #  recipe to execute (from 'Makefile', line 27):
 	$(FLEX) -o $(LFC) $(LFILE)
 
+# Not a target:
+objcode/set.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
 syntax: lexical syntax-c
 #  Implicit rule search has not been done.
 #  Modification time never checked.
@@ -474,19 +500,19 @@ tryB:
 	cd ../backup && flex -o lexTry.yy.c lexicalTry.l && bison -d -t syntax1.y && gcc syntax1.tab.c -lfl -ly -o parser && ./parser ../Code/test.txt
 
 # files hash-table stats:
-# Load=45/1024=4%, Rehash=0, Collisions=0/95=0%
+# Load=49/1024=5%, Rehash=0, Collisions=0/103=0%
 # VPATH Search Paths
 
 # No 'vpath' search paths.
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 62 / storage = 702 B / avg = 11 B
-# current buf: size = 8162 B / used = 702 B / count = 62 / avg = 11 B
+# strcache buffers: 1 (0) / strings = 66 / storage = 760 B / avg = 11 B
+# current buf: size = 8162 B / used = 760 B / count = 66 / avg = 11 B
 
-# strcache performance: lookups = 101 / hit rate = 38%
+# strcache performance: lookups = 107 / hit rate = 38%
 # hash-table stats:
-# Load=62/8192=1%, Rehash=0, Collisions=1/101=1%
-# Finished Make data base on Thu Jun  2 21:31:07 2022
+# Load=66/8192=1%, Rehash=0, Collisions=1/107=1%
+# Finished Make data base on Sun Jun  5 07:31:49 2022
 
  

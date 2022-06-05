@@ -16,6 +16,8 @@ typedef struct set_
 }set_;
 
 typedef set_* set;
+typedef listNode(char* , int, strItem_) strItem_;
+typedef strItem_* strItem;
 
 void init_s(set* ss);
 void addNum_s(set s, int num);
@@ -32,6 +34,5 @@ int indexInt_s(set s, int num);
 int getNum_s(set s);
 void setCountStr_s(set s, char*st, int num);
 void setCountInt_s(set s, int num1, int num);
-typedef listNode(char* , int, strItem_) strItem_;
-typedef strItem_* strItem;
+void print_set(set s);
 #endif

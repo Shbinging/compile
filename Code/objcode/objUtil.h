@@ -51,6 +51,7 @@ typedef listHead* list;
 list voidSplitList(list funcBlock);
 void buildCFG(tripleNode funcBlock);
 void testCFG(list funcBlock);
-
+list genBlock(tripleNode q);
 void modifyIr(list funcBlock);
+void printBlock(list p);
 #endif

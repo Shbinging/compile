@@ -121,3 +121,12 @@ list getStr_s(set s){
 int getNum_s(set s){
     return s->num;
 }
+
+void print_set(set s){
+    list nameList = getStr_s(s);
+    printf("start set\n");
+    for(strItem i = nameList->head; i; i = i->next){
+        printf("%d %s\n", indexStr_s(s, i->val), i->val);
+    }
+    printf("end set\n");
+}

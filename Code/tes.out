@@ -1,6 +1,6 @@
 ./parser test/test1.txt /root/Lab/Code/test.out
 
-===============
+
 FUNCTION fact :
 PARAM n
 IF n == #1 GOTO label1
@@ -15,13 +15,13 @@ IF n == #1 GOTO label1
 varAlive: n, 
 var n 2 
 
-===============
+
 GOTO label2
 
 GOTO label2
 varAlive: 
 
-===============
+
 LABEL label1 :
 RETURN n
 
@@ -32,13 +32,13 @@ RETURN n
 varAlive: n, 
 var n 1 
 
-===============
+
 GOTO label3
 
 GOTO label3
 varAlive: 
 
-===============
+
 LABEL label2 :
 tmp10 := n - #1
 
@@ -50,7 +50,7 @@ varAlive: 10, n,
 var 10 
 var n 1 
 
-===============
+
 ARG tmp10
 tmp8 := CALL fact
 
@@ -62,7 +62,7 @@ varAlive: 10, 8,
 var 10 0 
 var 8 
 
-===============
+
 tmp6 := n * tmp8
 RETURN tmp6
 
@@ -75,13 +75,13 @@ var 8 0
 var 6 1 
 var n 0 
 
-===============
+
 LABEL label3 :
 
 LABEL label3 :
 varAlive: 
 
-===============
+
 FUNCTION main :
 READ tmp15
 m := tmp15
@@ -101,19 +101,19 @@ varAlive: m,
 var m 3 
 var 15 2 1 
 
-===============
+
 GOTO label5
 
 GOTO label5
 varAlive: 
 
-===============
+
 LABEL label4 :
 
 LABEL label4 :
 varAlive: 
 
-===============
+
 ARG m
 tmp21 := CALL fact
 
@@ -125,7 +125,7 @@ varAlive: 21, m,
 var 21 
 var m 0 
 
-===============
+
 result := tmp21
 GOTO label6
 
@@ -137,7 +137,7 @@ varAlive: result, 21,
 var result 
 var 21 0 
 
-===============
+
 LABEL label5 :
 result := #1
 
@@ -148,7 +148,7 @@ result := #1
 varAlive: result, 
 var result 
 
-===============
+
 LABEL label6 :
 WRITE result
 tmp28 := #0

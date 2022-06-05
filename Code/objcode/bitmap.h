@@ -14,4 +14,6 @@ void unionBitMap(bitmap destbm, bitmap bm1);
 int getBitMap(bitmap bm, int index);
 void setBitMapOne(bitmap bm);
 void setBitMapZero(bitmap bm);
+bitmap getCopyBitMap(bitmap src);
+void printBitMap(bitmap bm);
 #endif
