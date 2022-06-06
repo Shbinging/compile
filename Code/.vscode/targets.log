@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Sun Jun  5 07:31:49 2022
+# Make data base, printed on Mon Jun  6 12:19:37 2022
 
 # Variables
 
@@ -83,7 +83,7 @@ HOME = /root
 # environment
 REMOTE_CONTAINERS = true
 # environment
-APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = true
+APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = 1
 # automatic
 +F = $(notdir $+)
 # environment
@@ -165,9 +165,9 @@ VSCODE_EXTHOST_WILL_SEND_SOCKET = true
 
 # Directories
 
-# . (device 2064, inode 170253): 19 files, no impossibilities.
+# . (device 2064, inode 170253): 23 files, no impossibilities.
 
-# 19 files, no impossibilities in 1 directories.
+# 23 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -270,7 +270,7 @@ objcode/heap.d:
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-06-05 07:31:44.228038634
+#  Last modified 2022-06-06 12:18:56.126932167
 #  File has been updated.
 #  Successfully updated.
 
@@ -282,6 +282,7 @@ objcode/objUtil.o:
 
 ta:
 #  Implicit rule search has not been done.
+ 
 #  Modification time never checked.
 #  File has not been updated.
 #  recipe to execute (from 'Makefile', line 52):
@@ -294,8 +295,7 @@ test:
 #  File does not exist.
 #  File has not been updated.
 #  recipe to execute (from 'Makefile', line 46):
- 
-	./parser test/test1.txt /root/Lab/Code/test.out
+	./parser test/test1.txt /root/Lab/Code/test.s
 
 # Not a target:
 objcode/bitmap.o:
@@ -507,12 +507,12 @@ tryB:
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 66 / storage = 760 B / avg = 11 B
-# current buf: size = 8162 B / used = 760 B / count = 66 / avg = 11 B
+# strcache buffers: 1 (0) / strings = 70 / storage = 792 B / avg = 11 B
+# current buf: size = 8162 B / used = 792 B / count = 70 / avg = 11 B
 
-# strcache performance: lookups = 107 / hit rate = 38%
+# strcache performance: lookups = 111 / hit rate = 36%
 # hash-table stats:
-# Load=66/8192=1%, Rehash=0, Collisions=1/107=1%
-# Finished Make data base on Sun Jun  5 07:31:49 2022
+# Load=70/8192=1%, Rehash=0, Collisions=1/111=1%
+# Finished Make data base on Mon Jun  6 12:19:37 2022
 
  

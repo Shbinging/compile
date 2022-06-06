@@ -116,7 +116,7 @@ void printObjCode(instr code){
 }
 
 void printObj(){
-    printf(".global main\n");
+    printf(".globl main\n");
     printf(".text\n");
     for(int i = 0; i < objCode->length; i++){
         instr code = objCode->a[i];
@@ -384,7 +384,7 @@ set getVarToInt(funcIR func){
         if (isVar(ir[i]->src2)) addStr_s(totalVar, getVar(ir[i]->src2));
         if (isVar(ir[i]->dest)) addStr_s(totalVar, getVar(ir[i]->dest));
     }
-    //print_set(totalVar);
+    print_set(totalVar);
     return totalVar;
 }
 
@@ -452,6 +452,7 @@ void blockAliveVarAnalyze(blockIR block){
 int* varAddress;
 int* varAlloc;
 vector_int rtoVar[maxR];
+bitmap modifyVar;
 int esp;
 int frameSize;
 int init_mem_alloc(){
@@ -480,6 +481,8 @@ int init_mem_alloc(){
 int init_reg_alloc(){
     varAlloc = malloc(sizeof(int) * getBlockVarNum());
     memset(varAlloc, 0, sizeof(varAlloc));
+    initBitMap(&modifyVar, getBlockVarNum());
+    setBitMapZero(modifyVar);
     for(int i = 0; i < maxR; i++){ 
         init_v_int(&rtoVar[i]);
     }
@@ -490,7 +493,7 @@ int finish_reg_alloc(){
     for(int i = t0; i <= s7; i++){
         for(int j = 0; j < rtoVar[i]->length; j++){
             int var_id = rtoVar[i]->a[j];
-            if (getBitMap(globalAliveVar, var_id)){
+            if (getBitMap(globalAliveVar, var_id) && getBitMap(modifyVar, var_id)){
                 assert(getVarAddr(var_id) <= frameSize);
                 emitInstrStore(fp, getVarAddr(var_id), i);
             }
@@ -567,6 +570,7 @@ int alloc(int var_id){
 }
 int allocOp(Operand op){
     assert(isVar(op));
+    setBitMap(modifyVar, getVarIdByOp(op), 1);
     return alloc(getVarIdByOp(op));
 }
 void genObjCode(TripleExp exp){
@@ -703,7 +707,7 @@ void genFuncBlock(blockIR block){
     emitInstrFunc(exp->dest->u.funcPoint->name);
     emitInstrAddi(sp, sp, -frameSize);
     emitInstrStore(sp, frameSize -4, ra);
-    emitInstrStore(fp, frameSize - 8, sp);
+    emitInstrStore(sp, frameSize - 8, sp);
     emitInstrAddi(fp, sp, frameSize);
     int s = 0;
     for(curIR = block.ir_s + 1; curIR <= block.ir_e; curIR++){
@@ -720,16 +724,19 @@ void genFuncBlock(blockIR block){
     }
 }
 
+int isGoto(enum Ttype_ type){
+    return (t_goto <= type && type <= t_geq) || type == t_return;
+}
 void genNormalBlock(blockIR block){
     baseIR = block.ir_s;
     blockAliveVarAnalyze(block);
     init_reg_alloc();
     for(curIR = block.ir_s; curIR <= block.ir_e; curIR++){
-        if (curIR == block.ir_e && isBranch(ir[curIR]->type)) break;
+        if (curIR == block.ir_e && isGoto(ir[curIR]->type)) break;
         genObjCode(ir[curIR]);
     }
     finish_reg_alloc();
-    if (curIR == block.ir_e && isBranch(ir[curIR]->type)){
+    if (curIR == block.ir_e && isGoto(ir[curIR]->type)){
         genObjCode(ir[curIR]);
     }
 }
