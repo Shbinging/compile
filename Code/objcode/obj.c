@@ -50,6 +50,7 @@ void printObjCode(instr code){
         case i_add:
         case i_sub:
         case i_mul:
+            printf("\t");
             printf("%s %s, %s, %s", GI(code->iType), CC(r3, rd), CC(r3, rs), CC(r3, rt));
             break;
         case i_beq:
@@ -58,42 +59,54 @@ void printObjCode(instr code){
         case i_blt:
         case i_bge:
         case i_ble:
+        printf("\t");
             printf("%s %s, %s, label%d", GI(code->iType), CC(r2l1, rs), CC(r2l1, rt), code->iOp.r2l1.dest);
             break;
         case i_addi:
+        printf("\t");
             printf("addi %s, %s, %d", CC(r2i1, rt), CC(r2i1, rs), code->iOp.r2i1.imm);
             break;
         case i_div:
+        printf("\t");
             printf("div %s, %s", CC(r2, rs), CC(r2, rt));
             break;
         case i_move:
+        printf("\t");
             printf("move %s, %s", CC(r2, rt), CC(r2, rs));
             break;
         case i_li:
+        printf("\t");
             printf("li %s, %d", CC(r1i1, rs), code->iOp.r1i1.imm);
             break;
         case i_mflo:
+        printf("\t");
             printf("mflo %s", CC(r1, rs));
             break;
         case i_j:
+        printf("\t");
             printf("j label%d", code->iOp.l1.dest);
             break;
         case i_jal:
+        printf("\t");
             printf("jal %s", code->iOp.func.funcName);
             break;
         case i_jr:
+        printf("\t");
             printf("jr $ra");
             break;
         case i_lw:
+        printf("\t");
             printf("lw %s, %d(%s)", CC(r2i1, rt), code->iOp.r2i1.imm, CC(r2i1, rs));
             break;
         case i_sw:
+        printf("\t");
             printf("sw %s, %d(%s)", CC(r2i1, rt), code->iOp.r2i1.imm, CC(r2i1, rs));
             break;
         case i_func:
             printf("%s:", code->iOp.func.funcName);
             break;
         case i_syscall:
+        printf("\t");
             printf("syscall");
             break;
         default:
@@ -397,7 +410,7 @@ bitmap FuncAliveVarAnalyze(funcIR func){
     for(strItem q = varList->head; q; q = q->next){
         //printf("%s\n", q->val);
         if (countStr_s(countVar, q->val) > 1){
-            printf("alive val %s\n", q->val);
+            //printf("alive val %s\n", q->val);
             setBitMap(res, getVarIdByName(q->val), 1);
         }
     }

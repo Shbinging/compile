@@ -10,7 +10,7 @@ int parseOK;
 TreeNode* parseTreeRoot;
 
 int main(int argc, char** argv){
-    //freopen(argv[2], "w", stdout);
+    freopen(argv[2], "w", stdout);
     if (argc <= 1) return 1;
     FILE* f = fopen(argv[1], "r");
     if (!f){
@@ -30,7 +30,7 @@ int main(int argc, char** argv){
     getOptIr(irOri);
     //deadVarLiminate(irOri); 
     modifyIr(irOri);
-    printTripe(irOri);
+    //printTripe(irOri);
     genProgramOBJ(irOri);
     fclose(stdout);
     return 0;
