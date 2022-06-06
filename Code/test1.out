@@ -1,24 +1,42 @@
 FUNCTION main :
-tmp1 := #1
+a -12
+b -16
+i -20
+tmp5 -24
+n -28
+c -32
+
+tmp1 := #0
 a := tmp1
+tmp2 := #1
+b := tmp2
+tmp3 := #0
+i := tmp3
 
-READ tmp3
+READ tmp5
 
-b := tmp3
-tmp6 := a + b
-a := tmp6
+n := tmp5
+
+LABEL label1 :
+IF i < n GOTO label2
+
+GOTO label3
+
+LABEL label2 :
+tmp11 := a + b
+c := tmp11
 
 WRITE b
 
-tmp12 := #0
-tmp15 := #0
-RETURN tmp15
-start set
-6 15
-4 6
-1 a
-0 1
-5 12
-2 3
-3 b
-end set
+tmp16 := #0
+a := b
+b := c
+tmp31 := #1
+tmp28 := i + tmp31
+i := tmp28
+
+GOTO label1
+
+LABEL label3 :
+tmp33 := #0
+RETURN tmp33

@@ -109,6 +109,8 @@ void printObjCode(instr code){
         printf("\t");
             printf("syscall");
             break;
+        case i_null:
+            break;
         default:
             assert(0);
     }
@@ -229,17 +231,17 @@ void emitCondGoto(int rs, int rt, int label, enum Ttype_ type){
     a->iOp.r2l1.rt = rt;
     a->iOp.r2l1.dest = label;
     switch (type){
-        t_eq:
+        case t_eq:
             a->iType = i_beq;break;
-        t_neq:
+        case t_neq:
             a->iType = i_bne;break;
-        t_g:
+        case t_g:
             a->iType = i_bgt;break;
-        t_l:
+        case t_l:
             a->iType = i_blt;break;
-        t_geq:
+        case t_geq:
             a->iType = i_bge;break;
-        t_leq:
+        case t_leq:
             a->iType = i_ble;break;
     }
     addCode(a);
@@ -253,6 +255,10 @@ void emitInstrJal(char* funcName){
 void emitInstrFunc(char* funcName){
     instr a= getInstr(i_func);
     a->iOp.func.funcName = funcName;
+    addCode(a);
+}
+void emitInstrNull(){
+    instr a = getInstr(i_null);
     addCode(a);
 }
 #define FT canTrans = 1;
@@ -473,6 +479,7 @@ int init_mem_alloc(){
                 esp += 1;
                 varAddress[i] = esp;
             }
+            printf("mem:%d %d\n", i, varAddress[i]);
         }
     }
     return esp;
@@ -777,6 +784,7 @@ void genFuncOBJ(funcIR func){
     globalAliveVar = FuncAliveVarAnalyze(func);
     frameSize = init_mem_alloc() * 4;
     genFuncBlock(func.blockIRList[0]);
+    emitInstrNull();
     for(int i = 1; i < func.blockNum; i++){
         //printf("block %d\n", i);
         // if (i == 2){
@@ -785,6 +793,7 @@ void genFuncOBJ(funcIR func){
         enum Ttype_ type = ir[func.blockIRList[i].ir_s]->type;
         if (type == t_call || type == t_arg) genCallBlock(func.blockIRList[i]);
         else genNormalBlock(func.blockIRList[i]);
+        emitInstrNull();
     }
 }
 

@@ -13,7 +13,7 @@ typedef struct blockInfo_{
     int id;
 } blockInfo_;
 typedef struct instr_{
-    enum instrType{i_li, i_la, i_move, i_bgt, i_bge, i_blt, i_ble, i_label, i_add, i_addi, i_sub, i_mul, i_div, i_mflo, i_lw, i_sw, i_j, i_jal, i_jr, i_beq, i_bne, i_func, i_syscall} iType;
+    enum instrType{i_li, i_la, i_move, i_bgt, i_bge, i_blt, i_ble, i_label, i_add, i_addi, i_sub, i_mul, i_div, i_mflo, i_lw, i_sw, i_j, i_jal, i_jr, i_beq, i_bne, i_func, i_syscall, i_null} iType;
     union oprand
     {
         struct R3{
