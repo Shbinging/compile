@@ -33,7 +33,7 @@ int main(int argc, char** argv){
     
     modifyIr(irOri);
     //printTripe(irOri);
-    testBlockAliveAnalyze(irOri);
+    //testBlockAliveAnalyze(irOri);
     //testCFG(irOri);
 
     //printf("%s\n", itoa(0));

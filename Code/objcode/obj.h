@@ -9,6 +9,8 @@
 #include "bitmap.h"
 #include "heap.h" 
 #include "set.h"
+#include "vector.h"
+
 
 vector(int)
 vector(instr)

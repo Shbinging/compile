@@ -1,0 +1,394 @@
+./frontEnd/syntax.y: warning: 2 shift/reduce conflicts [-Wconflicts-sr]
+./frontEnd/syntax.tab.c: In function 'yyparse':
+./frontEnd/syntax.tab.c:1909:9: warning: implicit declaration of function 'yyerror' [-Wimplicit-function-declaration]
+         yyerror (yymsgp);
+         ^
+objcode/bitmap.c: In function 'initBitMap':
+objcode/bitmap.c:10:5: warning: implicit declaration of function 'memset' [-Wimplicit-function-declaration]
+     memset(bm->map, 0, sizeof(int) * size);
+     ^
+objcode/bitmap.c:10:5: warning: incompatible implicit declaration of built-in function 'memset'
+objcode/bitmap.c:10:5: note: include '<string.h>' or provide a declaration of 'memset'
+objcode/bitmap.c: In function 'setBitMapZero':
+objcode/bitmap.c:44:5: warning: incompatible implicit declaration of built-in function 'memset'
+     memset(bm->map, 0, sizeof(int) * bm->size);
+     ^
+objcode/bitmap.c:44:5: note: include '<string.h>' or provide a declaration of 'memset'
+objcode/bitmap.c: In function 'printBitMap':
+objcode/bitmap.c:55:5: warning: implicit declaration of function 'printf' [-Wimplicit-function-declaration]
+     printf("set bitmap\n");
+     ^
+objcode/bitmap.c:55:5: warning: incompatible implicit declaration of built-in function 'printf'
+objcode/bitmap.c:55:5: note: include '<stdio.h>' or provide a declaration of 'printf'
+objcode/bitmap.c:58:9: warning: incompatible implicit declaration of built-in function 'memset'
+         memset(st, 0, sizeof(st));
+         ^
+objcode/bitmap.c:58:9: note: include '<string.h>' or provide a declaration of 'memset'
+In file included from objcode/obj.h:12:0,
+                 from objcode/obj.c:1:
+objcode/obj.c: In function 'init_v_int':
+objcode/vector.h:11:12: warning: implicit declaration of function 'malloc' [-Wimplicit-function-declaration]
+     *vec = malloc(sizeof(vector__##x));\
+            ^
+objcode/vector.h:82:18: note: in expansion of macro 'init_v'
+ #define gen_v(x) init_v(x)\
+                  ^
+objcode/obj.c:6:1: note: in expansion of macro 'gen_v'
+ gen_v(int)
+ ^
+objcode/vector.h:11:12: warning: incompatible implicit declaration of built-in function 'malloc'
+     *vec = malloc(sizeof(vector__##x));\
+            ^
+objcode/vector.h:82:18: note: in expansion of macro 'init_v'
+ #define gen_v(x) init_v(x)\
+                  ^
+objcode/obj.c:6:1: note: in expansion of macro 'gen_v'
+ gen_v(int)
+ ^
+objcode/vector.h:11:12: note: include '<stdlib.h>' or provide a declaration of 'malloc'
+     *vec = malloc(sizeof(vector__##x));\
+            ^
+objcode/vector.h:82:18: note: in expansion of macro 'init_v'
+ #define gen_v(x) init_v(x)\
+                  ^
+objcode/obj.c:6:1: note: in expansion of macro 'gen_v'
+ gen_v(int)
+ ^
+objcode/obj.c: In function 'push_back_v_int':
+objcode/vector.h:21:17: warning: incompatible implicit declaration of built-in function 'malloc'
+          x* b = malloc(sizeof(x) * vec->size);\
+                 ^
+objcode/vector.h:83:1: note: in expansion of macro 'push_back_v'
+ push_back_v(x)\
+ ^
+objcode/obj.c:6:1: note: in expansion of macro 'gen_v'
+ gen_v(int)
+ ^
+objcode/vector.h:21:17: note: include '<stdlib.h>' or provide a declaration of 'malloc'
+          x* b = malloc(sizeof(x) * vec->size);\
+                 ^
+objcode/vector.h:83:1: note: in expansion of macro 'push_back_v'
+ push_back_v(x)\
+ ^
+objcode/obj.c:6:1: note: in expansion of macro 'gen_v'
+ gen_v(int)
+ ^
+objcode/vector.h:25:9: warning: implicit declaration of function 'free' [-Wimplicit-function-declaration]
+         free(vec->a);\
+         ^
+objcode/vector.h:83:1: note: in expansion of macro 'push_back_v'
+ push_back_v(x)\
+ ^
+objcode/obj.c:6:1: note: in expansion of macro 'gen_v'
+ gen_v(int)
+ ^
+objcode/vector.h:25:9: warning: incompatible implicit declaration of built-in function 'free'
+         free(vec->a);\
+         ^
+objcode/vector.h:83:1: note: in expansion of macro 'push_back_v'
+ push_back_v(x)\
+ ^
+objcode/obj.c:6:1: note: in expansion of macro 'gen_v'
+ gen_v(int)
+ ^
+objcode/vector.h:25:9: note: include '<stdlib.h>' or provide a declaration of 'free'
+         free(vec->a);\
+         ^
+objcode/vector.h:83:1: note: in expansion of macro 'push_back_v'
+ push_back_v(x)\
+ ^
+objcode/obj.c:6:1: note: in expansion of macro 'gen_v'
+ gen_v(int)
+ ^
+objcode/obj.c: In function 'free_x_int':
+objcode/vector.h:57:5: warning: incompatible implicit declaration of built-in function 'free'
+     free(vec->a);\
+     ^
+objcode/vector.h:88:1: note: in expansion of macro 'free_v'
+ free_v(x)\
+ ^
+objcode/obj.c:6:1: note: in expansion of macro 'gen_v'
+ gen_v(int)
+ ^
+objcode/vector.h:57:5: note: include '<stdlib.h>' or provide a declaration of 'free'
+     free(vec->a);\
+     ^
+objcode/vector.h:88:1: note: in expansion of macro 'free_v'
+ free_v(x)\
+ ^
+objcode/obj.c:6:1: note: in expansion of macro 'gen_v'
+ gen_v(int)
+ ^
+objcode/obj.c: In function 'init_v_instr':
+objcode/vector.h:11:12: warning: incompatible implicit declaration of built-in function 'malloc'
+     *vec = malloc(sizeof(vector__##x));\
+            ^
+objcode/vector.h:82:18: note: in expansion of macro 'init_v'
+ #define gen_v(x) init_v(x)\
+                  ^
+objcode/obj.c:7:1: note: in expansion of macro 'gen_v'
+ gen_v(instr)
+ ^
+objcode/vector.h:11:12: note: include '<stdlib.h>' or provide a declaration of 'malloc'
+     *vec = malloc(sizeof(vector__##x));\
+            ^
+objcode/vector.h:82:18: note: in expansion of macro 'init_v'
+ #define gen_v(x) init_v(x)\
+                  ^
+objcode/obj.c:7:1: note: in expansion of macro 'gen_v'
+ gen_v(instr)
+ ^
+objcode/obj.c: In function 'push_back_v_instr':
+objcode/vector.h:21:17: warning: incompatible implicit declaration of built-in function 'malloc'
+          x* b = malloc(sizeof(x) * vec->size);\
+                 ^
+objcode/vector.h:83:1: note: in expansion of macro 'push_back_v'
+ push_back_v(x)\
+ ^
+objcode/obj.c:7:1: note: in expansion of macro 'gen_v'
+ gen_v(instr)
+ ^
+objcode/vector.h:21:17: note: include '<stdlib.h>' or provide a declaration of 'malloc'
+          x* b = malloc(sizeof(x) * vec->size);\
+                 ^
+objcode/vector.h:83:1: note: in expansion of macro 'push_back_v'
+ push_back_v(x)\
+ ^
+objcode/obj.c:7:1: note: in expansion of macro 'gen_v'
+ gen_v(instr)
+ ^
+objcode/vector.h:25:9: warning: incompatible implicit declaration of built-in function 'free'
+         free(vec->a);\
+         ^
+objcode/vector.h:83:1: note: in expansion of macro 'push_back_v'
+ push_back_v(x)\
+ ^
+objcode/obj.c:7:1: note: in expansion of macro 'gen_v'
+ gen_v(instr)
+ ^
+objcode/vector.h:25:9: note: include '<stdlib.h>' or provide a declaration of 'free'
+         free(vec->a);\
+         ^
+objcode/vector.h:83:1: note: in expansion of macro 'push_back_v'
+ push_back_v(x)\
+ ^
+objcode/obj.c:7:1: note: in expansion of macro 'gen_v'
+ gen_v(instr)
+ ^
+objcode/obj.c: In function 'pop_v_instr':
+objcode/vector.h:36:42: warning: return makes pointer from integer without a cast [-Wint-conversion]
+     if (vec->pos  >= vec->length) return -1;\
+                                          ^
+objcode/vector.h:85:1: note: in expansion of macro 'pop_v'
+ pop_v(x)\
+ ^
+objcode/obj.c:7:1: note: in expansion of macro 'gen_v'
+ gen_v(instr)
+ ^
+objcode/obj.c: In function 'free_x_instr':
+objcode/vector.h:57:5: warning: incompatible implicit declaration of built-in function 'free'
+     free(vec->a);\
+     ^
+objcode/vector.h:88:1: note: in expansion of macro 'free_v'
+ free_v(x)\
+ ^
+objcode/obj.c:7:1: note: in expansion of macro 'gen_v'
+ gen_v(instr)
+ ^
+objcode/vector.h:57:5: note: include '<stdlib.h>' or provide a declaration of 'free'
+     free(vec->a);\
+     ^
+objcode/vector.h:88:1: note: in expansion of macro 'free_v'
+ free_v(x)\
+ ^
+objcode/obj.c:7:1: note: in expansion of macro 'gen_v'
+ gen_v(instr)
+ ^
+objcode/obj.c: In function 'getInstr':
+objcode/obj.c:28:15: warning: incompatible implicit declaration of built-in function 'malloc'
+     instr a = malloc(sizeof(instr_));
+               ^
+objcode/obj.c:28:15: note: include '<stdlib.h>' or provide a declaration of 'malloc'
+objcode/obj.c: In function 'getNewExp':
+objcode/obj.c:194:21: warning: incompatible implicit declaration of built-in function 'malloc'
+     TripleExp res = malloc(sizeof(TripleExp_));
+                     ^
+objcode/obj.c:194:21: note: include '<stdlib.h>' or provide a declaration of 'malloc'
+objcode/obj.c: In function 'getIR':
+objcode/obj.c:220:10: warning: incompatible implicit declaration of built-in function 'malloc'
+     ir = malloc(sizeof(TripleExp) * totalIR);
+          ^
+objcode/obj.c:220:10: note: include '<stdlib.h>' or provide a declaration of 'malloc'
+objcode/obj.c: In function 'splitIR':
+objcode/obj.c:250:35: warning: incompatible implicit declaration of built-in function 'malloc'
+         funcList[i].blockIRList = malloc(sizeof(blockIR) * blockNum);
+                                   ^
+objcode/obj.c:250:35: note: include '<stdlib.h>' or provide a declaration of 'malloc'
+objcode/obj.c: In function 'FuncAliveVarAnalyze':
+objcode/obj.c:295:34: warning: passing argument 2 of 'countStr_s' from incompatible pointer type [-Wincompatible-pointer-types]
+         if (countStr_s(totalVar, q->val) > 1){
+                                  ^
+In file included from objcode/obj.h:11:0,
+                 from objcode/obj.c:1:
+objcode/set.h:31:5: note: expected 'char *' but argument is of type 'char **'
+ int countStr_s(set s, char*st);
+     ^
+objcode/obj.c:296:43: warning: passing argument 1 of 'getVarIdByName' from incompatible pointer type [-Wincompatible-pointer-types]
+             setBitMap(res, getVarIdByName(q->val), 1);
+                                           ^
+objcode/obj.c:273:5: note: expected 'char *' but argument is of type 'char **'
+ int getVarIdByName(char* name){
+     ^
+objcode/obj.c: In function 'blockAliveVarAnalyze':
+objcode/obj.c:314:20: warning: incompatible implicit declaration of built-in function 'malloc'
+     varsAliveMap = malloc(sizeof(bitmap) * irNum);
+                    ^
+objcode/obj.c:314:20: note: include '<stdlib.h>' or provide a declaration of 'malloc'
+objcode/obj.c: In function 'init_mem_alloc':
+objcode/obj.c:340:18: warning: incompatible implicit declaration of built-in function 'malloc'
+     varAddress = malloc(sizeof(int) * getBlockVarNum());
+                  ^
+objcode/obj.c:340:18: note: include '<stdlib.h>' or provide a declaration of 'malloc'
+objcode/obj.c: In function 'init_reg_alloc':
+objcode/obj.c:363:16: warning: incompatible implicit declaration of built-in function 'malloc'
+     varAlloc = malloc(sizeof(int) * getBlockVarNum());
+                ^
+objcode/obj.c:363:16: note: include '<stdlib.h>' or provide a declaration of 'malloc'
+objcode/set.c: In function 'itoa':
+objcode/set.c:15:21: warning: implicit declaration of function 'malloc' [-Wimplicit-function-declaration]
+         char* tmp = malloc(2);
+                     ^
+objcode/set.c:15:21: warning: incompatible implicit declaration of built-in function 'malloc'
+objcode/set.c:15:21: note: include '<stdlib.h>' or provide a declaration of 'malloc'
+objcode/set.c:25:21: warning: incompatible implicit declaration of built-in function 'malloc'
+         char* tmp = malloc(s + 1);
+                     ^
+objcode/set.c:25:21: note: include '<stdlib.h>' or provide a declaration of 'malloc'
+objcode/set.c: In function 'init_s':
+objcode/set.c:39:11: warning: incompatible implicit declaration of built-in function 'malloc'
+     *ss = malloc(sizeof(set_));
+           ^
+objcode/set.c:39:11: note: include '<stdlib.h>' or provide a declaration of 'malloc'
+objcode/set.c: In function 'getStr_s':
+objcode/set.c:122:16: warning: passing argument 1 of 'createList' from incompatible pointer type [-Wincompatible-pointer-types]
+     createList(&l);
+                ^
+In file included from objcode/set.h:5:0,
+                 from objcode/set.c:1:
+objcode/../utils/list/list.h:27:6: note: expected 'void **' but argument is of type 'listHead ** {aka struct listHead **}'
+ void createList(void**);
+      ^
+objcode/set.c:125:15: warning: assignment discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+     while(key = map_next(&(s->h), &iter)){
+               ^
+objcode/set.c: In function 'print_set':
+objcode/set.c:137:5: warning: implicit declaration of function 'printf' [-Wimplicit-function-declaration]
+     printf("start set\n");
+     ^
+objcode/set.c:137:5: warning: incompatible implicit declaration of built-in function 'printf'
+objcode/set.c:137:5: note: include '<stdio.h>' or provide a declaration of 'printf'
+objcode/set.c:139:41: warning: passing argument 2 of 'indexStr_s' from incompatible pointer type [-Wincompatible-pointer-types]
+         printf("%d %s\n", indexStr_s(s, i->val), i->val);
+                                         ^
+objcode/set.c:66:5: note: expected 'char *' but argument is of type 'char **'
+ int indexStr_s(set s, char* st){
+     ^
+objcode/set.c:139:16: warning: format '%s' expects argument of type 'char *', but argument 3 has type 'char **' [-Wformat=]
+         printf("%d %s\n", indexStr_s(s, i->val), i->val);
+                ^
+objcode/objUtil.c: In function 'modifyIr':
+objcode/objUtil.c:15:36: warning: implicit declaration of function 'getTriple' [-Wimplicit-function-declaration]
+                     insert(p, pre, getTriple(t_assign, tmp, exp->src1, NULL));
+                                    ^
+objcode/objUtil.c:15:36: warning: passing argument 3 of 'insert' makes pointer from integer without a cast [-Wint-conversion]
+In file included from objcode/objUtil.h:4:0,
+                 from objcode/objUtil.c:1:
+objcode/../utils/list/list.h:34:6: note: expected 'void *' but argument is of type 'int'
+ void insert(void*, void* pos, void* node);
+      ^
+objcode/objUtil.c:20:36: warning: passing argument 3 of 'insert' makes pointer from integer without a cast [-Wint-conversion]
+                     insert(p, pre, getTriple(t_assign, tmp, exp->src2, NULL));
+                                    ^
+In file included from objcode/objUtil.h:4:0,
+                 from objcode/objUtil.c:1:
+objcode/../utils/list/list.h:34:6: note: expected 'void *' but argument is of type 'int'
+ void insert(void*, void* pos, void* node);
+      ^
+objcode/objUtil.c:25:36: warning: passing argument 3 of 'insert' makes pointer from integer without a cast [-Wint-conversion]
+                     insert(p, pre, getTriple(t_assign, tmp, exp->dest, NULL));
+                                    ^
+In file included from objcode/objUtil.h:4:0,
+                 from objcode/objUtil.c:1:
+objcode/../utils/list/list.h:34:6: note: expected 'void *' but argument is of type 'int'
+ void insert(void*, void* pos, void* node);
+      ^
+objcode/objUtil.c:39:36: warning: passing argument 3 of 'insert' makes pointer from integer without a cast [-Wint-conversion]
+                     insert(p, pre, getTriple(t_assign, tmp, exp->src1, NULL));
+                                    ^
+In file included from objcode/objUtil.h:4:0,
+                 from objcode/objUtil.c:1:
+objcode/../utils/list/list.h:34:6: note: expected 'void *' but argument is of type 'int'
+ void insert(void*, void* pos, void* node);
+      ^
+objcode/objUtil.c:44:36: warning: passing argument 3 of 'insert' makes pointer from integer without a cast [-Wint-conversion]
+                     insert(p, pre, getTriple(t_assign, tmp, exp->src2, NULL));
+                                    ^
+In file included from objcode/objUtil.h:4:0,
+                 from objcode/objUtil.c:1:
+objcode/../utils/list/list.h:34:6: note: expected 'void *' but argument is of type 'int'
+ void insert(void*, void* pos, void* node);
+      ^
+objcode/objUtil.c: In function 'printBlock':
+objcode/objUtil.c:61:24: warning: implicit declaration of function 'malloc' [-Wimplicit-function-declaration]
+             char* op = malloc(10);
+                        ^
+objcode/objUtil.c:61:24: warning: incompatible implicit declaration of built-in function 'malloc'
+objcode/objUtil.c:61:24: note: include '<stdlib.h>' or provide a declaration of 'malloc'
+objcode/objUtil.c: In function 'getLabel':
+objcode/objUtil.c:145:16: warning: incompatible implicit declaration of built-in function 'malloc'
+     char* ch = malloc(sizeof(char) * 300);
+                ^
+objcode/objUtil.c:145:16: note: include '<stdlib.h>' or provide a declaration of 'malloc'
+objcode/objUtil.c: In function 'genBlock':
+objcode/objUtil.c:172:16: warning: passing argument 1 of 'createList' from incompatible pointer type [-Wincompatible-pointer-types]
+     createList(&curBlockList);
+                ^
+In file included from objcode/objUtil.h:4:0,
+                 from objcode/objUtil.c:1:
+objcode/../utils/list/list.h:27:6: note: expected 'void **' but argument is of type 'listHead ** {aka struct listHead **}'
+ void createList(void**);
+      ^
+objcode/objUtil.c:185:28: warning: incompatible implicit declaration of built-in function 'malloc'
+                 curBlock = malloc(sizeof(blockItem_));
+                            ^
+objcode/objUtil.c:185:28: note: include '<stdlib.h>' or provide a declaration of 'malloc'
+objcode/objUtil.c: In function 'buildCFG':
+objcode/objUtil.c:255:11: warning: incompatible implicit declaration of built-in function 'malloc'
+     CFG = malloc(sizeof(cfg));
+           ^
+objcode/objUtil.c:255:11: note: include '<stdlib.h>' or provide a declaration of 'malloc'
+objcode/graph.c: In function 'initGraph':
+objcode/graph.c:4:15: warning: implicit declaration of function 'malloc' [-Wimplicit-function-declaration]
+     c->head = malloc(sizeof(int) * (n + 7));
+               ^
+objcode/graph.c:4:15: warning: incompatible implicit declaration of built-in function 'malloc'
+objcode/graph.c:4:15: note: include '<stdlib.h>' or provide a declaration of 'malloc'
+main.c: In function 'main':
+main.c:22:5: warning: implicit declaration of function 'yyrestart' [-Wimplicit-function-declaration]
+     yyrestart(f);
+     ^
+sdt/sdt.c: In function 'sdtTree':
+sdt/sdt.c:864:17: warning: assignment from incompatible pointer type [-Wincompatible-pointer-types]
+     while ((key = map_next(&funcTable, &iter))) {
+                 ^
+In file included from sdt/sdt.h:4:0,
+                 from sdt/sdt.c:1:
+sdt/sdt.c:865:46: warning: passing argument 2 of 'map_get_' from incompatible pointer type [-Wincompatible-pointer-types]
+         funcItem func = *map_get(&funcTable, key);
+                                              ^
+sdt/../utils/map/map.h:42:37: note: in definition of macro 'map_get'
+   ( (m)->ref = map_get_(&(m)->base, key) )
+                                     ^
+sdt/../utils/map/map.h:63:7: note: expected 'const char *' but argument is of type 'struct funcItem_ **'
+ void *map_get_(map_base_t *m, const char *key);
+       ^

@@ -1,4 +1,5 @@
 #include "bitmap.h"
+#include <stdlib.h>
 
 void initBitMap(bitmap* bmm, int length){
     *bmm = malloc(sizeof(bitmap_));
@@ -7,7 +8,6 @@ void initBitMap(bitmap* bmm, int length){
     bm->size = size;
     bm->map = malloc(sizeof(int) * size);
     memset(bm->map, 0, sizeof(int) * size);
-    return bm;
 }
 
 void setBitMap(bitmap bm, int index, int val){

@@ -79,7 +79,8 @@ h_del_v(int)\
 h_free_v(int)\
 h_isEmpty_v(int)
 
-#define gen_v(x) push_back_v(x)\
+#define gen_v(x) init_v(x)\
+push_back_v(x)\
 resize_v(x)\
 pop_v(x)\
 top_v(x)\

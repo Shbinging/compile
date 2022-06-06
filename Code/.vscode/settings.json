@@ -42,7 +42,8 @@
         "heap.h": "c",
         "bitmap.h": "c",
         "obj.h": "c",
-        "vector.h": "c"
+        "vector.h": "c",
+        "string.h": "c"
     },
     "C_Cpp.errorSquiggles": "Disabled"
 }

@@ -17,10 +17,10 @@ static char* getVar(Operand o){
 }
 #define iterList(x, valType) for(valType i = (x)->head; i; i = i->next)
 
-const int maxR= 32;
+#define maxR 32
 
 vector_instr objCode;
-void addCode(instr a){
+static void addCode(instr a){
     push_back_v_instr(objCode, a);
 }
 
@@ -47,7 +47,7 @@ void emitInstrStore(int base, int offset, int dest){
 
 void emitInstrLabel(int dest){
     instr a = getInstr(i_label);
-    a->iOp.l1.dest = op;
+    a->iOp.l1.dest = dest;
     addCode(a);
 }
 
@@ -60,12 +60,12 @@ void emitInstrLi(int r, int imm){
     a->iOp.r1i1.imm = imm;
     addCode(a);
 }
-void emitInstrLa(int r, char* varName){
-    instr a = getInstr(i_la);
-    a->iOp.r1l1.rs = r;
-    a->iOp.r1l1.varName = varName;
-    addCode(a);
-}
+// void emitInstrLa(int r, char* varName){
+//     instr a = getInstr(i_la);
+//     a->iOp.r1l1.rs = r;
+//     a->iOp.r1l1.varName = varName;
+//     addCode(a);
+// }
 void emitInstrMove(int rt, int rs){
     instr a = getInstr(i_move);
     a->iOp.r2.rs = rs;
@@ -146,18 +146,18 @@ void emitCondGoto(int rs, int rt, int label, enum Ttype_ type){
 }
 void emitInstrJal(char* funcName){
     instr a = getInstr(i_jal);
-    a->iOp.func = funcName;
+    a->iOp.func.funcName = funcName;
     addCode(a);
 }
 
-void emitInstrFunc(char* fucnName){
+void emitInstrFunc(char* funcName){
     instr a= getInstr(i_func);
-    a->iOp.func = funcName;
+    a->iOp.func.funcName = funcName;
     addCode(a);
 }
 #define FT canTrans = 1;
 
-static max(int a, int b){
+static int max(int a, int b){
     return (a >= b) ? a : b;
 }
 /*
@@ -175,16 +175,17 @@ int totalVarNum;//ok
 int totalIR;
 int funcNum;
 TripleExp* ir;
+typedef struct blockIR{
+    int ir_s, ir_e;
+    enum blockIR_type{bt_normal, bt_func, bt_call} type;
+} blockIR;
 typedef struct funcIR{
     int ir_s, ir_e;
     int blockNum;
     blockIR* blockIRList;
 } funcIR;
 funcIR* funcList;
-typedef struct blockIR{
-    int ir_s, ir_e;
-    enum blockIR_type{bt_normal, bt_func, bt_call} type;
-} blockIR;
+
 int min(int a, int b){
     return a <= b ? a : b;
 }
@@ -232,7 +233,7 @@ void getIR(funcNode p){
 }
 
 static int isBranch(enum Ttype_  type){
-    return (t_goto <= type && type <= t_geq) || type == t_call || type == t_return
+    return (t_goto <= type && type <= t_geq) || type == t_call || type == t_return;
     //return (type == t_eq) || (type == t_geq) || (type == t_g) || (type == t_leq) || (type == t_l) || (type == t_goto) || (type == t_call) || (type == t_return);
 }
 
@@ -273,7 +274,7 @@ int getVarIdByName(char* name){
     return indexStr_s(totalVar, name);
 }
 int getBlockVarNum(){
-    return getNum_s(varId);
+    return getNum_s(totalVar);
 }
 set getVarToInt(funcIR func){
     set totalVar;
@@ -292,7 +293,7 @@ bitmap FuncAliveVarAnalyze(funcIR func){
     list varList = getStr_s(totalVar);
     for(strItem q = varList->head; q; q = q->next){
         if (countStr_s(totalVar, q->val) > 1){
-            setBitMap(getVarId(q->val), 1);
+            setBitMap(res, getVarIdByName(q->val), 1);
         }
     }
     return res;
@@ -306,12 +307,13 @@ int isCalcExp(TripleExp op){
     if (op->type <= t_func || op->type == t_dec) return 0;
     return 1;
 }
-#define aliveVar(x) setBitMap(aliveMap, id, 1); push_back_v_int(varsUseTime[id], i); 
+#define aliveVar(x) setBitMap(aliveMap, x, 1); push_back_v_int(varsUseTime[x], i); 
+#define deadVar(x) setBitMap(aliveMap, x, 0);
 void blockAliveVarAnalyze(blockIR block){
     int irNum = block.ir_e - block.ir_s + 1;
     varsAliveMap = malloc(sizeof(bitmap) * irNum);
     varsUseTime = malloc(sizeof(vector_int) * getBlockVarNum());
-    for(int i = 0; i < irNum; i++) initBitMap(&varsAliveMap[i]; getBlockVarNum());
+    for(int i = 0; i < irNum; i++) initBitMap(&varsAliveMap[i],  getBlockVarNum());
     for(int i = 0; i < getBlockVarNum(); i++){
         init_v_int(&varsUseTime[i]); 
     }
@@ -333,6 +335,7 @@ int* varAlloc;
 vector_int rtoVar[maxR];
 int curIR;
 int esp;
+int frameSize;
 int init_mem_alloc(){
     varAddress = malloc(sizeof(int) * getBlockVarNum());
     memset(varAddress, 0, sizeof(varAddress));
@@ -366,9 +369,10 @@ int init_reg_alloc(){
 }
 int getVarAddr(int id){
     //XXX::新申请
-    if (varAddress[id]) return varAddress[id] * 4;
-    else return varAddress[id] = (++esp) * 4;
+    if (!varAddress[id]) varAddress[id] = ++esp;
+    return -varAddress[id] * 4;
 }
+
 void spill(int result){
     for(int j = 0; j < rtoVar[j]->length; j++){
         int var = rtoVar[j]->a[j];
@@ -385,8 +389,8 @@ int allocate(){
         int mx1 = 0;
         for(int j = 0; j < rtoVar[i]->length; j++){
             int var = rtoVar[i]->a[j];
-            while(!isEmpty_v_int(varsUseTime[var]) && top_v_int(varsUseTime[var]) < curIR) pop_v_int(varsUseTime[v]);
-            if (!isEmpty_v_int(varsUseTime[var])) mx1 = max(mx1, varsUseTime[var]);
+            while(!isEmpty_v_int(varsUseTime[var]) && top_v_int(varsUseTime[var]) < curIR) pop_v_int(varsUseTime[var]);
+            if (!isEmpty_v_int(varsUseTime[var])) mx1 = max(mx1, top_v_int(varsUseTime[var]));
         }
         if (mx1 > mx){
             mx = mx1;
@@ -396,17 +400,15 @@ int allocate(){
     spill(result);
     return result;
 }
-
+int alloc(int var_id);
 int ensure(int var_id){
     if (varAlloc[var_id]) return varAlloc[var_id];
-    int result = allocate();
+    int result = alloc(var_id);
     emitInstrLoad(fp, getVarAddr(var_id), result);
-    varAlloc[var_id] = result;
-    push_back_v_int(rtoVar[result], var_id);
     return result;
 }
 
-void ensureOp(Operand op){
+int ensureOp(Operand op){
     assert(isVar(op));
     return ensure(getVarIdByOp(op));
 }
@@ -425,15 +427,16 @@ void freeOp(Operand op){
     freeVar(getVarIdByOp(op));
 }
 
-void alloc(int var_id){
+int alloc(int var_id){
     int result = allocate();
     varAlloc[var_id] = result;
     rtoVar[result]->length = 0;
     push_back_v_int(rtoVar[result], var_id);
+    return result;
 }
-void allocOp(Operand op){
+int allocOp(Operand op){
     assert(isVar(op));
-    alloc(getVarIdByOp(op));
+    return alloc(getVarIdByOp(op));
 }
 void genObjCode(TripleExp exp){
     int canTrans = 0;
@@ -449,30 +452,30 @@ void genObjCode(TripleExp exp){
                 emitInstrStore(ensureOp(exp->dest), 0, ensureOp(exp->src1));
             }else{
                 int regx = allocOp(exp->dest);
-                switch(exp->src1->type){
-                    case o_const:
+                if (exp->src1->type == o_const){
                         emitInstrLi(regx, exp->src1->u.constInt);
                         FT
-                        break;
-                    case o_point:
-                        emitInstrLoad(ensureOp(exp->src1), 0, regx);
-                        freeOp(exp->src1);
-                        FT
-                        break;
-                    case o_address:
-                        emitInstrAddi(regx, fp, getVarAddr(getVarIdByOp(exp->src1)));
-                        FT
-                        break;
-                    case o_normal:
-                        emitInstrMove(regx, ensureOp(exp->src1));
-                        freeOp(exp->src1);
-                        FT
-                        break;
-                    default:
-                    assert(0);
+                }else{
+                    switch(exp->src1->property){
+                        case o_point:
+                            emitInstrLoad(ensureOp(exp->src1), 0, regx);
+                            freeOp(exp->src1);
+                            FT
+                            break;
+                        case o_address:
+                            emitInstrAddi(regx, fp, getVarAddr(getVarIdByOp(exp->src1)));
+                            FT
+                            break;
+                        case o_normal:
+                            emitInstrMove(regx, ensureOp(exp->src1));
+                            freeOp(exp->src1);
+                            FT
+                            break;
+                        default:
+                        assert(0);
+                    }
                 }
             }
-            FT
     }
     if (type == t_add){
         //int regx = allocOp(exp->dest), regy = allocOp(exp->src1), regz = allocOp(exp->src2);
@@ -549,7 +552,7 @@ void genObjCode(TripleExp exp){
     assert(canTrans);
 }
 
-int frameSize;
+
 void genFuncBlock(blockIR block){
     TripleExp exp = ir[block.ir_s];
     assert(exp->type == t_func);
@@ -559,15 +562,15 @@ void genFuncBlock(blockIR block){
     emitInstrStore(fp, frameSize - 8, sp);
     emitInstrAddi(fp, sp, frameSize);
     int s = 0;
-    for(curIR = block.ir_s + 1; curIR <= block.ir_e; i++){
+    for(curIR = block.ir_s + 1; curIR <= block.ir_e; curIR++){
         assert(ir[curIR]->type == t_param);
         exp = ir[curIR];
         assert(exp->dest && isVar(exp->dest));
         if (s < 4){
-            emitInstrStore(fp, getVarAddr(getVar(exp->dest)), a0 + s);
+            emitInstrStore(fp, getVarAddr(getVarIdByOp(exp->dest)), a0 + s);
         }else{
             emitInstrLoad(fp, 4 * (s - 4), a0);
-            emitInstrStore(fp, getVarAddr(getVar(exp->dest)), a0);
+            emitInstrStore(fp, getVarAddr(getVarIdByOp(exp->dest)), a0);
         }
         s++;
     }
@@ -595,7 +598,7 @@ void genCallBlock(blockIR block){
         s--;
         if (s >= 4){
             assert(isVar(ir[curIR]->src1));
-            emitInstrStore(sp, (s - 4)* 4, getVarAddr(ir[curIR]->src1));
+            emitInstrStore(sp, (s - 4)* 4, getVarAddr(getVarIdByOp(ir[curIR]->src1)));
         }else{
             emitInstrMove(a0 + s, ensureOp(ir[curIR]->src1));
         }
@@ -620,7 +623,7 @@ void genFuncOBJ(funcIR func){
 void genProgramOBJ(list func){
     getIR(func->head);
     init_v_instr(&objCode);
-    for(int i = 0; i < funcNum){
+    for(int i = 0; i < funcNum; i++){
         genFuncOBJ(funcList[i]);
     }
 }
