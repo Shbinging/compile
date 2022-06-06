@@ -1,7 +1,10 @@
 make --dry-run --always-make --keep-going --print-directory
 make: Entering directory '/root/Lab/Code'
+ 
 flex -o ./frontEnd/lex.yy.c ./frontEnd/lexical.l
+ 
 bison -o ./frontEnd/syntax.tab.c -d -v -t ./frontEnd/syntax.y
+ 
 gcc -c ./frontEnd/syntax.tab.c -o ./frontEnd/syntax.tab.o
 gcc -std=c99 -g  -O0   -c -o ir/ir.o ir/ir.c
 gcc -std=c99 -g  -O0   -c -o ir/irOptimization.o ir/irOptimization.c
@@ -18,6 +21,7 @@ gcc -std=c99 -g  -O0   -c -o objcode/objUtil.o objcode/objUtil.c
 gcc -std=c99 -g  -O0   -c -o objcode/graph.o objcode/graph.c
 gcc -std=c99 -g  -O0   -c -o main.o main.c
 gcc -std=c99 -g  -O0   -c -o sdt/sdt.o sdt/sdt.c
+ 
 gcc -o parser ./ir/ir.o ./ir/irOptimization.o ./ir/irUtils.o ./utils/syntaxTree/tree.o ./utils/map/map.o ./utils/list/list.o ./frontEnd/syntax.tab.o ./objcode/bitmap.o ./objcode/obj.o ./objcode/heap.o ./objcode/set.o ./objcode/objUtil.o ./objcode/graph.o ./main.o ./sdt/sdt.o -lfl -ly
 make: Leaving directory '/root/Lab/Code'
  

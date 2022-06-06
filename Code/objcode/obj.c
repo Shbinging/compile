@@ -358,7 +358,7 @@ void splitIR(){
         int blockNum = 1;
         for(int j = funcList[i].ir_s + 1; j <= funcList[i].ir_e; j++){
             TripleExp q = ir[j], pre = ir[j - 1];
-            if (isBranch(pre->type) || q->type == t_label || (q->type == t_arg && pre->type != t_arg) || (q->type != t_param && (pre->type == t_func || pre->type == t_param)) || (q->type == t_read) || (q->type == t_write)){
+            if (isBranch(pre->type) || q->type == t_label || (q->type == t_arg && pre->type != t_arg) || (q->type == t_call && pre->type != t_arg) || (q->type != t_param && (pre->type == t_func || pre->type == t_param)) || (q->type == t_read) || (q->type == t_write)){
                 blockNum++;
             }
         }
@@ -371,7 +371,7 @@ void splitIR(){
         TripleExp pre = NULL;
         for(int j = funcList[i].ir_s + 1; j <= funcList[i].ir_e; j++){
             TripleExp q = ir[j], pre = ir[j - 1];
-            if (isBranch(pre->type) || q->type == t_label || (q->type == t_arg && pre->type != t_arg) || (q->type != t_param && (pre->type == t_func || pre->type == t_param)) || (q->type == t_read) || (q->type == t_write)){
+            if (isBranch(pre->type) || q->type == t_label || (q->type == t_arg && pre->type != t_arg) || (q->type == t_call && pre->type != t_arg) || (q->type != t_param && (pre->type == t_func || pre->type == t_param)) || (q->type == t_read) || (q->type == t_write)){
                 blocks[p].ir_e = j - 1;
                 p++;
                 blocks[p].ir_s = j;
@@ -400,7 +400,7 @@ set getVarToInt(funcIR func){
         if (isVar(ir[i]->src2)) addStr_s(totalVar, getVar(ir[i]->src2));
         if (isVar(ir[i]->dest)) addStr_s(totalVar, getVar(ir[i]->dest));
     }
-    print_set(totalVar);
+    //print_set(totalVar);
     return totalVar;
 }
 
@@ -458,13 +458,13 @@ void blockAliveVarAnalyze(blockIR block){
         varsAliveMap[i - baseIR] = getCopyBitMap(aliveMap);
         TripleExp exp = ir[i];
         if (isCalcExp(exp)){
-            if (i == 62){
-                printf("ok\n");
-            }
-            if (exp->dest && isVar(exp->dest) && !isPoint(exp->dest)){deadVar(getVarIdByOp(exp->dest)) printf("dead1\n");}
-            if (exp->src1 && isVar(exp->src1)){ aliveVar(getVarIdByOp(exp->src1)) printf("alive1\n");}//XXX:bug
-            if (exp->src2 && isVar(exp->src2)){ aliveVar(getVarIdByOp(exp->src2)) printf("alive2\n");}
-            if (exp->dest && isVar(exp->dest) && isPoint(exp->dest)) {aliveVar(getVarIdByOp(exp->dest)) printf("alive3\n");}
+            // if (i == 62){
+            //     printf("ok\n");
+            // }
+            if (exp->dest && isVar(exp->dest) && !isPoint(exp->dest)){deadVar(getVarIdByOp(exp->dest))} //printf("dead1\n");}
+            if (exp->src1 && isVar(exp->src1)){ aliveVar(getVarIdByOp(exp->src1)) }//printf("alive1\n");}//XXX:bug
+            if (exp->src2 && isVar(exp->src2)){ aliveVar(getVarIdByOp(exp->src2))} //printf("alive2\n");}
+            if (exp->dest && isVar(exp->dest) && isPoint(exp->dest)) {aliveVar(getVarIdByOp(exp->dest))} //printf("alive3\n");}
         }
     }
 }
@@ -493,7 +493,7 @@ int init_mem_alloc(){
                 esp += 1;
                 varAddress[i] = esp;
             }
-            printf("mem:%d %d\n", i, varAddress[i]);
+            //printf("mem:%d %d\n", i, varAddress[i]);
         }
     }
     return esp;
@@ -567,7 +567,7 @@ int ensure(int var_id){
 
 int ensureOp(Operand op){
     assert(isVar(op));
-    printf("ensure tmp%s %d\n", getVar(op), getVarIdByOp(op));
+    //printf("ensure tmp%s %d\n", getVar(op), getVarIdByOp(op));
     return ensure(getVarIdByOp(op));
 }
 
@@ -577,13 +577,13 @@ void freeVar(int var_id){
             del_v_int(rtoVar[varAlloc[var_id]], var_id);
         }
         varAlloc[var_id] = 0;
-        printf("free! %d\n", var_id);
+        //printf("free! %d\n", var_id);
     }
 }
 
 void freeOp(Operand op){
     assert(isVar(op));
-    printf("freeOp tmp%s %d\n", getVar(op), getVarIdByOp(op));
+    //printf("freeOp tmp%s %d\n", getVar(op), getVarIdByOp(op));
     freeVar(getVarIdByOp(op));
 }
 
@@ -596,7 +596,7 @@ int alloc(int var_id){
 }
 int allocOp(Operand op){
     assert(isVar(op));
-    printf("alloc tmp%s %d\n", getVar(op), getVarIdByOp(op));
+    //printf("alloc tmp%s %d\n", getVar(op), getVarIdByOp(op));
     setBitMap(modifyVar, getVarIdByOp(op), 1);
     return alloc(getVarIdByOp(op));
 }
@@ -714,9 +714,9 @@ void genObjCode(TripleExp exp){
         FT
     }
     if (type == t_read){
-        emitInstrLi(v0, 4);
-        emitInstrLa(a0, "_prompt");
-        emitInstrSyscall();
+        //emitInstrLi(v0, 4);
+        //emitInstrLa(a0, "_prompt");
+        //emitInstrSyscall();
         emitInstrLi(v0, 5);
         emitInstrSyscall();
         emitInstrMove(allocOp(exp->dest), v0);
@@ -771,7 +771,7 @@ void genNormalBlock(blockIR block){
     blockAliveVarAnalyze(block);
     init_reg_alloc();
     for(curIR = block.ir_s; curIR <= block.ir_e; curIR++){
-        printf("%d\n", curIR);
+        //printf("%d\n", curIR);
         if (curIR == block.ir_e && isGoto(ir[curIR]->type)) break;
         genObjCode(ir[curIR]);
     }
@@ -830,7 +830,7 @@ void genFuncOBJ(funcIR func){
         //printf("block %d\n", i);
         // if (i == 2){
         //     printf("ok");
-        // }
+        //}
         enum Ttype_ type = ir[func.blockIRList[i].ir_s]->type;
         if (type == t_call || type == t_arg) genCallBlock(func.blockIRList[i]);
         else genNormalBlock(func.blockIRList[i]);
