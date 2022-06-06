@@ -1,0 +1,28 @@
+./parser test/test1.txt /root/Lab/Code/test.out
+FUNCTION main :
+tmp1 := #0
+a := tmp1
+tmp2 := #1
+b := tmp2
+tmp3 := #0
+i := tmp3
+
+LABEL label1 :
+IF i < n GOTO label2
+
+GOTO label3
+
+LABEL label2 :
+tmp8 := a + b
+c := tmp8
+a := b
+b := c
+tmp25 := #1
+tmp22 := i + tmp25
+i := tmp22
+
+GOTO label1
+
+LABEL label3 :
+tmp27 := #0
+RETURN tmp27

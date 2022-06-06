@@ -29,9 +29,8 @@ int main(int argc, char** argv){
 
     getOptIr(irOri);
     //deadVarLiminate(irOri); 
-    
     modifyIr(irOri);
-
+    printTripe(irOri);
     genProgramOBJ(irOri);
     fclose(stdout);
     return 0;

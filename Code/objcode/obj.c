@@ -362,15 +362,33 @@ set getVarToInt(funcIR func){
         if (isVar(ir[i]->src2)) addStr_s(totalVar, getVar(ir[i]->src2));
         if (isVar(ir[i]->dest)) addStr_s(totalVar, getVar(ir[i]->dest));
     }
+    //print_set(totalVar);
     return totalVar;
 }
 
 bitmap FuncAliveVarAnalyze(funcIR func){
     bitmap res;
     initBitMap(&res, getBlockVarNum());
+    set countVar;
+    init_s(&countVar);
+    for(int i = 0; i < func.blockNum; i++){
+        set countVarCurBlock;
+        init_s(&countVarCurBlock);
+        blockIR* block = func.blockIRList + i;
+        for(int j = block->ir_s; j <= block->ir_e; j++){
+            if (isVar(ir[j]->src1)) addStr_s(countVarCurBlock, getVar(ir[j]->src1));
+            if (isVar(ir[j]->src2)) addStr_s(countVarCurBlock, getVar(ir[j]->src2));
+            if (isVar(ir[j]->dest)) addStr_s(countVarCurBlock, getVar(ir[j]->dest));
+        }
+        iterList(getStr_s(countVarCurBlock), strItem){
+            addStr_s(countVar, i->val);
+        }
+    }
     list varList = getStr_s(totalVar);
     for(strItem q = varList->head; q; q = q->next){
-        if (countStr_s(totalVar, q->val) > 1){
+        //printf("%s\n", q->val);
+        if (countStr_s(countVar, q->val) > 1){
+            printf("%s\n", q->val);
             setBitMap(res, getVarIdByName(q->val), 1);
         }
     }
@@ -380,13 +398,14 @@ bitmap FuncAliveVarAnalyze(funcIR func){
 vector_int* varsUseTime;
 bitmap* varsAliveMap;
 bitmap globalAliveVar;
-
+int curIR, baseIR;
 int isCalcExp(TripleExp op){
     if (op->type <= t_func || op->type == t_dec) return 0;
     return 1;
 }
 #define aliveVar(x) setBitMap(aliveMap, x, 1); push_back_v_int(varsUseTime[x], i); 
 #define deadVar(x) setBitMap(aliveMap, x, 0);
+
 void blockAliveVarAnalyze(blockIR block){
     int irNum = block.ir_e - block.ir_s + 1;
     varsAliveMap = malloc(sizeof(bitmap) * irNum);
@@ -397,10 +416,10 @@ void blockAliveVarAnalyze(blockIR block){
     }
     bitmap aliveMap = getCopyBitMap(globalAliveVar);
     for(int i = block.ir_e; i >= block.ir_s; i--){
-        varsAliveMap[i] = getCopyBitMap(aliveMap);
+        varsAliveMap[i - baseIR] = getCopyBitMap(aliveMap);
         TripleExp exp = ir[i];
         if (isCalcExp(exp)){
-            if (exp->src1 && isVar(exp->src1)){ aliveVar(getVarIdByOp(exp->src1))}
+            if (exp->src1 && isVar(exp->src1)){ aliveVar(getVarIdByOp(exp->src1))}//XXX:bug
             if (exp->src2 && isVar(exp->src2)){ aliveVar(getVarIdByOp(exp->src2))}
             if (exp->dest && isVar(exp->dest) && isPoint(exp->dest)) {aliveVar(getVarIdByOp(exp->dest))}
             if (exp->dest && isVar(exp->dest) && !isPoint(exp->dest)){deadVar(getVarIdByOp(exp->dest))}
@@ -411,7 +430,6 @@ void blockAliveVarAnalyze(blockIR block){
 int* varAddress;
 int* varAlloc;
 vector_int rtoVar[maxR];
-int curIR;
 int esp;
 int frameSize;
 int init_mem_alloc(){
@@ -492,7 +510,7 @@ int ensureOp(Operand op){
 }
 
 void freeVar(int var_id){
-    if (!getBitMap(varsAliveMap[curIR], var_id)){
+    if (!getBitMap(varsAliveMap[curIR - baseIR], var_id)){
         if (varAlloc[var_id]){
             del_v_int(rtoVar[varAlloc[var_id]], var_id);
         }
@@ -655,6 +673,7 @@ void genFuncBlock(blockIR block){
 }
 
 void genNormalBlock(blockIR block){
+    baseIR = block.ir_s;
     blockAliveVarAnalyze(block);
     init_reg_alloc();
     for(curIR = block.ir_s; curIR <= block.ir_e; curIR++){
@@ -692,6 +711,10 @@ void genFuncOBJ(funcIR func){
     frameSize = init_mem_alloc() * 4;
     genFuncBlock(func.blockIRList[0]);
     for(int i = 1; i < func.blockNum; i++){
+        printf("block %d\n", i);
+        if (i == 2){
+            printf("ok");
+        }
         enum Ttype_ type = ir[func.blockIRList[i].ir_s]->type;
         if (type == t_call || type == t_arg) genCallBlock(func.blockIRList[i]);
         else genNormalBlock(func.blockIRList[i]);
