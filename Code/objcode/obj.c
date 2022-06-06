@@ -15,6 +15,7 @@ static char* getVar(Operand o){
     if (o->type == o_var) return o->u.varPoint->name;
     if (o->type == o_tmpVar) return itoa(o->u.tmpId);
 }
+
 #define iterList(x, valType) for(valType i = (x)->head; i; i = i->next)
 
 #define maxR 32
@@ -29,6 +30,79 @@ instr getInstr(enum instrType type){
     a->iType = type;
 }
 
+char* getRegisterName(r_type r){
+    char* registerName[] = {"$zero","$at","$v0","$v1","$a0","$a1","$a2","$a3","$t0","$t1","$t2","$t3","$t4","$t5","$t6","$t7","$t8","$t9","$s0","$s1","$s2","$s3","$s4","$s5","$s6","$s7","$k0","$k1","$gp","$sp","$fp","$ra"};
+    return registerName[r];
+}
+#define GR(x) getRegisterName(x)
+char* getInstrName(enum instrType type){
+    char* instrName[] = {"li", "la", "move", "bgt", "bge", "blt", "ble", "label", "add", "addi", "sub", "mul", "div", "mflo", "lw", "sw", "j", "jal", "jr", "beq", "bne", "func"};
+}
+#define GI(x) getInstrName(x)
+#define CC(x,y) GR(code->iOp.x.y)
+
+void printObjCode(instr code){
+    switch(code->iType){
+        case i_add:
+        case i_sub:
+        case i_mul:
+            printf("%s %s, %s, %s", GI(code->iType), CC(r3, rd), CC(r3, rs), CC(r3, rt));
+            break;
+        case i_beq:
+        case i_bne:
+        case i_bgt:
+        case i_blt:
+        case i_bge:
+        case i_ble:
+            printf("%s %s, %s, label%d", GI(code->iType), CC(r2l1, rs), CC(r2l1, rt), code->iOp.r2l1.dest);
+            break;
+        case i_addi:
+            printf("addi %s, %s, %d", CC(r2i1, rt), CC(r2i1, rs), code->iOp.r2i1.imm);
+            break;
+        case i_div:
+            printf("div %s, %s", CC(r2, rs), CC(r2, rt));
+            break;
+        case i_move:
+            printf("move %s, %s", CC(r2, rt), CC(r2, rs));
+            break;
+        case i_li:
+            printf("li %s, %d", CC(r1i1, rs), code->iOp.r1i1.imm);
+            break;
+        case i_mflo:
+            printf("mflo %s", CC(r1, rs));
+            break;
+        case i_j:
+            printf("j label %d", code->iOp.l1.dest);
+            break;
+        case i_jal:
+            printf("jal %s", code->iOp.func.funcName);
+            break;
+        case i_jr:
+            printf("jr $ra");
+            break;
+        case i_lw:
+            printf("lw %s, %d(%s)", code->iOp.r2i1.rt, code->iOp.r2i1.imm, code->iOp.r2i1.rs);
+            break;
+        case i_sw:
+            printf("sw %s, %d(%s)", code->iOp.r2i1.rt, code->iOp.r2i1.imm, code->iOp.r2i1.rs);
+            break;
+        case i_func:
+            printf("%s:", code->iOp.func.funcName);
+            break;
+        default:
+            assert(0);
+    }
+    printf("\n");
+}
+
+void printObj(){
+    printf(".global main\n");
+    printf(".text\n");
+    for(int i = 0; i < objCode->length; i++){
+        instr code = objCode->a[i];
+        printObjCode(code);
+    }
+}
 void emitInstrLoad(int base, int offset, int dest){
     instr a = getInstr(i_lw);
     a->iOp.r2i1.rs = base;
