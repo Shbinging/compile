@@ -597,6 +597,11 @@ int alloc(int var_id){
 int allocOp(Operand op){
     assert(isVar(op));
     //printf("alloc tmp%s %d\n", getVar(op), getVarIdByOp(op));
+    int var_id = getVarIdByOp(op);
+    if (varAlloc[var_id]){
+        del_v_int(rtoVar[varAlloc[var_id]], var_id);
+        varAlloc[var_id] = 0;
+    }
     setBitMap(modifyVar, getVarIdByOp(op), 1);
     return alloc(getVarIdByOp(op));
 }

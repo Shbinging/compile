@@ -1,74 +1,99 @@
-FUNCTION cal_sum :
-PARAM s1
-PARAM s2
-PARAM s3
-tmp2 := s1 + s2
-tmp1 := tmp2 + s3
-s_res := tmp1
-RETURN s_res
-FUNCTION mod :
-PARAM m1
-PARAM m2
-tmp15 := m1 / m2
-tmp13 := tmp15 * m2
-tmp11 := m1 - tmp13
-m_res := tmp11
-RETURN m_res
-FUNCTION is_good :
-PARAM x
-tmp26 := #2
-tmp24 := x * tmp26
-a := tmp24
-tmp30 := #2
-tmp28 := x + tmp30
-b := tmp28
-tmp32 := x * x
-c := tmp32
-ARG c
-ARG b
-ARG a
-tmp37 := CALL cal_sum
-sum := tmp37
-tmp47 := #5
-ARG tmp47
-ARG sum
-tmp44 := CALL mod
-rem := tmp44
-tmp49 := #1
-IF rem > tmp49 GOTO label1
-GOTO label2
+FUNCTION average :
+PARAM class
+tmp1 := #0
+scoreSum := tmp1
+tmp2 := #0
+i := tmp2
+tmp6 := #0
+tmp5 := class
+tmp78 := #800
+tmp6 := tmp6 + tmp78
+tmp5 := tmp5 + tmp6
+tmp6 := #0
+tmp3 := tmp5 + tmp6
+tmp76 := *tmp3
+N := tmp76
 LABEL label1 :
-tmp51 := #1
-RETURN tmp51
+IF i < N GOTO label2
 GOTO label3
 LABEL label2 :
-tmp52 := #0
-RETURN tmp52
+tmp18 := #0
+tmp17 := class
+tmp79 := #0
+tmp18 := tmp18 + tmp79
+tmp17 := tmp17 + tmp18
+tmp18 := #0
+tmp80 := #100
+tmp18 := tmp18 * tmp80
+tmp18 := tmp18 + i
+tmp81 := #8
+tmp18 := tmp18 * tmp81
+tmp82 := #0
+tmp18 := tmp18 + tmp82
+tmp17 := tmp17 + tmp18
+tmp18 := #0
+tmp14 := tmp17 + tmp18
+tmp77 := *tmp14
+tmp12 := tmp77 + scoreSum
+scoreSum := tmp12
+tmp26 := #1
+tmp23 := i + tmp26
+i := tmp23
+GOTO label1
 LABEL label3 :
+tmp28 := scoreSum / N
+RETURN tmp28
 FUNCTION main :
-READ tmp54
-f := tmp54
-READ tmp57
-g := tmp57
-READ tmp60
-h := tmp60
-ARG f
-tmp62 := CALL is_good
-tmp76 := #0
-IF tmp62 != tmp76 GOTO label4
-GOTO label5
+DEC classInit 804
+tmp33 := #0
+result := tmp33
+tmp34 := #10
+initN := tmp34
+tmp35 := #0
+j := tmp35
+tmp40 := #0
+tmp39 := &classInit
+tmp83 := #800
+tmp40 := tmp40 + tmp83
+tmp39 := tmp39 + tmp40
+tmp40 := #0
+tmp36 := tmp39 + tmp40
+*tmp36 := initN
 LABEL label4 :
-ARG h
-ARG g
-ARG f
-tmp66 := CALL cal_sum
-WRITE tmp66
-tmp65 := #0
+IF j < initN GOTO label5
 GOTO label6
 LABEL label5 :
-tmp74 := #0
-WRITE tmp74
-tmp73 := #0
+tmp50 := #0
+tmp49 := &classInit
+tmp84 := #0
+tmp50 := tmp50 + tmp84
+tmp49 := tmp49 + tmp50
+tmp50 := #0
+tmp85 := #100
+tmp50 := tmp50 * tmp85
+tmp50 := tmp50 + j
+tmp86 := #8
+tmp50 := tmp50 * tmp86
+tmp87 := #0
+tmp50 := tmp50 + tmp87
+tmp49 := tmp49 + tmp50
+tmp50 := #0
+tmp46 := tmp49 + tmp50
+tmp56 := #1
+tmp53 := j + tmp56
+tmp59 := #1
+tmp54 := j + tmp59
+tmp47 := tmp53 * tmp54
+*tmp46 := tmp47
+tmp65 := #1
+tmp62 := j + tmp65
+j := tmp62
+GOTO label4
 LABEL label6 :
+ARG &classInit
+tmp68 := CALL average
+result := tmp68
+WRITE result
+tmp72 := #0
 tmp75 := #0
 RETURN tmp75
