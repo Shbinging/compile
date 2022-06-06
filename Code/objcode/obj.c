@@ -140,6 +140,8 @@ void emitInstrLoad(int base, int offset, int dest){
 
 void emitInstrStore(int base, int offset, int dest){
     instr a = getInstr(i_sw);
+    assert(base > 0);
+    assert(dest > 0);
     a->iOp.r2i1.rs = base;
     a->iOp.r2i1.imm = offset;
     a->iOp.r2i1.rt = dest;
@@ -444,7 +446,8 @@ void blockAliveVarAnalyze(blockIR block){
     int irNum = block.ir_e - block.ir_s + 1;
     varsAliveMap = malloc(sizeof(bitmap) * irNum);
     varsUseTime = malloc(sizeof(vector_int) * getBlockVarNum());
-    for(int i = 0; i < irNum; i++) initBitMap(&varsAliveMap[i],  getBlockVarNum());
+    for(int i = 0; i < irNum; i++) 
+        initBitMap(&varsAliveMap[i],  getBlockVarNum());
     for(int i = 0; i < getBlockVarNum(); i++){
         init_v_int(&varsUseTime[i]); 
     }
@@ -453,10 +456,13 @@ void blockAliveVarAnalyze(blockIR block){
         varsAliveMap[i - baseIR] = getCopyBitMap(aliveMap);
         TripleExp exp = ir[i];
         if (isCalcExp(exp)){
-            if (exp->src1 && isVar(exp->src1)){ aliveVar(getVarIdByOp(exp->src1))}//XXX:bug
-            if (exp->src2 && isVar(exp->src2)){ aliveVar(getVarIdByOp(exp->src2))}
-            if (exp->dest && isVar(exp->dest) && isPoint(exp->dest)) {aliveVar(getVarIdByOp(exp->dest))}
-            if (exp->dest && isVar(exp->dest) && !isPoint(exp->dest)){deadVar(getVarIdByOp(exp->dest))}
+            if (i == 62){
+                printf("ok\n");
+            }
+            if (exp->dest && isVar(exp->dest) && !isPoint(exp->dest)){deadVar(getVarIdByOp(exp->dest)) printf("dead1\n");}
+            if (exp->src1 && isVar(exp->src1)){ aliveVar(getVarIdByOp(exp->src1)) printf("alive1\n");}//XXX:bug
+            if (exp->src2 && isVar(exp->src2)){ aliveVar(getVarIdByOp(exp->src2)) printf("alive2\n");}
+            if (exp->dest && isVar(exp->dest) && isPoint(exp->dest)) {aliveVar(getVarIdByOp(exp->dest)) printf("alive3\n");}
         }
     }
 }
@@ -469,7 +475,7 @@ int esp;
 int frameSize;
 int init_mem_alloc(){
     varAddress = malloc(sizeof(int) * getBlockVarNum());
-    memset(varAddress, 0, sizeof(varAddress));
+    memset(varAddress, 0, sizeof(int) * getBlockVarNum());
     for(int i = 0; i < totalIR; i++){
         if (ir[i]->type == t_dec){
             varAddress[getVarIdByOp(ir[i]->dest)] = ir[i]->dest->addtion.size;
@@ -477,7 +483,7 @@ int init_mem_alloc(){
     } 
     esp = 2;
     for(int i = 0; i < getBlockVarNum(); i++){
-        if (getBitMap(globalAliveVar, i)){
+        if (varAddress[i] || getBitMap(globalAliveVar, i)){
             if (varAddress[i]){
                 esp += varAddress[i];
                 varAddress[i] = esp;
@@ -521,10 +527,12 @@ int getVarAddr(int id){
 }
 
 void spill(int result){
-    for(int j = 0; j < rtoVar[j]->length; j++){
-        int var = rtoVar[j]->a[j];
+    for(int j = 0; j < rtoVar[result]->length; j++){
+        int var = rtoVar[result]->a[j];
         emitInstrStore(fp, getVarAddr(var), result);
+        varAlloc[var] = 0;
     }
+    clear_v_int(rtoVar[result]);
 }
 
 int allocate(){
@@ -533,13 +541,13 @@ int allocate(){
     }
     int mx = 0, result = 0;
     for(int i = t0; i <= s7; i++){
-        int mx1 = 0;
+        int mx1 = 1000000;
         for(int j = 0; j < rtoVar[i]->length; j++){
             int var = rtoVar[i]->a[j];
             while(!isEmpty_v_int(varsUseTime[var]) && top_v_int(varsUseTime[var]) < curIR) pop_v_int(varsUseTime[var]);
-            if (!isEmpty_v_int(varsUseTime[var])) mx1 = max(mx1, top_v_int(varsUseTime[var]));
+            if (!isEmpty_v_int(varsUseTime[var])) mx1 = min(mx1, top_v_int(varsUseTime[var]));
         }
-        if (mx1 > mx){
+        if (mx1 >= mx){
             mx = mx1;
             result = i;
         }
@@ -557,6 +565,7 @@ int ensure(int var_id){
 
 int ensureOp(Operand op){
     assert(isVar(op));
+    printf("ensure tmp%s %d\n", getVar(op), getVarIdByOp(op));
     return ensure(getVarIdByOp(op));
 }
 
@@ -566,23 +575,26 @@ void freeVar(int var_id){
             del_v_int(rtoVar[varAlloc[var_id]], var_id);
         }
         varAlloc[var_id] = 0;
+        printf("free! %d\n", var_id);
     }
 }
 
 void freeOp(Operand op){
     assert(isVar(op));
+    printf("freeOp tmp%s %d\n", getVar(op), getVarIdByOp(op));
     freeVar(getVarIdByOp(op));
 }
 
 int alloc(int var_id){
     int result = allocate();
     varAlloc[var_id] = result;
-    rtoVar[result]->length = 0;
+    clear_v_int(rtoVar[result]);
     push_back_v_int(rtoVar[result], var_id);
     return result;
 }
 int allocOp(Operand op){
     assert(isVar(op));
+    printf("alloc tmp%s %d\n", getVar(op), getVarIdByOp(op));
     setBitMap(modifyVar, getVarIdByOp(op), 1);
     return alloc(getVarIdByOp(op));
 }
@@ -597,7 +609,9 @@ void genObjCode(TripleExp exp){
             assert(isVar(exp->dest));
             if (isPoint(exp->dest)){
                 //int regx = ensureOp(exp->dest), regy = ensureOp(exp->src1);
+                assert(isVar(exp->src1));
                 emitInstrStore(ensureOp(exp->dest), 0, ensureOp(exp->src1));
+                FT
             }else{
                 int regx = allocOp(exp->dest);
                 if (exp->src1->type == o_const){
@@ -717,6 +731,9 @@ void genObjCode(TripleExp exp){
         emitInstrMove(v0, 0);
         FT
     }
+    if (type == t_dec){
+        FT
+    }
     assert(canTrans);
 }
 
@@ -752,6 +769,9 @@ void genNormalBlock(blockIR block){
     blockAliveVarAnalyze(block);
     init_reg_alloc();
     for(curIR = block.ir_s; curIR <= block.ir_e; curIR++){
+        if (curIR == 61){
+            printf("ok");
+        }
         if (curIR == block.ir_e && isGoto(ir[curIR]->type)) break;
         genObjCode(ir[curIR]);
     }
@@ -771,13 +791,15 @@ void genCallBlock(blockIR block){
     emitInstrAddi(sp, sp, -4);
     emitInstrStore(sp, 0, ra);
     emitInstrAddi(sp, sp, -4 * max(0, s - 4));
+    int ss = s;
     for(curIR = block.ir_s; curIR <= block.ir_e; curIR++){
         if (ir[curIR]->type == t_call) break;
         assert(ir[curIR]->type == t_arg);
         s--;
         if (s >= 4){
             assert(isVar(ir[curIR]->src1));
-            emitInstrStore(sp, (s - 4)* 4, getVarAddr(getVarIdByOp(ir[curIR]->src1)));
+            emitInstrStore(sp, (s - 4)* 4, ensureOp(ir[curIR]->src1));
+            
         }else{
             emitInstrMove(a0 + s, ensureOp(ir[curIR]->src1));
         }
@@ -785,7 +807,7 @@ void genCallBlock(blockIR block){
     assert(ir[curIR]->type == t_call);
     emitInstrJal(ir[curIR]->src1->u.funcPoint->name);
     emitInstrMove(allocOp(ir[curIR]->dest), v0);
-    emitInstrAddi(sp, sp, 4 * max(0, s - 4));
+    emitInstrAddi(sp, sp, 4 * max(0, ss - 4));
     emitInstrLoad(sp, 0, ra);
     emitInstrAddi(sp, sp, 4);
     //emitInstrAddi(fp, sp, frameSize);

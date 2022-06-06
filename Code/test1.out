@@ -1,82 +1,127 @@
-FUNCTION fact :
-PARAM n
-
-tmp2 := #1
-IF n == tmp2 GOTO label1
-
-GOTO label2
-
-LABEL label1 :
-RETURN n
-
-GOTO label3
-
-LABEL label2 :
-tmp12 := #1
-tmp10 := n - tmp12
-
-ARG tmp10
-tmp8 := CALL fact
-
-tmp6 := n * tmp8
-RETURN tmp6
-
-LABEL label3 :
-
 FUNCTION main :
-
-READ tmp15
-
-m := tmp15
-tmp18 := #1
-IF m > tmp18 GOTO label4
-
-GOTO label5
-
-LABEL label4 :
-
-ARG m
-tmp21 := CALL fact
-
-result := tmp21
-
-GOTO label6
-
-LABEL label5 :
-
-tmp26 := #1
-result := tmp26
-
-LABEL label6 :
-
-WRITE result
-
-tmp28 := #0
+DEC a 20
+tmp5 := #0
+tmp4 := &a
+tmp6 := #1
+tmp42 := #5
+tmp5 := tmp5 * tmp42
+tmp5 := tmp5 + tmp6
+tmp43 := #4
+tmp5 := tmp5 * tmp43
+tmp1 := tmp4 + tmp5
+tmp2 := #3
+*tmp1 := tmp2
+tmp11 := #0
+tmp10 := &a
+tmp12 := #1
+tmp44 := #5
+tmp11 := tmp11 * tmp44
+tmp11 := tmp11 + tmp12
+tmp45 := #4
+tmp11 := tmp11 * tmp45
+tmp8 := tmp10 + tmp11
+tmp38 := *tmp8
+WRITE tmp38
+tmp7 := #0
+tmp17 := #0
+tmp16 := &a
+tmp18 := #2
+tmp46 := #5
+tmp17 := tmp17 * tmp46
+tmp17 := tmp17 + tmp18
+tmp47 := #4
+tmp17 := tmp17 * tmp47
+tmp13 := tmp16 + tmp17
+tmp14 := #4
+*tmp13 := tmp14
+tmp23 := #0
+tmp22 := &a
+tmp24 := #2
+tmp48 := #5
+tmp23 := tmp23 * tmp48
+tmp23 := tmp23 + tmp24
+tmp49 := #4
+tmp23 := tmp23 * tmp49
+tmp20 := tmp22 + tmp23
+tmp39 := *tmp20
+WRITE tmp39
+tmp19 := #0
 tmp31 := #0
-RETURN tmp31
-
+tmp30 := &a
+tmp32 := #1
+tmp50 := #5
+tmp31 := tmp31 * tmp50
+tmp31 := tmp31 + tmp32
+tmp51 := #4
+tmp31 := tmp31 * tmp51
+tmp27 := tmp30 + tmp31
+tmp35 := #0
+tmp34 := &a
+tmp36 := #2
+tmp52 := #5
+tmp35 := tmp35 * tmp52
+tmp35 := tmp35 + tmp36
+tmp53 := #4
+tmp35 := tmp35 * tmp53
+tmp28 := tmp34 + tmp35
+tmp41 := *tmp28
+tmp40 := *tmp27
+tmp26 := tmp40 + tmp41
+WRITE tmp26
+tmp25 := #0
+tmp37 := #0
+RETURN tmp37
 start set
-5 6
-0 n
-3 10
-4 8
-2 12
-1 2
+43 41
+36 27
+45 26
+44 40
+46 25
+5 43
+25 24
+4 42
+23 23
+12 45
+0 a
+24 22
+11 44
+20 47
+28 20
+19 46
+27 49
+26 48
+42 28
+1 5
+2 4
+15 7
+3 6
+6 1
+7 2
+13 8
+39 36
+34 50
+22 14
+47 37
+35 51
+40 52
+38 34
+17 16
+41 53
+37 35
+16 17
+33 32
+9 10
+8 11
+32 30
+10 12
+31 31
+21 13
+18 18
+30 19
+14 38
+29 39
 end set
-mem:0 3
-mem:3 4
-mem:4 5
-start set
-1 m
-5 26
-0 15
-4 result
-2 18
-3 21
-7 31
-6 28
-end set
-mem:0 3
-mem:1 4
-mem:3 5
-mem:4 6
+mem:0 22
+mem:14 23
+mem:29 24
+mem:45 25

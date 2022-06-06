@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Mon Jun  6 12:19:37 2022
+# Make data base, printed on Mon Jun  6 16:08:49 2022
 
 # Variables
 
@@ -67,7 +67,7 @@ YFC = $(shell find ./ -name "*.y" | sed s/[^/]*\\.y/syntax.tab.c/)
 # makefile (from 'Makefile', line 15)
 LFC = $(shell find ./ -name "*.l" | sed s/[^/]*\\.l/lex.yy.c/)
 # environment
-SSH_AUTH_SOCK = /tmp/vscode-ssh-auth-e9bb24517187e017837d6c577ba88c5a140bb9f7.sock
+SSH_AUTH_SOCK = /tmp/vscode-ssh-auth-d1ed91fe3c449bf74ae77fb90d04e39c46b3857b.sock
 # automatic
 %F = $(notdir $%)
 # environment
@@ -75,7 +75,7 @@ VSCODE_PIPE_LOGGING = true
 # environment
 PWD = /root/Lab/Code
 # environment
-VSCODE_IPC_HOOK_CLI = /tmp/vscode-ipc-f59b0de1-4898-49e7-8232-b46e35041968.sock
+VSCODE_IPC_HOOK_CLI = /tmp/vscode-ipc-58f2fdab-0b12-44ff-a827-de24c3d55ed2.sock
 # environment
 VSCODE_AMD_ENTRYPOINT = vs/workbench/api/node/extensionHostProcess
 # environment
@@ -83,7 +83,7 @@ HOME = /root
 # environment
 REMOTE_CONTAINERS = true
 # environment
-APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = 1
+APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = true
 # automatic
 +F = $(notdir $+)
 # environment
@@ -113,7 +113,7 @@ YFO = $(YFC:.c=.o)
 # makefile (from 'Makefile', line 7)
 BISON = bison
 # environment
-REMOTE_CONTAINERS_IPC = /tmp/vscode-remote-containers-ipc-e9bb24517187e017837d6c577ba88c5a140bb9f7.sock
+REMOTE_CONTAINERS_IPC = /tmp/vscode-remote-containers-ipc-d1ed91fe3c449bf74ae77fb90d04e39c46b3857b.sock
 # default
 MAKE_COMMAND := make
 # default
@@ -147,7 +147,7 @@ LC_ALL = C
 # default
 SUFFIXES := 
 # environment
-REMOTE_CONTAINERS_SOCKETS = ["/tmp/vscode-ssh-auth-e9bb24517187e017837d6c577ba88c5a140bb9f7.sock"]
+REMOTE_CONTAINERS_SOCKETS = ["/tmp/vscode-ssh-auth-d1ed91fe3c449bf74ae77fb90d04e39c46b3857b.sock"]
 # default
 .INCLUDE_DIRS = /usr/include /usr/local/include /usr/include
 # default
@@ -282,11 +282,11 @@ objcode/objUtil.o:
 
 ta:
 #  Implicit rule search has not been done.
- 
 #  Modification time never checked.
 #  File has not been updated.
 #  recipe to execute (from 'Makefile', line 52):
 	sh /root/test/compilers-tests/run.sh /root/Lab/Code/parser
+ 
 	
 
 test:
@@ -513,6 +513,6 @@ tryB:
 # strcache performance: lookups = 111 / hit rate = 36%
 # hash-table stats:
 # Load=70/8192=1%, Rehash=0, Collisions=1/111=1%
-# Finished Make data base on Mon Jun  6 12:19:37 2022
+# Finished Make data base on Mon Jun  6 16:08:49 2022
 
  

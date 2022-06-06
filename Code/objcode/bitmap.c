@@ -46,7 +46,7 @@ void setBitMapZero(bitmap bm){
 
 bitmap getCopyBitMap(bitmap src){
     bitmap dest;
-    initBitMap(&dest, src->size);
+    initBitMap(&dest, src->size * 32);
     for(int i = 0; i < src->size; i++) dest->map[i] = src->map[i];
     return dest;
 }

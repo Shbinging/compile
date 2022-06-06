@@ -28,6 +28,11 @@ typedef vector__##x* vector_##x;
     vec->a[vec->length++] = val;\
 }
 
+#define clear_v(x) static void clear_v_##x(vector_##x vec){\
+    vec->length = 0;\
+    vec->pos = 0;\
+}
+
 #define resize_v(x) static void resize_v_##x(vector_##x vec, int size){\
     for(int i = 0; i < size; i++) push_back_v_##x(vec, 0);\
 }
@@ -86,7 +91,8 @@ pop_v(x)\
 top_v(x)\
 del_v(x)\
 free_v(x)\
-isEmpty_v(x)
+isEmpty_v(x)\
+clear_v(x)
 
 
 //h_gen_v(int)
