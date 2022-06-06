@@ -485,6 +485,19 @@ int init_reg_alloc(){
     }
     
 }
+
+int finish_reg_alloc(){
+    for(int i = t0; i <= s7; i++){
+        for(int j = 0; j < rtoVar[i]->length; j++){
+            int var_id = rtoVar[i]->a[j];
+            if (getBitMap(globalAliveVar, var_id)){
+                assert(getVarAddr(var_id) <= frameSize);
+                emitInstrStore(fp, getVarAddr(var_id), i);
+            }
+        }
+    }
+}
+
 int getVarAddr(int id){
     //XXX::新申请
     if (!varAddress[id]) varAddress[id] = ++esp;
@@ -712,16 +725,12 @@ void genNormalBlock(blockIR block){
     blockAliveVarAnalyze(block);
     init_reg_alloc();
     for(curIR = block.ir_s; curIR <= block.ir_e; curIR++){
+        if (curIR == block.ir_e && isBranch(ir[curIR]->type)) break;
         genObjCode(ir[curIR]);
     }
-    for(int i = t0; i <= s7; i++){
-        for(int j = 0; j < rtoVar[i]->length; j++){
-            int var_id = rtoVar[i]->a[j];
-            if (getBitMap(globalAliveVar, var_id)){
-                assert(getVarAddr(var_id) <= frameSize);
-                emitInstrStore(fp, getVarAddr(var_id), i);
-            }
-        }
+    finish_reg_alloc();
+    if (curIR == block.ir_e && isBranch(ir[curIR]->type)){
+        genObjCode(ir[curIR]);
     }
 }
 
@@ -747,10 +756,13 @@ void genCallBlock(blockIR block){
         }
     }
     assert(ir[curIR]->type == t_call);
+    emitInstrJal(ir[curIR]->src1->u.funcPoint->name);
+    emitInstrMove(allocOp(ir[curIR]->dest), v0);
+    emitInstrAddi(sp, sp, 4 * max(0, s - 4));
     emitInstrLoad(sp, 0, ra);
     emitInstrAddi(sp, sp, 4);
-    emitInstrAddi(sp, sp, 4 * max(0, s - 4));
     emitInstrAddi(fp, sp, frameSize);
+    finish_reg_alloc();
 }
 
 void genFuncOBJ(funcIR func){
