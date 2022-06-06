@@ -9,5 +9,7 @@
 #include "bitmap.h"
 #include "heap.h" 
 #include "set.h"
-void testBlockAliveAnalyze(list funcBlock);
+
+vector(int)
+vector(instr)
 #endif

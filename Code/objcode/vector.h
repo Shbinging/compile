@@ -79,14 +79,13 @@ h_del_v(int)\
 h_free_v(int)\
 h_isEmpty_v(int)
 
-#define gen_v(x) init_v(int)\
-push_back_v(int)\
-resize_v(int)\
-pop_v(int)\
-top_v(int)\
-del_v(int)\
-free_v(int)\
-isEmpty_v(int)
+#define gen_v(x) push_back_v(x)\
+resize_v(x)\
+pop_v(x)\
+top_v(x)\
+del_v(x)\
+free_v(x)\
+isEmpty_v(x)
 
 
 //h_gen_v(int)
