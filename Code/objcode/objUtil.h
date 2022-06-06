@@ -39,9 +39,13 @@ typedef struct instr_{
             int rs;
             int imm;
         }r1i1;
-        struct func{
+        struct Func{
             char* funcName;
         }func;
+        struct La{
+            int rs;
+            char* funcName;
+        }la;
     }iOp;
     
 } instr_;

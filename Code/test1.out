@@ -1,42 +1,82 @@
-FUNCTION main :
-a -12
-b -16
-i -20
-tmp5 -24
-n -28
-c -32
+FUNCTION fact :
+PARAM n
 
-tmp1 := #0
-a := tmp1
 tmp2 := #1
-b := tmp2
-tmp3 := #0
-i := tmp3
+IF n == tmp2 GOTO label1
 
-READ tmp5
-
-n := tmp5
+GOTO label2
 
 LABEL label1 :
-IF i < n GOTO label2
+RETURN n
 
 GOTO label3
 
 LABEL label2 :
-tmp11 := a + b
-c := tmp11
+tmp12 := #1
+tmp10 := n - tmp12
 
-WRITE b
+ARG tmp10
+tmp8 := CALL fact
 
-tmp16 := #0
-a := b
-b := c
-tmp31 := #1
-tmp28 := i + tmp31
-i := tmp28
-
-GOTO label1
+tmp6 := n * tmp8
+RETURN tmp6
 
 LABEL label3 :
-tmp33 := #0
-RETURN tmp33
+
+FUNCTION main :
+
+READ tmp15
+
+m := tmp15
+tmp18 := #1
+IF m > tmp18 GOTO label4
+
+GOTO label5
+
+LABEL label4 :
+
+ARG m
+tmp21 := CALL fact
+
+result := tmp21
+
+GOTO label6
+
+LABEL label5 :
+
+tmp26 := #1
+result := tmp26
+
+LABEL label6 :
+
+WRITE result
+
+tmp28 := #0
+tmp31 := #0
+RETURN tmp31
+
+start set
+5 6
+0 n
+3 10
+4 8
+2 12
+1 2
+end set
+mem:0 3
+mem:3 4
+mem:4 5
+start set
+1 m
+5 26
+0 15
+4 result
+2 18
+3 21
+7 31
+6 28
+end set
+mem:0 3
+mem:1 4
+mem:3 5
+mem:4 6

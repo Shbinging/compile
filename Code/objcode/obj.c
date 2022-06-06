@@ -111,6 +111,10 @@ void printObjCode(instr code){
             break;
         case i_null:
             break;
+        case i_la:
+        printf("\t");
+            printf("la %s, %s", CC(la, rs), code->iOp.la.funcName);
+            break;
         default:
             assert(0);
     }
@@ -118,7 +122,8 @@ void printObjCode(instr code){
 }
 
 void printObj(){
-    printf(".globl main\n");
+    printf(".data\n_prompt: .asciiz \"Enter an integer:\"\n_ret: .asciiz \"\\n\"");
+    printf("\n.globl main\n");
     printf(".text\n");
     for(int i = 0; i < objCode->length; i++){
         instr code = objCode->a[i];
@@ -156,12 +161,13 @@ void emitInstrLi(int r, int imm){
     a->iOp.r1i1.imm = imm;
     addCode(a);
 }
-// void emitInstrLa(int r, char* varName){
-//     instr a = getInstr(i_la);
-//     a->iOp.r1l1.rs = r;
-//     a->iOp.r1l1.varName = varName;
-//     addCode(a);
-// }
+
+void emitInstrLa(int r, char* varName){
+    instr a = getInstr(i_la);
+    a->iOp.la.funcName = varName;
+    a->iOp.la.rs = r;
+    addCode(a);
+}
 void emitInstrMove(int rt, int rs){
     instr a = getInstr(i_move);
     a->iOp.r2.rs = rs;
@@ -654,10 +660,10 @@ void genObjCode(TripleExp exp){
     }
     if (type == t_return){
         //int regx = allocOp(exp->dest);
+        emitInstrMove(v0, ensureOp(exp->src1));
         emitInstrLoad(sp, frameSize - 4, ra);
         emitInstrLoad(sp, frameSize - 8, fp);
         emitInstrAddi(sp, sp, frameSize);
-        emitInstrMove(v0, ensureOp(exp->src1));
         emitInstrJr();
         FT
     }
@@ -692,6 +698,9 @@ void genObjCode(TripleExp exp){
         FT
     }
     if (type == t_read){
+        emitInstrLi(v0, 4);
+        emitInstrLa(a0, "_prompt");
+        emitInstrSyscall();
         emitInstrLi(v0, 5);
         emitInstrSyscall();
         emitInstrMove(allocOp(exp->dest), v0);
@@ -702,6 +711,10 @@ void genObjCode(TripleExp exp){
         emitInstrMove(a0, ensureOp(exp->src1));
         freeOp(exp->src1);
         emitInstrSyscall();
+        emitInstrLi(v0, 4);
+        emitInstrLa(a0, "_ret");
+        emitInstrSyscall();
+        emitInstrMove(v0, 0);
         FT
     }
     assert(canTrans);
@@ -714,7 +727,7 @@ void genFuncBlock(blockIR block){
     emitInstrFunc(exp->dest->u.funcPoint->name);
     emitInstrAddi(sp, sp, -frameSize);
     emitInstrStore(sp, frameSize -4, ra);
-    emitInstrStore(sp, frameSize - 8, sp);
+    emitInstrStore(sp, frameSize - 8, fp);
     emitInstrAddi(fp, sp, frameSize);
     int s = 0;
     for(curIR = block.ir_s + 1; curIR <= block.ir_e; curIR++){
@@ -775,7 +788,7 @@ void genCallBlock(blockIR block){
     emitInstrAddi(sp, sp, 4 * max(0, s - 4));
     emitInstrLoad(sp, 0, ra);
     emitInstrAddi(sp, sp, 4);
-    emitInstrAddi(fp, sp, frameSize);
+    //emitInstrAddi(fp, sp, frameSize);
     finish_reg_alloc();
 }
 
