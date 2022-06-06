@@ -138,6 +138,7 @@ int isOpUse(list funcBlock, Operand op){
 
 void getOptIr(list funcBlock){
     if (funcBlock == NULL) return;
+    return;
     constLiminate(funcBlock);
     for(funcNode p = (funcNode)funcBlock->head; p; p = p->next){
         for(tripleNode q = (tripleNode) p->val->head; q; q = q->next){

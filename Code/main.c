@@ -6,7 +6,6 @@
 #include "ir/ir.h"
 #include "ir/irOptimization.h"
 #include "objcode/obj.h"
-#include "objcode/vector.h"
 int parseOK;
 TreeNode* parseTreeRoot;
 
@@ -32,46 +31,8 @@ int main(int argc, char** argv){
     //deadVarLiminate(irOri); 
     
     modifyIr(irOri);
-    //printTripe(irOri);
-    //testBlockAliveAnalyze(irOri);
-    //testCFG(irOri);
 
-    //printf("%s\n", itoa(0));
-    //printf("%s\n", itoa(100));
-    // set s;
-    // init_s(&s);
-    // addNum_s(s, 1);
-    // addStr_s(s, "333");
-    // addNum_s(s, 1);
-    // list l = getStr_s(s);
-    // strItem item = getIndex_l(l, 0);
-    // printf("%s\n", item->val);
-    // for(strItem item = l->head; item; item = item->next){
-    //     printf("%s\n", item->val);
-    // }
-    // heap h;
-    // init_heap(&h, 10);
-    // push_h(h, 2, "123");
-    // push_h(h, 1, "456");
-    // heapNode hh = pop_h(h);
-    // printf("%d %s\n", hh->key, hh->val);
-    // push_h(h, 3, "234");
-    // printf("%d %s\n", top_h(h)->key, top_h(h)->val);
-    // pop_h(h);
-    // printf("%d\n", empty_h(h));
-    // pop_h(h);
-    // printf("%d\n", empty_h(h));
-    // printf("%d\n", countInt_s(s, 1));
-    //bitmap bt = initBitMap(128);
-    //for(int i = 0; i < 20; i++) yylex();
-    // bitmap b, b1;
-    // initBitMap(&b, 68);
-    // initBitMap(&b1, 68);
-    // setBitMap(b, 60, 1);
-    // setBitMap(b, 60, 0);
-    // setBitMap(b, 40, 1);
-    // unionBitMap(b, b1);
-    // printf("%d\n", getBitMap(b, 40));
+    genProgramOBJ(irOri);
     fclose(stdout);
     return 0;
 }

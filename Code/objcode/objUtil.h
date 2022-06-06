@@ -68,11 +68,5 @@ typedef blockItem_* blockItem;
 typedef listNode(listHead, int, listItem_) listItem_;
 typedef listItem_* listItem;
 typedef listHead* list;
-
-// list voidSplitList(list funcBlock);
-// void buildCFG(tripleNode funcBlock);
-// void testCFG(list funcBlock);
-// list genBlock(tripleNode q);
-// void modifyIr(list funcBlock);
-// void printBlock(list p);
+void printTriple(TripleExp q);
 #endif

@@ -11,7 +11,7 @@
 #include "set.h"
 #include "vector.h"
 
-
+void genProgramOBJ(list func);
 vector(int)
 vector(instr)
 #endif

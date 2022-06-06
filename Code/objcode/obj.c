@@ -37,12 +37,16 @@ char* getRegisterName(r_type r){
 #define GR(x) getRegisterName(x)
 char* getInstrName(enum instrType type){
     char* instrName[] = {"li", "la", "move", "bgt", "bge", "blt", "ble", "label", "add", "addi", "sub", "mul", "div", "mflo", "lw", "sw", "j", "jal", "jr", "beq", "bne", "func"};
+    return instrName[type];
 }
 #define GI(x) getInstrName(x)
 #define CC(x,y) GR(code->iOp.x.y)
 
 void printObjCode(instr code){
     switch(code->iType){
+        case i_label:
+            printf("label%d:", code->iOp.l1.dest);
+            break;
         case i_add:
         case i_sub:
         case i_mul:
@@ -72,7 +76,7 @@ void printObjCode(instr code){
             printf("mflo %s", CC(r1, rs));
             break;
         case i_j:
-            printf("j label %d", code->iOp.l1.dest);
+            printf("j label%d", code->iOp.l1.dest);
             break;
         case i_jal:
             printf("jal %s", code->iOp.func.funcName);
@@ -81,10 +85,10 @@ void printObjCode(instr code){
             printf("jr $ra");
             break;
         case i_lw:
-            printf("lw %s, %d(%s)", code->iOp.r2i1.rt, code->iOp.r2i1.imm, code->iOp.r2i1.rs);
+            printf("lw %s, %d(%s)", CC(r2i1, rt), code->iOp.r2i1.imm, CC(r2i1, rs));
             break;
         case i_sw:
-            printf("sw %s, %d(%s)", code->iOp.r2i1.rt, code->iOp.r2i1.imm, code->iOp.r2i1.rs);
+            printf("sw %s, %d(%s)", CC(r2i1, rt), code->iOp.r2i1.imm, CC(r2i1, rs));
             break;
         case i_func:
             printf("%s:", code->iOp.func.funcName);
@@ -696,8 +700,10 @@ void genFuncOBJ(funcIR func){
 
 void genProgramOBJ(list func){
     getIR(func->head);
+    splitIR();
     init_v_instr(&objCode);
     for(int i = 0; i < funcNum; i++){
         genFuncOBJ(funcList[i]);
     }
+    printObj();
 }
