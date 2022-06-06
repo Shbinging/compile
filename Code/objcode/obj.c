@@ -1,13 +1,17 @@
 #include "obj.h"
 #include "objUtil.h"
 #include "assert.h"
+#include "vector.h"
+
+gen_v(int)
+
 static int isVar(Operand o){
     return o && (o->type == o_var || o->type == o_tmpVar);
 } 
 
-static int isVarNormal(Operand o){
-    return o && (o->type == o_var || o->type == o_tmpVar) && (o->property != o_point);
-}
+// static int isVarNormal(Operand o){
+//     return o && (o->type == o_var || o->type == o_tmpVar) && (o->property != o_point);
+// }
 
 static char* getVar(Operand o){
     if (!o) return NULL;
@@ -15,7 +19,7 @@ static char* getVar(Operand o){
     if (o->type == o_tmpVar) return itoa(o->u.tmpId);
 }
 
-#define addVar(x) if (exp->x && isVar(exp->x)) addStr_s(varSet, getVar(exp->x))
+//#define addVar(x) if (exp->x && isVar(exp->x)) addStr_s(varSet, getVar(exp->x))
 
 
 // set getBlockVar(blockInfo b){
@@ -82,17 +86,17 @@ static char* getVar(Operand o){
 
 #define iterList(x, valType) for(valType i = (x)->head; i; i = i->next)
 
-int getBlockTripleNum(blockInfo block){
-    int s = 0;
-    for (tripleNode p = block->head; p != block->tail; p = p->next){
-        s++;
-    }
-    return s;
-}
+// int getBlockTripleNum(blockInfo block){
+//     int s = 0;
+//     for (tripleNode p = block->head; p != block->tail; p = p->next){
+//         s++;
+//     }
+//     return s;
+// }
 
-int isPoint(Operand op){
-    return op && op->property == o_point;
-}
+// int isPoint(Operand op){
+//     return op && op->property == o_point;
+// }
 // int isSourceVar(enum Ttype_ type, Operand op, int isDest){
 //     if (!op) return 0;
 //     switch(type){
@@ -227,22 +231,22 @@ int isPoint(Operand op){
 // }
 
 
-typedef map_t(listItem) map_listItem_t;
+//typedef map_t(listItem) map_listItem_t;
 const int maxR= 32;
 
-set rTable[maxR];
-int rTimeStap[maxR];
-map_int_t varToR;
-list objCode;
-map_int_t stackTable, stackTableTmp;
-int esp;
-int espFrame;
-int varNum;
-int totalVarNum;
+// set rTable[maxR];
+// int rTimeStap[maxR];
+// map_int_t varToR;
+// list objCode;
+// map_int_t stackTable, stackTableTmp;
+// int esp;
+// int espFrame;
+// int varNum;
+// int totalVarNum;
 
 
-typedef listNode(instr, int, instrItem_) instrItem_;
-typedef instrItem_* instrItem;
+// typedef listNode(instr, int, instrItem_) instrItem_;
+// typedef instrItem_* instrItem;
 
 // int getVarAddress(char* name){
 //     if (findStr_s(aliveSet), name){
@@ -256,8 +260,9 @@ typedef instrItem_* instrItem;
 // void initCode(){
 //     createList(&objCode);    
 // }
+vector objCode;
 void addCode(instr a){
-    push_back_l(objCode, instrItem_, a);
+    push_back_v_int(objCode, (int)a);
 }
 instr getInstr(enum instrType type){
     instr a = malloc(sizeof(instr_));
@@ -291,7 +296,7 @@ void emitInstrStore(int base, int offset, int dest){
 //     }
 // }
 
-#define SIZE(x) ((x) * 4)
+//#define SIZE(x) ((x) * 4)
 
 
 // void spill(int r){
@@ -448,156 +453,156 @@ void emitInstrFunc(char* fucnName){
     addCode(a);
 }
 
-void isConst(Operand op){
-    return op->property == o_const;
-}
+// void isConst(Operand op){
+//     return op->property == o_const;
+// }
 #define FT canTrans = 1;
-#define Alloc(x) Allocate(getVar(x))
-void genObjNormal(TripleExp exp){
-    int canTrans = 0;
-    enum Ttype_ type = exp->type;
-    if (type == t_label){
-            emitInstrLabel(exp->dest->u.labelId);
-            FT
-    }
-    if (type == t_assign){
-            if (isPoint(exp->dest)){
-                int regx = Alloc(exp->dest), regy = Alloc(exp->src1);
-                emitInstrStore(regx, 0, regy);
-            }else{
-                int regx = Alloc(exp->dest);
-                switch(exp->src1->type){
-                    case o_const:
-                        emitInstrLi(regx, exp->src1->u.constInt);
-                        FT
-                    case o_point:
-                        emitInstrLoad(Alloc(exp->src1), 0, regx);
-                        FT
-                    case o_address:
-                        emitInstrAddi(regx, fp, getVarAddress(getVar(exp->src1)));
-                        FT
-                    case o_normal:
-                        emitInstrMove(regx, Alloc(exp->src1));
-                        FT
-                    default:
-                    assert(0);
-                }
-            }
-            FT
-    }
-    if (type == t_add){
-        int regx = Alloc(exp->dest), regy = Alloc(exp->src1), regz = Alloc(exp->src2);
-        emitInstrAdd(regx, regy, regz);
-    }
-    if (type == t_sub){
-        int regx = Alloc(exp->dest), regy = Alloc(exp->src1), regz = Alloc(exp->src2);
-        emitInstrSub(regx, regy, regz);      
-    }
-    if (type == t_star){
-        int regx = Alloc(exp->dest), regy = Alloc(exp->src1), regz = Alloc(exp->src2);
-        emitInstrStar(regx, regy, regz);  
-    }
-    if (type == t_div){
-        int regx = Alloc(exp->dest), regy = Alloc(exp->src1), regz = Alloc(exp->src2);
-        emitInstrDiv(regy, regz);  
-        emitInstrMflo(regx);
-    }
-    if (type == t_goto){
-        emitInstrGoto(exp->dest->u.labelId);
-    }
-    if (type == t_return){
-        int regx = Alloc(exp->dest);
-        emitInstrMove(v0, regx);
-        emitInstrJr();
-    }
-    if (type == t_eq){
-        int regx = Alloc(exp->src1), regy = Alloc(exp->src2);
-        emitCondGoto(regx, regy, exp->dest->u.labelId, t_eq);
-    }
-    if (type == t_neq){
-        int regx = Alloc(exp->src1), regy = Alloc(exp->src2);
-        emitCondGoto(regx, regy, exp->dest->u.labelId, t_neq);
-    }
-    if (type == t_g){
-        int regx = Alloc(exp->src1), regy = Alloc(exp->src2);
-        emitCondGoto(regx, regy, exp->dest->u.labelId, t_g);
-    }
-    if (type == t_geq){
-        int regx = Alloc(exp->src1), regy = Alloc(exp->src2);
-        emitCondGoto(regx, regy, exp->dest->u.labelId, t_geq);
-    }
-    if (type == t_l){
-        int regx = Alloc(exp->src1), regy = Alloc(exp->src2);
-        emitCondGoto(regx, regy, exp->dest->u.labelId, t_l);
-    }
-    if (type == t_leq){
-        int regx = Alloc(exp->src1), regy = Alloc(exp->src2);
-        emitCondGoto(regx, regy, exp->dest->u.labelId, t_leq);
-    }
-}
+//#define Alloc(x) Allocate(getVar(x))
+// void genObjNormal(TripleExp exp){
+//     int canTrans = 0;
+//     enum Ttype_ type = exp->type;
+//     if (type == t_label){
+//             emitInstrLabel(exp->dest->u.labelId);
+//             FT
+//     }
+//     if (type == t_assign){
+//             if (isPoint(exp->dest)){
+//                 int regx = Alloc(exp->dest), regy = Alloc(exp->src1);
+//                 emitInstrStore(regx, 0, regy);
+//             }else{
+//                 int regx = Alloc(exp->dest);
+//                 switch(exp->src1->type){
+//                     case o_const:
+//                         emitInstrLi(regx, exp->src1->u.constInt);
+//                         FT
+//                     case o_point:
+//                         emitInstrLoad(Alloc(exp->src1), 0, regx);
+//                         FT
+//                     case o_address:
+//                         emitInstrAddi(regx, fp, getVarAddress(getVar(exp->src1)));
+//                         FT
+//                     case o_normal:
+//                         emitInstrMove(regx, Alloc(exp->src1));
+//                         FT
+//                     default:
+//                     assert(0);
+//                 }
+//             }
+//             FT
+//     }
+//     if (type == t_add){
+//         int regx = Alloc(exp->dest), regy = Alloc(exp->src1), regz = Alloc(exp->src2);
+//         emitInstrAdd(regx, regy, regz);
+//     }
+//     if (type == t_sub){
+//         int regx = Alloc(exp->dest), regy = Alloc(exp->src1), regz = Alloc(exp->src2);
+//         emitInstrSub(regx, regy, regz);      
+//     }
+//     if (type == t_star){
+//         int regx = Alloc(exp->dest), regy = Alloc(exp->src1), regz = Alloc(exp->src2);
+//         emitInstrStar(regx, regy, regz);  
+//     }
+//     if (type == t_div){
+//         int regx = Alloc(exp->dest), regy = Alloc(exp->src1), regz = Alloc(exp->src2);
+//         emitInstrDiv(regy, regz);  
+//         emitInstrMflo(regx);
+//     }
+//     if (type == t_goto){
+//         emitInstrGoto(exp->dest->u.labelId);
+//     }
+//     if (type == t_return){
+//         int regx = Alloc(exp->dest);
+//         emitInstrMove(v0, regx);
+//         emitInstrJr();
+//     }
+//     if (type == t_eq){
+//         int regx = Alloc(exp->src1), regy = Alloc(exp->src2);
+//         emitCondGoto(regx, regy, exp->dest->u.labelId, t_eq);
+//     }
+//     if (type == t_neq){
+//         int regx = Alloc(exp->src1), regy = Alloc(exp->src2);
+//         emitCondGoto(regx, regy, exp->dest->u.labelId, t_neq);
+//     }
+//     if (type == t_g){
+//         int regx = Alloc(exp->src1), regy = Alloc(exp->src2);
+//         emitCondGoto(regx, regy, exp->dest->u.labelId, t_g);
+//     }
+//     if (type == t_geq){
+//         int regx = Alloc(exp->src1), regy = Alloc(exp->src2);
+//         emitCondGoto(regx, regy, exp->dest->u.labelId, t_geq);
+//     }
+//     if (type == t_l){
+//         int regx = Alloc(exp->src1), regy = Alloc(exp->src2);
+//         emitCondGoto(regx, regy, exp->dest->u.labelId, t_l);
+//     }
+//     if (type == t_leq){
+//         int regx = Alloc(exp->src1), regy = Alloc(exp->src2);
+//         emitCondGoto(regx, regy, exp->dest->u.labelId, t_leq);
+//     }
+// }
 
-void genBlockObjNormal(blockInfo block){
-    struct blockAliveVarAnalyzeRes res = blockAliveVarAnalyze(i->val);
-    varNum = res.varNum;
-    list* varTimeStap = res.varTimestamp;
-    initRegisterAlloc();
-    for(tripleNode i = block->head; i != block->tail; i = i->next){
-        TripleExp exp = i->val;
-        genObjNormal(exp);
-    }
-    list var = getStr_s(res.varSet);
-    iterList(var, strItem){
-        if (findStr_s(aliveSet, i->val)){
-            emitInstrStore(fp, getVarAddress(i->val), *map_get(stackTable, i->val));
-        }
-    }    
-}
+// void genBlockObjNormal(blockInfo block){
+//     struct blockAliveVarAnalyzeRes res = blockAliveVarAnalyze(i->val);
+//     varNum = res.varNum;
+//     list* varTimeStap = res.varTimestamp;
+//     initRegisterAlloc();
+//     for(tripleNode i = block->head; i != block->tail; i = i->next){
+//         TripleExp exp = i->val;
+//         genObjNormal(exp);
+//     }
+//     list var = getStr_s(res.varSet);
+//     iterList(var, strItem){
+//         if (findStr_s(aliveSet, i->val)){
+//             emitInstrStore(fp, getVarAddress(i->val), *map_get(stackTable, i->val));
+//         }
+//     }    
+// }
 
-void genBlockFunc(blockInfo block){
-    for(tripleNode i = block->head; i != block->tail; i = i->next){
-        TripleExp exp = i->val;
-        int s = 0;
-        if (exp->type == t_param){
-            s++;
-            if (s <= 4){
-                emitInstrStore(fp, getVarAddress(getVar(exp->dest)), a0 + s - 1);
-            }else{
-                emitInstrLoad(fp, 4 * (s - 5), a0);
-                emitInstrStore(fp, getVarAddress(getVar(exp->dest)), a0);
-            }
-        }
-    }
-}
+// void genBlockFunc(blockInfo block){
+//     for(tripleNode i = block->head; i != block->tail; i = i->next){
+//         TripleExp exp = i->val;
+//         int s = 0;
+//         if (exp->type == t_param){
+//             s++;
+//             if (s <= 4){
+//                 emitInstrStore(fp, getVarAddress(getVar(exp->dest)), a0 + s - 1);
+//             }else{
+//                 emitInstrLoad(fp, 4 * (s - 5), a0);
+//                 emitInstrStore(fp, getVarAddress(getVar(exp->dest)), a0);
+//             }
+//         }
+//     }
+// }
 
 static max(int a, int b){
     return (a >= b) ? a : b;
 }
-void genBlockCall(blockInfo block){
-    int s = 0;
-    for(tripleNode i = block->head; i != block->tail; i = i->next){
-        TripleExp exp = i->val;
-        if (exp->type == t_arg){s++;}
-    }    
-    int j = 0;
-    int s1 = s;
-    emitInstrAddi(sp, sp, -4 * max(0, s - 4));
-    for(tripleNode i = block->head; i != block->tail; i = i->next){
-        TripleExp exp = i->val;
-        if (exp->type == t_arg){
-            if (s > 4){
-                emitInstrStore(sp, j * 4, *map_get(varToR, getVar(exp->dest)));
-                j++;
-            }else{
-                emitInstrMove(a0 + s - 1, *map_get(varToR, getVar(exp->dest)));
-            }
-            s--;
-        }else if (exp->type == t_call){
-            emitInstrJal(exp->src1->u.funcPoint->name);
-            emitInstrMove(Alloc(exp->dest), v0); //XXX:是否存在指针的情况？
-        }
-    }
-    emitInstrAddi(sp, sp, 4 * max(0, s1 - 4));
-}
+// void genBlockCall(blockInfo block){
+//     int s = 0;
+//     for(tripleNode i = block->head; i != block->tail; i = i->next){
+//         TripleExp exp = i->val;
+//         if (exp->type == t_arg){s++;}
+//     }    
+//     int j = 0;
+//     int s1 = s;
+//     emitInstrAddi(sp, sp, -4 * max(0, s - 4));
+//     for(tripleNode i = block->head; i != block->tail; i = i->next){
+//         TripleExp exp = i->val;
+//         if (exp->type == t_arg){
+//             if (s > 4){
+//                 emitInstrStore(sp, j * 4, *map_get(varToR, getVar(exp->dest)));
+//                 j++;
+//             }else{
+//                 emitInstrMove(a0 + s - 1, *map_get(varToR, getVar(exp->dest)));
+//             }
+//             s--;
+//         }else if (exp->type == t_call){
+//             emitInstrJal(exp->src1->u.funcPoint->name);
+//             emitInstrMove(Alloc(exp->dest), v0); //XXX:是否存在指针的情况？
+//         }
+//     }
+//     emitInstrAddi(sp, sp, 4 * max(0, s1 - 4));
+// }
 
 /*
 set rTable[maxR];
@@ -610,53 +615,53 @@ int espFrame;//ok
 int varNum;//
 int totalVarNum;//ok
 */
-void genFunc(tripleNode funcBlock){
-    list c = genBlock(funcBlock);
-    aliveSet = simpleFuncAliveVarAnalyze(c);
-    set array;
-    init_s(array);
-    for(tripleNode q = funcBlock; q; q = q->next){
-        TripleExp exp = q->val;
-        if (exp->type == t_dec){
-            addStr_s(array, exp->dest->u.varPoint->name);
-            setCountStr_s(array, exp->dest->u.varPoint->name, exp->dest->addtion.size);
-        }
-        if (exp->type == t_param){
-            addStr_s(aliveSet, getVar(exp->dest));
-        }
-    }
-    list varList = getStr_s(aliveSet);
-    map_init(&stackTable);
-    espFrame = 2;
-    iterList(varList, strItem){
-        char* varName = i->val;
-        map_set(&stackTable, varName, espFrame);
-        if (!findStr_s(array, varName)){
-            espFrame++;
-        }else{
-            espFrame += countStr_s(array, varName);
-        }
-    }
-    int frameSize = espFrame * 4;
-    emitInstrAddi(sp, sp, -frameSize);
-    emitInstrStore(sp, frameSize -4, ra);
-    emitInstrStore(sp, frameSize - 8, fp);
-    emitInstrAddi(fp, sp, frameSize);
-    totalVarNum = get_num_s(aliveSet);
-    initRegisterAlloc();
-    iterList(c, blockItem){
-        Ttype_ type = ((tripleNode)(i->val->head))->val->type;
-        if (type == t_arg || type ==t_call){
-            genBlockCall(i->val);
-        }else if (type == t_func){
-            genBlockFunc(i->val);
-        }else genBlockObjNormal(i->val);
-    }
-    emitInstrLoad(sp, frameSize - 4, ra);
-    emitInstrLoad(sp, frameSize - 8, fp);
-    emitInstrAddi(sp, sp, frameSize);
-    emitInstrJr();
-}
+// void genFunc(tripleNode funcBlock){
+//     list c = genBlock(funcBlock);
+//     aliveSet = simpleFuncAliveVarAnalyze(c);
+//     set array;
+//     init_s(array);
+//     for(tripleNode q = funcBlock; q; q = q->next){
+//         TripleExp exp = q->val;
+//         if (exp->type == t_dec){
+//             addStr_s(array, exp->dest->u.varPoint->name);
+//             setCountStr_s(array, exp->dest->u.varPoint->name, exp->dest->addtion.size);
+//         }
+//         if (exp->type == t_param){
+//             addStr_s(aliveSet, getVar(exp->dest));
+//         }
+//     }
+//     list varList = getStr_s(aliveSet);
+//     map_init(&stackTable);
+//     espFrame = 2;
+//     iterList(varList, strItem){
+//         char* varName = i->val;
+//         map_set(&stackTable, varName, espFrame);
+//         if (!findStr_s(array, varName)){
+//             espFrame++;
+//         }else{
+//             espFrame += countStr_s(array, varName);
+//         }
+//     }
+//     int frameSize = espFrame * 4;
+//     emitInstrAddi(sp, sp, -frameSize);
+//     emitInstrStore(sp, frameSize -4, ra);
+//     emitInstrStore(sp, frameSize - 8, fp);
+//     emitInstrAddi(fp, sp, frameSize);
+//     totalVarNum = get_num_s(aliveSet);
+//     initRegisterAlloc();
+//     iterList(c, blockItem){
+//         Ttype_ type = ((tripleNode)(i->val->head))->val->type;
+//         if (type == t_arg || type ==t_call){
+//             genBlockCall(i->val);
+//         }else if (type == t_func){
+//             genBlockFunc(i->val);
+//         }else genBlockObjNormal(i->val);
+//     }
+//     emitInstrLoad(sp, frameSize - 4, ra);
+//     emitInstrLoad(sp, frameSize - 8, fp);
+//     emitInstrAddi(sp, sp, frameSize);
+//     emitInstrJr();
+// }
 
 // list genOBJ(list funcBlock){
 //     list obj;
@@ -839,77 +844,77 @@ bitmap FuncAliveVarAnalyze(funcIR func){
     return res;
 }
 
-typedef struct vector_{
-    int length, pos, size;
-    int* a;
-}vector_;
-typedef vector_* vector;
+// typedef struct vector_{
+//     int length, pos, size;
+//     int* a;
+// }vector_;
+// typedef vector_* vector;
 
-vector* varsUseTime;
+vector_int* varsUseTime;
 bitmap* varsAliveMap;
 bitmap globalAliveVar;
 
-void init_v(vector* vec){
-    *vec = malloc(sizeof(vector_));
-    (*vec)->length = 0;
-    (*vec)->pos = 0;
-    (*vec)->size = 16;
-    (*vec)->a = malloc(sizeof(int) * 16);
-}
-void push_back_v(vector vec, int val){
-    if (vec->length + 1> vec->size){
-        vec->size *= 4;
-        int* b = malloc(sizeof(int) * vec->size);
-        for(int i = 0; i < vec->length; i++){
-            b[i] = vec->a[i];
-        }
-        free(vec->a);
-        vec->a = b;
-    }
-    b[vec->length++] = val;
-}
+// void init_v_int(vector* vec){
+//     *vec = malloc(sizeof(vector_));
+//     (*vec)->length = 0;
+//     (*vec)->pos = 0;
+//     (*vec)->size = 16;
+//     (*vec)->a = malloc(sizeof(int) * 16);
+// }
+// void push_back_v_int(vector vec, int val){
+//     if (vec->length + 1> vec->size){
+//         vec->size *= 4;
+//         int* b = malloc(sizeof(int) * vec->size);
+//         for(int i = 0; i < vec->length; i++){
+//             b[i] = vec->a[i];
+//         }
+//         free(vec->a);
+//         vec->a = b;
+//     }
+//     b[vec->length++] = val;
+// }
 
-void resize_v(vector vec, int size){
-    for(int i = 0; i < size; i++) push_back_v(vec, 0);
-}
+// void resize_v(vector vec, int size){
+//     for(int i = 0; i < size; i++) push_back_v_int(vec, 0);
+// }
 
-int pop_v(vector vec){
-    if (vec->pos + 1 >= vec->length) return -1;
-    else return vec->a[vec->pos++];
-}
+// int pop_v_int(vector vec){
+//     if (vec->pos + 1 >= vec->length) return -1;
+//     else return vec->a[vec->pos++];
+// }
 
-int top_v(vector vec){
-    return vec->a[vec->pos];
-}
+// int top_v_int(vector vec){
+//     return vec->a[vec->pos];
+// }
 
-int del_v(vector vec, int val){
-    for(int i = 0; i < vec->length; i++){
-        if (vec->a[i] == val){
-            for(int j = i; j < vec->length - 1; j++){
-                vec->a[j] = vec->a[j + 1];
-            }
-            vec->length--;
-            break;
-        }
-    }
-}
+// int del_v_int(vector vec, int val){
+//     for(int i = 0; i < vec->length; i++){
+//         if (vec->a[i] == val){
+//             for(int j = i; j < vec->length - 1; j++){
+//                 vec->a[j] = vec->a[j + 1];
+//             }
+//             vec->length--;
+//             break;
+//         }
+//     }
+// }
 
-int isEmpty_v(vector vec){
-    return vec->pos >= vec->length;
-}
+// int isEmpty_v_int(vector vec){
+//     return vec->pos >= vec->length;
+// }
 int isCalcExp(TripleExp op){
     if (op->type <= t_func || op->type == t_dec) return 0;
     return 1;
 }
 
-#define aliveVar(x) setBitMap(aliveMap, id, 1); push_back_v(varsUseTime[id], i); 
+#define aliveVar(x) setBitMap(aliveMap, id, 1); push_back_v_int(varsUseTime[id], i); 
 void blockAliveVarAnalyze(blockIR block){
     int irNum = block.ir_e - block.ir_s + 1;
     varsAliveMap = malloc(sizeof(bitmap) * irNum);
-    varsUseTime = malloc(sizeof(vector) * getBlockVarNum());
+    varsUseTime = malloc(sizeof(vector_int) * getBlockVarNum());
     for(int i = 0; i < irNum; i++) initBitMap(&varsAliveMap[i]; getBlockVarNum());
     for(int i = 0; i < getBlockVarNum(); i++){
-        init_v(&varsUseTime[i]); 
+        init_v_int(&varsUseTime[i]); 
     }
     bitmap aliveMap = getCopyBitMap(globalAliveVar);
     for(int i = block.ir_e; i >= block.ir_s; i--){
@@ -926,7 +931,7 @@ void blockAliveVarAnalyze(blockIR block){
 
 int* varAddress;
 int* varAlloc;
-vector rtoVar[maxR];
+vector_int rtoVar[maxR];
 int curIR;
 int esp;
 int init_mem_alloc(){
@@ -956,7 +961,7 @@ int init_reg_alloc(){
     varAlloc = malloc(sizeof(int) * getBlockVarNum());
     memset(varAlloc, 0, sizeof(varAlloc));
     for(int i = 0; i < maxR; i++){ 
-        init_v(&rtoVar[i]);
+        init_v_int(&rtoVar[i]);
     }
     
 }
@@ -981,8 +986,8 @@ int allocate(){
         int mx1 = 0;
         for(int j = 0; j < rtoVar[i]->length; j++){
             int var = rtoVar[i]->a[j];
-            while(!isEmpty_v(varsUseTime[var]) && top_v(varsUseTime[var]) < curIR) pop_v(varsUseTime[v]);
-            if (!isEmpty_v(varsUseTime[var])) mx1 = max(mx1, varsUseTime[var]);
+            while(!isEmpty_v_int(varsUseTime[var]) && top_v_int(varsUseTime[var]) < curIR) pop_v_int(varsUseTime[v]);
+            if (!isEmpty_v_int(varsUseTime[var])) mx1 = max(mx1, varsUseTime[var]);
         }
         if (mx1 > mx){
             mx = mx1;
@@ -998,7 +1003,7 @@ int ensure(int var_id){
     int result = allocate();
     emitInstrLoad(fp, getVarAddr(var_id), result);
     varAlloc[var_id] = result;
-    push_back_v(rtoVar[result], var_id);
+    push_back_v_int(rtoVar[result], var_id);
     return result;
 }
 
@@ -1007,10 +1012,10 @@ void ensureOp(Operand op){
     return ensure(getVarIdByOp(op));
 }
 
-void free(int var_id){
+void freeVar(int var_id){
     if (!getBitMap(varsAliveMap[curIR], var_id)){
         if (varAlloc[var_id]){
-            del_v(rtoVar[varAlloc[var_id]], var_id);
+            del_v_int(rtoVar[varAlloc[var_id]], var_id);
         }
         varAlloc[var_id] = 0;
     }
@@ -1018,14 +1023,14 @@ void free(int var_id){
 
 void freeOp(Operand op){
     assert(isVar(op));
-    free(getVarIdByOp(op));
+    freeVar(getVarIdByOp(op));
 }
 
 void alloc(int var_id){
     int result = allocate();
     varAlloc[var_id] = result;
     rtoVar[result]->length = 0;
-    push_back_v(rtoVar[result], var_id);
+    push_back_v_int(rtoVar[result], var_id);
 }
 void allocOp(Operand op){
     assert(isVar(op));

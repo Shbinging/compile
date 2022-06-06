@@ -6,8 +6,10 @@
 #include "ir/ir.h"
 #include "ir/irOptimization.h"
 #include "objcode/obj.h"
+#include "objcode/vector.h"
 int parseOK;
 TreeNode* parseTreeRoot;
+
 int main(int argc, char** argv){
     //freopen(argv[2], "w", stdout);
     if (argc <= 1) return 1;
