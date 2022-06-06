@@ -64,8 +64,8 @@ void printTriple(TripleExp q){
         case t_arg:
             res->dest = q->src1;
             res->src1 = NULL;
-        case t_read:
-            res->dest = q->dest;
+        case t_write:
+            res->dest = q->src1;
             res->src1 = NULL;
     }
     char* op = malloc(10);
@@ -142,6 +142,7 @@ void printTriple(TripleExp q){
                     printf("%s := CALL %s", sprintOperand(tri->dest), sprintOperand(tri->src1));
                     break;
                 }
+    printf("\n");
 }
 void printBlock(list p){
         for(blockItem q = p->head; q; q = q->next){

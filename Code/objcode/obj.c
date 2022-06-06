@@ -93,6 +93,9 @@ void printObjCode(instr code){
         case i_func:
             printf("%s:", code->iOp.func.funcName);
             break;
+        case i_syscall:
+            printf("syscall");
+            break;
         default:
             assert(0);
     }
@@ -201,6 +204,12 @@ void emitInstrJr(){
     a->iOp.r1.rs = ra;
     addCode(a);
 }
+
+void emitInstrSyscall(){
+    instr a = getInstr(i_syscall);
+    addCode(a);
+}
+
 void emitCondGoto(int rs, int rt, int label, enum Ttype_ type){
     instr a = getInstr(i_bge);
     a->iOp.r2l1.rs = rs;
@@ -279,7 +288,7 @@ TripleExp getNewExp(TripleExp q){
         case t_arg:
             res->dest = NULL;
             res->src1 = q->src1;
-        case t_read:
+        case t_write:
             res->dest = NULL;
             res->src1 = q->dest;
     }
@@ -311,7 +320,7 @@ void getIR(funcNode p){
 }
 
 static int isBranch(enum Ttype_  type){
-    return (t_goto <= type && type <= t_geq) || type == t_call || type == t_return;
+    return (t_goto <= type && type <= t_geq) || type == t_call || type == t_return || type == t_read || type == t_write;
     //return (type == t_eq) || (type == t_geq) || (type == t_g) || (type == t_leq) || (type == t_l) || (type == t_goto) || (type == t_call) || (type == t_return);
 }
 
@@ -320,7 +329,7 @@ void splitIR(){
         int blockNum = 1;
         for(int j = funcList[i].ir_s + 1; j <= funcList[i].ir_e; j++){
             TripleExp q = ir[j], pre = ir[j - 1];
-            if (isBranch(pre->type) || q->type == t_label || (q->type == t_arg && pre->type != t_arg) || (q->type != t_param && (pre->type == t_func || pre->type == t_param))){
+            if (isBranch(pre->type) || q->type == t_label || (q->type == t_arg && pre->type != t_arg) || (q->type != t_param && (pre->type == t_func || pre->type == t_param)) || (q->type == t_read) || (q->type == t_write)){
                 blockNum++;
             }
         }
@@ -333,7 +342,7 @@ void splitIR(){
         TripleExp pre = NULL;
         for(int j = funcList[i].ir_s + 1; j <= funcList[i].ir_e; j++){
             TripleExp q = ir[j], pre = ir[j - 1];
-            if (isBranch(pre->type) || q->type == t_label || (q->type == t_arg && pre->type != t_arg) || (q->type != t_param && (pre->type == t_func || pre->type == t_param))){
+            if (isBranch(pre->type) || q->type == t_label || (q->type == t_arg && pre->type != t_arg) || (q->type != t_param && (pre->type == t_func || pre->type == t_param)) || (q->type == t_read) || (q->type == t_write)){
                 blocks[p].ir_e = j - 1;
                 p++;
                 blocks[p].ir_s = j;
@@ -388,7 +397,7 @@ bitmap FuncAliveVarAnalyze(funcIR func){
     for(strItem q = varList->head; q; q = q->next){
         //printf("%s\n", q->val);
         if (countStr_s(countVar, q->val) > 1){
-            printf("%s\n", q->val);
+            printf("alive val %s\n", q->val);
             setBitMap(res, getVarIdByName(q->val), 1);
         }
     }
@@ -645,6 +654,19 @@ void genObjCode(TripleExp exp){
         freeOp(exp->src1);freeOp(exp->src2);
         FT
     }
+    if (type == t_read){
+        emitInstrLi(v0, 5);
+        emitInstrSyscall();
+        emitInstrMove(allocOp(exp->dest), v0);
+        FT
+    }
+    if (type == t_write){
+        emitInstrLi(v0, 1);
+        emitInstrMove(a0, ensureOp(exp->src1));
+        freeOp(exp->src1);
+        emitInstrSyscall();
+        FT
+    }
     assert(canTrans);
 }
 
@@ -679,6 +701,15 @@ void genNormalBlock(blockIR block){
     for(curIR = block.ir_s; curIR <= block.ir_e; curIR++){
         genObjCode(ir[curIR]);
     }
+    for(int i = t0; i <= s7; i++){
+        for(int j = 0; j < rtoVar[i]->length; j++){
+            int var_id = rtoVar[i]->a[j];
+            if (getBitMap(globalAliveVar, var_id)){
+                assert(getVarAddr(var_id) <= frameSize);
+                emitInstrStore(fp, getVarAddr(var_id), i);
+            }
+        }
+    }
 }
 
 void genCallBlock(blockIR block){
@@ -688,6 +719,8 @@ void genCallBlock(blockIR block){
         assert(ir[curIR]->type == t_arg);
         s++;
     }
+    emitInstrAddi(sp, sp, -4);
+    emitInstrStore(sp, 0, ra);
     emitInstrAddi(sp, sp, -4 * max(0, s - 4));
     for(curIR = block.ir_s; curIR <= block.ir_e; curIR++){
         if (ir[curIR]->type == t_call) break;
@@ -701,6 +734,8 @@ void genCallBlock(blockIR block){
         }
     }
     assert(ir[curIR]->type == t_call);
+    emitInstrLoad(sp, 0, ra);
+    emitInstrAddi(sp, sp, 4);
     emitInstrAddi(sp, sp, 4 * max(0, s - 4));
     emitInstrAddi(fp, sp, frameSize);
 }
@@ -711,10 +746,10 @@ void genFuncOBJ(funcIR func){
     frameSize = init_mem_alloc() * 4;
     genFuncBlock(func.blockIRList[0]);
     for(int i = 1; i < func.blockNum; i++){
-        printf("block %d\n", i);
-        if (i == 2){
-            printf("ok");
-        }
+        //printf("block %d\n", i);
+        // if (i == 2){
+        //     printf("ok");
+        // }
         enum Ttype_ type = ir[func.blockIRList[i].ir_s]->type;
         if (type == t_call || type == t_arg) genCallBlock(func.blockIRList[i]);
         else genNormalBlock(func.blockIRList[i]);
@@ -727,6 +762,13 @@ void genProgramOBJ(list func){
     init_v_instr(&objCode);
     for(int i = 0; i < funcNum; i++){
         genFuncOBJ(funcList[i]);
+        // printf("======func %d\n\n", i);
+        // for(int j = 0; j < funcList[i].blockNum; j++){
+        //     printf("=========block %d\n\n", j);
+        //     for(int k = funcList[i].blockIRList[j].ir_s; k <= funcList[i].blockIRList[j].ir_e; k++){
+        //         printTriple(ir[k]);
+        //     }
+        // }
     }
     printObj();
 }

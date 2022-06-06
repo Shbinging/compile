@@ -6,72 +6,93 @@ tmp2 := #1
 b := tmp2
 tmp3 := #0
 i := tmp3
+READ tmp5
+n := tmp5
 LABEL label1 :
 IF i < n GOTO label2
 GOTO label3
 LABEL label2 :
-tmp8 := a + b
-c := tmp8
+tmp11 := a + b
+c := tmp11
+WRITE b
+tmp16 := #0
 a := b
 b := c
-tmp25 := #1
-tmp22 := i + tmp25
-i := tmp22
+tmp31 := #1
+tmp28 := i + tmp31
+i := tmp28
 GOTO label1
 LABEL label3 :
-tmp27 := #0
-RETURN tmp27
-start set
-11 27
-9 25
-1 a
-0 1
-10 22
-8 c
-4 3
-3 b
-2 2
-6 n
-5 i
-7 8
-end set
-a
-b
-i
+tmp33 := #0
+RETURN tmp33
+alive val 5
+alive val a
+alive val c
+alive val b
+alive val n
+alive val i
 .global main
 .text
 main:
-addi $sp, $sp, -20
-sw $ra, 16($sp)
-sw $sp, 12($fp)
-addi $fp, $sp, 20
+addi $sp, $sp, -32
+sw $ra, 28($sp)
+sw $sp, 24($fp)
+addi $fp, $sp, 32
 li $t0, 0
 move $t1, $t0
 li $t0, 1
 move $t2, $t0
 li $t0, 0
 move $t3, $t0
+sw $t1, -12($fp)
+sw $t2, -16($fp)
+sw $t3, -20($fp)
+li $v0, 5
+syscall
+move $t0, $v0
+sw $t0, -24($fp)
+lw $t1, -24($fp)
+move $t0, $t1
+sw $t0, -28($fp)
+sw $t1, -24($fp)
 label1:
-lw $t0, -24($fp)
+lw $t0, -28($fp)
 lw $t1, -20($fp)
 bge $t1, $t0, label2
+sw $t0, -28($fp)
+sw $t1, -20($fp)
 j label3
 label2:
 lw $t0, -16($fp)
 lw $t1, -12($fp)
 add $t2, $t1, $t0
+move $t3, $t2
+sw $t0, -16($fp)
+sw $t1, -12($fp)
+sw $t3, -32($fp)
+li $v0, 1
+lw $t0, -16($fp)
+move $a0, $t0
+syscall
+sw $t0, -16($fp)
+li $t0, 0
+lw $t2, -16($fp)
 move $t1, $t2
-move $t2, $t0
-move $t0, $t1
-li $t1, 1
-lw $t3, -20($fp)
-add $t4, $t3, $t1
-move $t1, $t4
+lw $t3, -32($fp)
+move $t2, $t3
+li $t4, 1
+lw $t5, -20($fp)
+add $t6, $t5, $t4
+move $t4, $t6
 j label1
+sw $t1, -12($fp)
+sw $t2, -16($fp)
+sw $t3, -32($fp)
+sw $t4, -20($fp)
 label3:
 li $t0, 0
-lw $ra, 16($sp)
-lw $fp, 12($sp)
-addi $sp, $sp, 20
+lw $ra, 28($sp)
+lw $fp, 24($sp)
+addi $sp, $sp, 32
 move $v0, $t0
 jr $ra
