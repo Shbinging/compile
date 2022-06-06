@@ -673,7 +673,9 @@ gen_Exp(9) { //()
 gen_Exp(10) { //MINUS
     Operand t1 = new_tmp();
     listHead* code = Exp0(TWO(rt), t1);
-    push_back(code, getTriple(t_sub, place, op_Imm(0), t1));
+    Operand t2 = new_tmp();
+    push_back(code, getTriple(t_assign, t2, op_Imm(-1), NULL));
+    push_back(code, getTriple(t_star, place, t2, t1));
     return code;
 }
 

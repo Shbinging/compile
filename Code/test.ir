@@ -1,40 +1,74 @@
-FUNCTION add :
-PARAM temp
-tmp6 := #0
-tmp5 := temp
-tmp6 := tmp6 + #0
-tmp5 := tmp5 + tmp6
-tmp6 := #0
-tmp2 := tmp5 + tmp6
-tmp9 := #0
-tmp8 := temp
-tmp9 := tmp9 + #4
-tmp8 := tmp8 + tmp9
-tmp9 := #0
-tmp3 := tmp8 + tmp9
-tmp1 := *tmp2 + *tmp3
-RETURN tmp1
+FUNCTION cal_sum :
+PARAM s1
+PARAM s2
+PARAM s3
+tmp2 := s1 + s2
+tmp1 := tmp2 + s3
+s_res := tmp1
+RETURN s_res
+FUNCTION mod :
+PARAM m1
+PARAM m2
+tmp15 := m1 / m2
+tmp13 := tmp15 * m2
+tmp11 := m1 - tmp13
+m_res := tmp11
+RETURN m_res
+FUNCTION is_good :
+PARAM x
+tmp26 := #2
+tmp24 := x * tmp26
+a := tmp24
+tmp30 := #2
+tmp28 := x + tmp30
+b := tmp28
+tmp32 := x * x
+c := tmp32
+ARG c
+ARG b
+ARG a
+tmp37 := CALL cal_sum
+sum := tmp37
+tmp47 := #5
+ARG tmp47
+ARG sum
+tmp44 := CALL mod
+rem := tmp44
+tmp49 := #1
+IF rem > tmp49 GOTO label1
+GOTO label2
+LABEL label1 :
+tmp51 := #1
+RETURN tmp51
+GOTO label3
+LABEL label2 :
+tmp52 := #0
+RETURN tmp52
+LABEL label3 :
 FUNCTION main :
-DEC op 8
-tmp14 := #0
-tmp13 := &op
-tmp14 := tmp14 + #0
-tmp13 := tmp13 + tmp14
-tmp14 := #0
-tmp10 := tmp13 + tmp14
-tmp11 := #1
-*tmp10 := tmp11
-tmp19 := #0
-tmp18 := &op
-tmp19 := tmp19 + #4
-tmp18 := tmp18 + tmp19
-tmp19 := #0
-tmp15 := tmp18 + tmp19
-tmp16 := #2
-*tmp15 := tmp16
-ARG &op
-tmp21 := CALL add
-n := tmp21
-WRITE n
-tmp27 := #0
-RETURN tmp27
+READ tmp54
+f := tmp54
+READ tmp57
+g := tmp57
+READ tmp60
+h := tmp60
+ARG f
+tmp62 := CALL is_good
+tmp76 := #0
+IF tmp62 != tmp76 GOTO label4
+GOTO label5
+LABEL label4 :
+ARG h
+ARG g
+ARG f
+tmp66 := CALL cal_sum
+WRITE tmp66
+tmp65 := #0
+GOTO label6
+LABEL label5 :
+tmp74 := #0
+WRITE tmp74
+tmp73 := #0
+LABEL label6 :
+tmp75 := #0
+RETURN tmp75

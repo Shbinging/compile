@@ -1,127 +1,445 @@
+FUNCTION cal_sum :
+PARAM s1
+PARAM s2
+PARAM s3
+tmp2 := s1 + s2
+tmp1 := tmp2 + s3
+s_res := tmp1
+RETURN s_res
+FUNCTION mod :
+PARAM m1
+PARAM m2
+tmp15 := m1 / m2
+tmp13 := tmp15 * m2
+tmp11 := m1 - tmp13
+m_res := tmp11
+RETURN m_res
+FUNCTION is_good :
+PARAM x
+tmp26 := #2
+tmp24 := x * tmp26
+a := tmp24
+tmp30 := #2
+tmp28 := x + tmp30
+b := tmp28
+tmp32 := x * x
+c := tmp32
+ARG c
+ARG b
+ARG a
+tmp37 := CALL cal_sum
+sum := tmp37
+tmp47 := #5
+ARG tmp47
+ARG sum
+tmp44 := CALL mod
+rem := tmp44
+WRITE a
+tmp48 := #0
+WRITE b
+tmp51 := #0
+WRITE c
+tmp54 := #0
+WRITE sum
+tmp57 := #0
+WRITE rem
+tmp60 := #0
+tmp64 := #1
+IF rem > tmp64 GOTO label1
+GOTO label2
+LABEL label1 :
+tmp66 := #1
+RETURN tmp66
+GOTO label3
+LABEL label2 :
+tmp67 := #0
+RETURN tmp67
+LABEL label3 :
 FUNCTION main :
-DEC a 20
-tmp5 := #0
-tmp4 := &a
-tmp6 := #1
-tmp42 := #5
-tmp5 := tmp5 * tmp42
-tmp5 := tmp5 + tmp6
-tmp43 := #4
-tmp5 := tmp5 * tmp43
-tmp1 := tmp4 + tmp5
-tmp2 := #3
-*tmp1 := tmp2
-tmp11 := #0
-tmp10 := &a
-tmp12 := #1
-tmp44 := #5
-tmp11 := tmp11 * tmp44
-tmp11 := tmp11 + tmp12
-tmp45 := #4
-tmp11 := tmp11 * tmp45
-tmp8 := tmp10 + tmp11
-tmp38 := *tmp8
-WRITE tmp38
-tmp7 := #0
-tmp17 := #0
-tmp16 := &a
-tmp18 := #2
-tmp46 := #5
-tmp17 := tmp17 * tmp46
-tmp17 := tmp17 + tmp18
-tmp47 := #4
-tmp17 := tmp17 * tmp47
-tmp13 := tmp16 + tmp17
-tmp14 := #4
-*tmp13 := tmp14
-tmp23 := #0
-tmp22 := &a
-tmp24 := #2
-tmp48 := #5
-tmp23 := tmp23 * tmp48
-tmp23 := tmp23 + tmp24
-tmp49 := #4
-tmp23 := tmp23 * tmp49
-tmp20 := tmp22 + tmp23
-tmp39 := *tmp20
-WRITE tmp39
-tmp19 := #0
-tmp31 := #0
-tmp30 := &a
-tmp32 := #1
-tmp50 := #5
-tmp31 := tmp31 * tmp50
-tmp31 := tmp31 + tmp32
-tmp51 := #4
-tmp31 := tmp31 * tmp51
-tmp27 := tmp30 + tmp31
-tmp35 := #0
-tmp34 := &a
-tmp36 := #2
-tmp52 := #5
-tmp35 := tmp35 * tmp52
-tmp35 := tmp35 + tmp36
-tmp53 := #4
-tmp35 := tmp35 * tmp53
-tmp28 := tmp34 + tmp35
-tmp41 := *tmp28
-tmp40 := *tmp27
-tmp26 := tmp40 + tmp41
-WRITE tmp26
-tmp25 := #0
-tmp37 := #0
-RETURN tmp37
+READ tmp69
+f := tmp69
+READ tmp72
+g := tmp72
+READ tmp75
+h := tmp75
+ARG f
+tmp77 := CALL is_good
+tmp91 := #0
+IF tmp77 != tmp91 GOTO label4
+GOTO label5
+LABEL label4 :
+ARG h
+ARG g
+ARG f
+tmp81 := CALL cal_sum
+WRITE tmp81
+tmp80 := #0
+GOTO label6
+LABEL label5 :
+tmp89 := #0
+WRITE tmp89
+tmp88 := #0
+LABEL label6 :
+tmp90 := #0
+RETURN tmp90
 start set
-43 41
-36 27
-45 26
-44 40
-46 25
-5 43
-25 24
-4 42
-23 23
-12 45
-0 a
-24 22
-11 44
-20 47
-28 20
-19 46
-27 49
-26 48
-42 28
-1 5
-2 4
-15 7
-3 6
-6 1
-7 2
-13 8
-39 36
-34 50
-22 14
-47 37
-35 51
-40 52
-38 34
-17 16
-41 53
-37 35
-16 17
-33 32
-9 10
-8 11
-32 30
-10 12
-31 31
-21 13
-18 18
-30 19
-14 38
-29 39
+4 1
+1 s2
+5 s_res
+2 s3
+3 2
+0 s1
 end set
-mem:0 22
-mem:14 23
-mem:29 24
-mem:45 25
+mem:0 3
+mem:1 4
+mem:2 5
+alive1
+dead1
+alive1
+dead1
+alive1
+alive2
+dead1
+alive1
+alive2
+4
+ensure tmps2 1
+ensure tmps1 0
+alloc tmp2 3
+freeOp tmps1 0
+freeOp tmps2 1
+5
+ensure tmps3 2
+ensure tmp2 3
+alloc tmp1 4
+freeOp tmp2 3
+free! 3
+freeOp tmps3 2
+6
+alloc tmps_res 5
+ensure tmp1 4
+freeOp tmp1 4
+free! 4
+7
+ensure tmps_res 5
+start set
+2 15
+0 m1
+1 m2
+5 m_res
+4 11
+3 13
+end set
+mem:0 3
+mem:1 4
+alive1
+dead1
+alive1
+dead1
+alive1
+alive2
+dead1
+alive1
+alive2
+dead1
+alive1
+alive2
+11
+ensure tmpm2 1
+ensure tmpm1 0
+alloc tmp15 2
+freeOp tmpm1 0
+freeOp tmpm2 1
+12
+ensure tmpm2 1
+ensure tmp15 2
+alloc tmp13 3
+freeOp tmp15 2
+free! 2
+freeOp tmpm2 1
+13
+ensure tmp13 3
+ensure tmpm1 0
+alloc tmp11 4
+freeOp tmpm1 0
+freeOp tmp13 3
+free! 3
+14
+alloc tmpm_res 5
+ensure tmp11 4
+freeOp tmp11 4
+free! 4
+15
+ensure tmpm_res 5
+start set
+15 51
+9 37
+1 26
+18 60
+2 24
+21 67
+16 54
+7 32
+3 a
+20 66
+12 44
+11 47
+8 c
+4 30
+19 64
+17 57
+6 b
+14 48
+10 sum
+5 28
+0 x
+13 rem
+end set
+mem:0 3
+mem:3 4
+mem:6 5
+mem:8 6
+mem:9 7
+mem:10 8
+mem:11 9
+mem:12 10
+mem:13 11
+dead1
+alive1
+dead1
+alive1
+alive2
+dead1
+alive1
+dead1
+alive1
+alive2
+dead1
+dead1
+alive1
+dead1
+alive1
+alive2
+dead1
+18
+alloc tmp26 1
+19
+ensure tmp26 1
+ensure tmpx 0
+alloc tmp24 2
+freeOp tmpx 0
+freeOp tmp26 1
+free! 1
+20
+alloc tmpa 3
+ensure tmp24 2
+freeOp tmp24 2
+free! 2
+21
+alloc tmp30 4
+22
+ensure tmp30 4
+ensure tmpx 0
+alloc tmp28 5
+freeOp tmpx 0
+freeOp tmp30 4
+free! 4
+23
+alloc tmpb 6
+ensure tmp28 5
+freeOp tmp28 5
+free! 5
+24
+ensure tmpx 0
+ensure tmpx 0
+alloc tmp32 7
+freeOp tmpx 0
+freeOp tmpx 0
+25
+alloc tmpc 8
+ensure tmp32 7
+freeOp tmp32 7
+free! 7
+ensure tmpc 8
+ensure tmpb 6
+ensure tmpa 3
+alloc tmp37 9
+dead1
+dead1
+alive1
+30
+alloc tmpsum 10
+ensure tmp37 9
+freeOp tmp37 9
+31
+alloc tmp47 11
+ensure tmp47 11
+ensure tmpsum 10
+alloc tmp44 12
+dead1
+alive1
+35
+alloc tmprem 13
+ensure tmp44 12
+freeOp tmp44 12
+alive1
+36
+ensure tmpa 3
+freeOp tmpa 3
+dead1
+37
+alloc tmp48 14
+alive1
+38
+ensure tmpb 6
+freeOp tmpb 6
+dead1
+39
+alloc tmp51 15
+alive1
+40
+ensure tmpc 8
+freeOp tmpc 8
+dead1
+41
+alloc tmp54 16
+alive1
+42
+ensure tmpsum 10
+freeOp tmpsum 10
+dead1
+43
+alloc tmp57 17
+alive1
+44
+ensure tmprem 13
+freeOp tmprem 13
+alive1
+alive2
+dead1
+dead1
+45
+alloc tmp60 18
+46
+alloc tmp64 19
+47
+ensure tmp64 19
+ensure tmprem 13
+freeOp tmprem 13
+freeOp tmp64 19
+free! 19
+48
+alive1
+dead1
+49
+50
+alloc tmp66 20
+51
+ensure tmp66 20
+52
+alive1
+dead1
+53
+54
+alloc tmp67 21
+55
+ensure tmp67 21
+56
+start set
+2 72
+3 g
+1 f
+10 89
+11 88
+6 77
+4 75
+0 69
+12 90
+8 81
+9 80
+7 91
+5 h
+end set
+mem:0 3
+mem:1 4
+mem:2 5
+mem:3 6
+mem:4 7
+mem:5 8
+mem:6 9
+mem:8 10
+mem:10 11
+dead1
+58
+alloc tmp69 0
+dead1
+alive1
+59
+alloc tmpf 1
+ensure tmp69 0
+freeOp tmp69 0
+dead1
+60
+alloc tmp72 2
+dead1
+alive1
+61
+alloc tmpg 3
+ensure tmp72 2
+freeOp tmp72 2
+ok
+dead1
+62
+alloc tmp75 4
+dead1
+alive1
+63
+alloc tmph 5
+ensure tmp75 4
+freeOp tmp75 4
+ensure tmpf 1
+alloc tmp77 6
+alive1
+alive2
+dead1
+66
+alloc tmp91 7
+67
+ensure tmp91 7
+ensure tmp77 6
+freeOp tmp77 6
+freeOp tmp91 7
+free! 7
+68
+69
+ensure tmph 5
+ensure tmpg 3
+ensure tmpf 1
+alloc tmp81 8
+alive1
+74
+ensure tmp81 8
+freeOp tmp81 8
+dead1
+75
+alloc tmp80 9
+76
+dead1
+77
+78
+alloc tmp89 10
+alive1
+79
+ensure tmp89 10
+freeOp tmp89 10
+dead1
+80
+alloc tmp88 11
+alive1
+dead1
+81
+82
+alloc tmp90 12
+83
+ensure tmp90 12
+.data

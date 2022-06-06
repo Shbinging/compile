@@ -173,7 +173,9 @@ void emitInstrLa(int r, char* varName){
 void emitInstrMove(int rt, int rs){
     instr a = getInstr(i_move);
     a->iOp.r2.rs = rs;
+    assert(rs <= 31);
     a->iOp.r2.rt = rt;
+    assert(rt <= 31);
     addCode(a);
 }
 void emitInstrAdd(int rd, int rs, int rt){
@@ -499,7 +501,7 @@ int init_mem_alloc(){
 
 int init_reg_alloc(){
     varAlloc = malloc(sizeof(int) * getBlockVarNum());
-    memset(varAlloc, 0, sizeof(varAlloc));
+    memset(varAlloc, 0, sizeof(int) * getBlockVarNum());
     initBitMap(&modifyVar, getBlockVarNum());
     setBitMapZero(modifyVar);
     for(int i = 0; i < maxR; i++){ 
@@ -769,9 +771,7 @@ void genNormalBlock(blockIR block){
     blockAliveVarAnalyze(block);
     init_reg_alloc();
     for(curIR = block.ir_s; curIR <= block.ir_e; curIR++){
-        if (curIR == 61){
-            printf("ok");
-        }
+        printf("%d\n", curIR);
         if (curIR == block.ir_e && isGoto(ir[curIR]->type)) break;
         genObjCode(ir[curIR]);
     }
@@ -782,6 +782,7 @@ void genNormalBlock(blockIR block){
 }
 
 void genCallBlock(blockIR block){
+    init_reg_alloc();
     int s = 0;
     for(curIR = block.ir_s; curIR <= block.ir_e; curIR++){
         if (ir[curIR]->type == t_call) break;
@@ -806,12 +807,17 @@ void genCallBlock(blockIR block){
     }
     assert(ir[curIR]->type == t_call);
     emitInstrJal(ir[curIR]->src1->u.funcPoint->name);
-    emitInstrMove(allocOp(ir[curIR]->dest), v0);
+    int tmp = allocOp(ir[curIR]->dest);
+    emitInstrMove(tmp, v0);
     emitInstrAddi(sp, sp, 4 * max(0, ss - 4));
     emitInstrLoad(sp, 0, ra);
     emitInstrAddi(sp, sp, 4);
+    int var_id = getVarIdByOp(ir[curIR]->dest);
+    if (getBitMap(globalAliveVar, var_id) && getBitMap(modifyVar, var_id)){
+        emitInstrStore(fp, getVarAddr(var_id), tmp);
+    }
     //emitInstrAddi(fp, sp, frameSize);
-    finish_reg_alloc();
+    //finish_reg_alloc();
 }
 
 void genFuncOBJ(funcIR func){

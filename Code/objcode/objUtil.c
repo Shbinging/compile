@@ -2,6 +2,7 @@
 #include "graph.h"
 #include <stdio.h>
 #include "../ir/ir.h"
+
 void modifyIr(list funcBlock){
     if (funcBlock){
         for(funcNode p = (funcNode)funcBlock->head; p; p = p->next){
@@ -27,12 +28,14 @@ void modifyIr(list funcBlock){
                 }
             }
         }
+        #define eq(x) (exp->type == x)
         for(funcNode p = (funcNode)funcBlock->head; p; p = p->next){
             for(tripleNode q = (tripleNode)p->val->head; q; q = q->next){
                 TripleExp exp = q->val;
                 //debugCode(exp);
-                if (!((exp->type == t_star) || (exp->type == t_div))) continue;
+                if (!((exp->type == t_star) || (exp->type == t_div) || (exp->type == t_add) || (exp->type >= t_eq && exp->type <= t_geq))) continue;
                 tripleNode pre = q->pre;
+                if (pre == NULL) continue;
                 while(pre->val->type == t_arg) pre = pre->pre;
                 if (exp->src1 && exp->src1->type == o_const){
                     Operand tmp = new_tmp();
