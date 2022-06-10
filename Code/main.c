@@ -33,5 +33,6 @@ int main(int argc, char** argv){
     //printTripe(irOri);
     genProgramOBJ(irOri);
     fclose(stdout);
+    while(1);
     return 0;
 }
