@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Mon Jun  6 18:50:00 2022
+# Make data base, printed on Fri Jun 10 06:39:17 2022
 
 # Variables
 
@@ -67,7 +67,7 @@ YFC = $(shell find ./ -name "*.y" | sed s/[^/]*\\.y/syntax.tab.c/)
 # makefile (from 'Makefile', line 15)
 LFC = $(shell find ./ -name "*.l" | sed s/[^/]*\\.l/lex.yy.c/)
 # environment
-SSH_AUTH_SOCK = /tmp/vscode-ssh-auth-287d29f6eb4849e5e3ecfc1f58307744b045bac9.sock
+SSH_AUTH_SOCK = /tmp/vscode-ssh-auth-357f22bc4878fd5ebb6408b8c4f78ea6261dea82.sock
 # automatic
 %F = $(notdir $%)
 # environment
@@ -75,7 +75,7 @@ VSCODE_PIPE_LOGGING = true
 # environment
 PWD = /root/Lab/Code
 # environment
-VSCODE_IPC_HOOK_CLI = /tmp/vscode-ipc-7c8dce4a-3a08-432c-b9ec-89c896107e54.sock
+VSCODE_IPC_HOOK_CLI = /tmp/vscode-ipc-748b00a7-2ee5-4b88-85af-dba3ec7df681.sock
 # environment
 VSCODE_AMD_ENTRYPOINT = vs/workbench/api/node/extensionHostProcess
 # environment
@@ -113,7 +113,7 @@ YFO = $(YFC:.c=.o)
 # makefile (from 'Makefile', line 7)
 BISON = bison
 # environment
-REMOTE_CONTAINERS_IPC = /tmp/vscode-remote-containers-ipc-287d29f6eb4849e5e3ecfc1f58307744b045bac9.sock
+REMOTE_CONTAINERS_IPC = /tmp/vscode-remote-containers-ipc-357f22bc4878fd5ebb6408b8c4f78ea6261dea82.sock
 # default
 MAKE_COMMAND := make
 # default
@@ -147,7 +147,7 @@ LC_ALL = C
 # default
 SUFFIXES := 
 # environment
-REMOTE_CONTAINERS_SOCKETS = ["/tmp/vscode-ssh-auth-287d29f6eb4849e5e3ecfc1f58307744b045bac9.sock"]
+REMOTE_CONTAINERS_SOCKETS = ["/tmp/vscode-ssh-auth-357f22bc4878fd5ebb6408b8c4f78ea6261dea82.sock"]
 # default
 .INCLUDE_DIRS = /usr/include /usr/local/include /usr/include
 # default
@@ -280,6 +280,7 @@ objcode/objUtil.o:
 #  Modification time never checked.
 #  File has not been updated.
 
+ 
 ta:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
@@ -289,7 +290,6 @@ ta:
 	
 
 test:
- 
 #  Phony target (prerequisite of .PHONY).
 #  Implicit rule search has not been done.
 #  File does not exist.
@@ -513,6 +513,6 @@ tryB:
 # strcache performance: lookups = 111 / hit rate = 36%
 # hash-table stats:
 # Load=70/8192=1%, Rehash=0, Collisions=1/111=1%
-# Finished Make data base on Mon Jun  6 18:50:00 2022
+# Finished Make data base on Fri Jun 10 06:39:17 2022
 
  

@@ -33,10 +33,15 @@ void modifyIr(list funcBlock){
             for(tripleNode q = (tripleNode)p->val->head; q; q = q->next){
                 TripleExp exp = q->val;
                 //debugCode(exp);
-                if (!((exp->type == t_star) || (exp->type == t_div) || (exp->type == t_add) || (exp->type >= t_eq && exp->type <= t_geq))) continue;
+                if (!((exp->type == t_star) || (exp->type == t_div) || (exp->type == t_add) || (exp->type >= t_eq && exp->type <= t_geq) || (exp->type == t_arg))) continue;
                 tripleNode pre = q->pre;
                 if (pre == NULL) continue;
                 while(pre->val->type == t_arg) pre = pre->pre;
+                if (exp->dest && exp->type == t_arg && exp->dest->property == o_address){
+                    Operand tmp = new_tmp();
+                    insert(p, pre, getTriple(t_assign, tmp, exp->dest, NULL));
+                    exp->dest = tmp;
+                }
                 if (exp->src1 && exp->src1->type == o_const){
                     Operand tmp = new_tmp();
                     insert(p, pre, getTriple(t_assign, tmp, exp->src1, NULL));
