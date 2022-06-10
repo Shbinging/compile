@@ -1,0 +1,1990 @@
+# 1 "obj.c"
+# 1 "<built-in>"
+# 1 "<command-line>"
+# 1 "/usr/include/stdc-predef.h" 1 3 4
+# 1 "<command-line>" 2
+# 1 "obj.c"
+# 1 "obj.h" 1
+
+
+# 1 "objUtil.h" 1
+
+
+# 1 "../sdt/sdt.h" 1
+
+
+# 1 "../sdt/../utils/syntaxTree/treeNode.h" 1
+
+
+
+
+enum nodeType{
+    nodeYFNULL,
+    nodeYFFULL,
+    nodeID,
+    nodeTYPE,
+    nodeINT,
+    nodeFLOAT,
+    nodeKEY
+};
+typedef struct TreeNode{
+    enum nodeType type;
+    char* name;
+    int no;
+    union{
+        int lineNo;
+        int val_int;
+        float val_float;
+        char* type;
+        char* varName;
+    }info;
+    char* opName;
+    struct TreeNode* son;
+    struct TreeNode* bro;
+} TreeNode;
+extern int parseOK;
+extern void printTree(TreeNode*, int);
+extern void print(TreeNode*, int);
+extern TreeNode* parseTreeRoot;
+extern TreeNode* make_tree(enum nodeType type, char* name, int lineNo, int no, int num, ...);
+# 4 "../sdt/sdt.h" 2
+# 1 "../sdt/../utils/map/map.h" 1
+# 11 "../sdt/../utils/map/map.h"
+# 1 "/usr/include/string.h" 1 3 4
+# 25 "/usr/include/string.h" 3 4
+# 1 "/usr/include/features.h" 1 3 4
+# 367 "/usr/include/features.h" 3 4
+# 1 "/usr/include/x86_64-linux-gnu/sys/cdefs.h" 1 3 4
+# 410 "/usr/include/x86_64-linux-gnu/sys/cdefs.h" 3 4
+# 1 "/usr/include/x86_64-linux-gnu/bits/wordsize.h" 1 3 4
+# 411 "/usr/include/x86_64-linux-gnu/sys/cdefs.h" 2 3 4
+# 368 "/usr/include/features.h" 2 3 4
+# 391 "/usr/include/features.h" 3 4
+# 1 "/usr/include/x86_64-linux-gnu/gnu/stubs.h" 1 3 4
+# 10 "/usr/include/x86_64-linux-gnu/gnu/stubs.h" 3 4
+# 1 "/usr/include/x86_64-linux-gnu/gnu/stubs-64.h" 1 3 4
+# 11 "/usr/include/x86_64-linux-gnu/gnu/stubs.h" 2 3 4
+# 392 "/usr/include/features.h" 2 3 4
+# 26 "/usr/include/string.h" 2 3 4
+
+
+
+
+
+
+# 1 "/usr/lib/gcc/x86_64-linux-gnu/5/include/stddef.h" 1 3 4
+# 216 "/usr/lib/gcc/x86_64-linux-gnu/5/include/stddef.h" 3 4
+
+# 216 "/usr/lib/gcc/x86_64-linux-gnu/5/include/stddef.h" 3 4
+typedef long unsigned int size_t;
+# 33 "/usr/include/string.h" 2 3 4
+
+
+
+
+
+
+
+
+
+extern void *memcpy (void *__restrict __dest, const void *__restrict __src,
+       size_t __n) __attribute__ ((__nothrow__ , __leaf__)) __attribute__ ((__nonnull__ (1, 2)));
+
+
+extern void *memmove (void *__dest, const void *__src, size_t __n)
+     __attribute__ ((__nothrow__ , __leaf__)) __attribute__ ((__nonnull__ (1, 2)));
+
+
+
+
+
+
+extern void *memccpy (void *__restrict __dest, const void *__restrict __src,
+        int __c, size_t __n)
+     __attribute__ ((__nothrow__ , __leaf__)) __attribute__ ((__nonnull__ (1, 2)));
+
+
+
+
+
+extern void *memset (void *__s, int __c, size_t __n) __attribute__ ((__nothrow__ , __leaf__)) __attribute__ ((__nonnull__ (1)));
+
+
+extern int memcmp (const void *__s1, const void *__s2, size_t __n)
+     __attribute__ ((__nothrow__ , __leaf__)) __attribute__ ((__pure__)) __attribute__ ((__nonnull__ (1, 2)));
+# 92 "/usr/include/string.h" 3 4
+extern void *memchr (const void *__s, int __c, size_t __n)
+      __attribute__ ((__nothrow__ , __leaf__)) __attribute__ ((__pure__)) __attribute__ ((__nonnull__ (1)));
+
+
+# 123 "/usr/include/string.h" 3 4
+
+
+extern char *strcpy (char *__restrict __dest, const char *__restrict __src)
+     __attribute__ ((__nothrow__ , __leaf__)) __attribute__ ((__nonnull__ (1, 2)));
+
+extern char *strncpy (char *__restrict __dest,
+        const char *__restrict __src, size_t __n)
+     __attribute__ ((__nothrow__ , __leaf__)) __attribute__ ((__nonnull__ (1, 2)));
+
+
+extern char *strcat (char *__restrict __dest, const char *__restrict __src)
+     __attribute__ ((__nothrow__ , __leaf__)) __attribute__ ((__nonnull__ (1, 2)));
+
+extern char *strncat (char *__restrict __dest, const char *__restrict __src,
+        size_t __n) __attribute__ ((__nothrow__ , __leaf__)) __attribute__ ((__nonnull__ (1, 2)));
+
+
+extern int strcmp (const char *__s1, const char *__s2)
+     __attribute__ ((__nothrow__ , __leaf__)) __attribute__ ((__pure__)) __attribute__ ((__nonnull__ (1, 2)));
+
+extern int strncmp (const char *__s1, const char *__s2, size_t __n)
+     __attribute__ ((__nothrow__ , __leaf__)) __attribute__ ((__pure__)) __attribute__ ((__nonnull__ (1, 2)));
+
+
+extern int strcoll (const char *__s1, const char *__s2)
+     __attribute__ ((__nothrow__ , __leaf__)) __attribute__ ((__pure__)) __attribute__ ((__nonnull__ (1, 2)));
+
+extern size_t strxfrm (char *__restrict __dest,
+         const char *__restrict __src, size_t __n)
+     __attribute__ ((__nothrow__ , __leaf__)) __attribute__ ((__nonnull__ (2)));
+
+
+
+
+
+
+# 1 "/usr/include/xlocale.h" 1 3 4
+# 27 "/usr/include/xlocale.h" 3 4
+typedef struct __locale_struct
+{
+
+  struct __locale_data *__locales[13];
+
+
+  const unsigned short int *__ctype_b;
+  const int *__ctype_tolower;
+  const int *__ctype_toupper;
+
+
+  const char *__names[13];
+} *__locale_t;
+
+
+typedef __locale_t locale_t;
+# 160 "/usr/include/string.h" 2 3 4
+
+
+extern int strcoll_l (const char *__s1, const char *__s2, __locale_t __l)
+     __attribute__ ((__nothrow__ , __leaf__)) __attribute__ ((__pure__)) __attribute__ ((__nonnull__ (1, 2, 3)));
+
+extern size_t strxfrm_l (char *__dest, const char *__src, size_t __n,
+    __locale_t __l) __attribute__ ((__nothrow__ , __leaf__)) __attribute__ ((__nonnull__ (2, 4)));
+
+
+
+
+extern char *strdup (const char *__s)
+     __attribute__ ((__nothrow__ , __leaf__)) __attribute__ ((__malloc__)) __attribute__ ((__nonnull__ (1)));
+
+
+
+
+
+
+extern char *strndup (const char *__string, size_t __n)
+     __attribute__ ((__nothrow__ , __leaf__)) __attribute__ ((__malloc__)) __attribute__ ((__nonnull__ (1)));
+# 206 "/usr/include/string.h" 3 4
+
+# 231 "/usr/include/string.h" 3 4
+extern char *strchr (const char *__s, int __c)
+     __attribute__ ((__nothrow__ , __leaf__)) __attribute__ ((__pure__)) __attribute__ ((__nonnull__ (1)));
+# 258 "/usr/include/string.h" 3 4
+extern char *strrchr (const char *__s, int __c)
+     __attribute__ ((__nothrow__ , __leaf__)) __attribute__ ((__pure__)) __attribute__ ((__nonnull__ (1)));
+
+
+# 277 "/usr/include/string.h" 3 4
+
+
+
+extern size_t strcspn (const char *__s, const char *__reject)
+     __attribute__ ((__nothrow__ , __leaf__)) __attribute__ ((__pure__)) __attribute__ ((__nonnull__ (1, 2)));
+
+
+extern size_t strspn (const char *__s, const char *__accept)
+     __attribute__ ((__nothrow__ , __leaf__)) __attribute__ ((__pure__)) __attribute__ ((__nonnull__ (1, 2)));
+# 310 "/usr/include/string.h" 3 4
+extern char *strpbrk (const char *__s, const char *__accept)
+     __attribute__ ((__nothrow__ , __leaf__)) __attribute__ ((__pure__)) __attribute__ ((__nonnull__ (1, 2)));
+# 337 "/usr/include/string.h" 3 4
+extern char *strstr (const char *__haystack, const char *__needle)
+     __attribute__ ((__nothrow__ , __leaf__)) __attribute__ ((__pure__)) __attribute__ ((__nonnull__ (1, 2)));
+
+
+
+
+extern char *strtok (char *__restrict __s, const char *__restrict __delim)
+     __attribute__ ((__nothrow__ , __leaf__)) __attribute__ ((__nonnull__ (2)));
+
+
+
+
+extern char *__strtok_r (char *__restrict __s,
+    const char *__restrict __delim,
+    char **__restrict __save_ptr)
+     __attribute__ ((__nothrow__ , __leaf__)) __attribute__ ((__nonnull__ (2, 3)));
+
+extern char *strtok_r (char *__restrict __s, const char *__restrict __delim,
+         char **__restrict __save_ptr)
+     __attribute__ ((__nothrow__ , __leaf__)) __attribute__ ((__nonnull__ (2, 3)));
+# 392 "/usr/include/string.h" 3 4
+
+
+extern size_t strlen (const char *__s)
+     __attribute__ ((__nothrow__ , __leaf__)) __attribute__ ((__pure__)) __attribute__ ((__nonnull__ (1)));
+
+
+
+
+
+extern size_t strnlen (const char *__string, size_t __maxlen)
+     __attribute__ ((__nothrow__ , __leaf__)) __attribute__ ((__pure__)) __attribute__ ((__nonnull__ (1)));
+
+
+
+
+
+extern char *strerror (int __errnum) __attribute__ ((__nothrow__ , __leaf__));
+
+# 422 "/usr/include/string.h" 3 4
+extern int strerror_r (int __errnum, char *__buf, size_t __buflen) __asm__ ("" "__xpg_strerror_r") __attribute__ ((__nothrow__ , __leaf__))
+
+                        __attribute__ ((__nonnull__ (2)));
+# 440 "/usr/include/string.h" 3 4
+extern char *strerror_l (int __errnum, __locale_t __l) __attribute__ ((__nothrow__ , __leaf__));
+
+
+
+
+
+extern void __bzero (void *__s, size_t __n) __attribute__ ((__nothrow__ , __leaf__)) __attribute__ ((__nonnull__ (1)));
+
+
+
+extern void bcopy (const void *__src, void *__dest, size_t __n)
+     __attribute__ ((__nothrow__ , __leaf__)) __attribute__ ((__nonnull__ (1, 2)));
+
+
+extern void bzero (void *__s, size_t __n) __attribute__ ((__nothrow__ , __leaf__)) __attribute__ ((__nonnull__ (1)));
+
+
+extern int bcmp (const void *__s1, const void *__s2, size_t __n)
+     __attribute__ ((__nothrow__ , __leaf__)) __attribute__ ((__pure__)) __attribute__ ((__nonnull__ (1, 2)));
+# 484 "/usr/include/string.h" 3 4
+extern char *index (const char *__s, int __c)
+     __attribute__ ((__nothrow__ , __leaf__)) __attribute__ ((__pure__)) __attribute__ ((__nonnull__ (1)));
+# 512 "/usr/include/string.h" 3 4
+extern char *rindex (const char *__s, int __c)
+     __attribute__ ((__nothrow__ , __leaf__)) __attribute__ ((__pure__)) __attribute__ ((__nonnull__ (1)));
+
+
+
+
+extern int ffs (int __i) __attribute__ ((__nothrow__ , __leaf__)) __attribute__ ((__const__));
+# 529 "/usr/include/string.h" 3 4
+extern int strcasecmp (const char *__s1, const char *__s2)
+     __attribute__ ((__nothrow__ , __leaf__)) __attribute__ ((__pure__)) __attribute__ ((__nonnull__ (1, 2)));
+
+
+extern int strncasecmp (const char *__s1, const char *__s2, size_t __n)
+     __attribute__ ((__nothrow__ , __leaf__)) __attribute__ ((__pure__)) __attribute__ ((__nonnull__ (1, 2)));
+# 552 "/usr/include/string.h" 3 4
+extern char *strsep (char **__restrict __stringp,
+       const char *__restrict __delim)
+     __attribute__ ((__nothrow__ , __leaf__)) __attribute__ ((__nonnull__ (1, 2)));
+
+
+
+
+extern char *strsignal (int __sig) __attribute__ ((__nothrow__ , __leaf__));
+
+
+extern char *__stpcpy (char *__restrict __dest, const char *__restrict __src)
+     __attribute__ ((__nothrow__ , __leaf__)) __attribute__ ((__nonnull__ (1, 2)));
+extern char *stpcpy (char *__restrict __dest, const char *__restrict __src)
+     __attribute__ ((__nothrow__ , __leaf__)) __attribute__ ((__nonnull__ (1, 2)));
+
+
+
+extern char *__stpncpy (char *__restrict __dest,
+   const char *__restrict __src, size_t __n)
+     __attribute__ ((__nothrow__ , __leaf__)) __attribute__ ((__nonnull__ (1, 2)));
+extern char *stpncpy (char *__restrict __dest,
+        const char *__restrict __src, size_t __n)
+     __attribute__ ((__nothrow__ , __leaf__)) __attribute__ ((__nonnull__ (1, 2)));
+# 658 "/usr/include/string.h" 3 4
+
+# 12 "../sdt/../utils/map/map.h" 2
+
+
+
+
+# 15 "../sdt/../utils/map/map.h"
+struct map_node_t;
+typedef struct map_node_t map_node_t;
+
+typedef struct {
+  map_node_t **buckets;
+  unsigned nbuckets, nnodes;
+} map_base_t;
+
+typedef struct {
+  unsigned bucketidx;
+  map_node_t *node;
+} map_iter_t;
+# 62 "../sdt/../utils/map/map.h"
+void map_deinit_(map_base_t *m);
+void *map_get_(map_base_t *m, const char *key);
+int map_set_(map_base_t *m, const char *key, void *value, int vsize);
+void map_remove_(map_base_t *m, const char *key);
+map_iter_t map_iter_(void);
+const char *map_next_(map_base_t *m, map_iter_t *iter);
+
+
+typedef struct { map_base_t base; void* *ref; void* tmp; } map_void_t;
+typedef struct { map_base_t base; char* *ref; char* tmp; } map_str_t;
+typedef struct { map_base_t base; int *ref; int tmp; } map_int_t;
+typedef struct { map_base_t base; char *ref; char tmp; } map_char_t;
+typedef struct { map_base_t base; float *ref; float tmp; } map_float_t;
+typedef struct { map_base_t base; double *ref; double tmp; } map_double_t;
+# 5 "../sdt/sdt.h" 2
+
+
+
+
+
+
+void sdtTree(TreeNode* rt, int depth);
+typedef struct Type_* Type;
+typedef struct FieldList_* FieldList;
+typedef struct varItem_* varItem;
+typedef struct structItem_* structItem;
+typedef struct expVal_* expVal;
+typedef struct expValList_* expValList;
+typedef struct funcItem_* funcItem;
+typedef struct Type_
+{
+    enum { BASIC, ARRAY, STRUCTURE} kind;
+    union
+    {
+
+    enum {type_int, type_float} basic;
+
+    struct { Type elem; int size; } array;
+
+    FieldList structure;
+    } u;
+    char* structureName;
+} Type_;
+
+typedef struct FieldList_
+{
+    char* name;
+    Type type;
+    FieldList tail;
+} FieldList_;
+
+typedef struct varItem_
+{
+    char* name;
+    Type type;
+    int isInit;
+} varItem_;
+
+typedef struct structItem_{
+    char* name;
+    Type type;
+} structItem_;
+
+typedef struct funcItem_{
+    char* name;
+    FieldList para;
+    Type retType;
+    int isDef;
+    int lineSum;
+    int lineNo[256];
+} funcItem_;
+
+typedef struct expVal_
+{
+    Type type;
+    union
+    {
+        int val_int;
+        float val_float;
+        funcItem func;
+        int varSrc;
+    }val;
+    enum {l_func, l_var} lType;
+    enum {L_VAL, R_VAL} lr;
+} expVal_;
+typedef struct expValList_{
+    expVal val;
+    expValList tail;
+} expValList_;
+typedef struct { map_base_t base; structItem *ref; structItem tmp; } map_structItem_t;
+typedef struct { map_base_t base; varItem *ref; varItem tmp; } map_varItem_t;
+typedef struct { map_base_t base; funcItem *ref; funcItem tmp; } map_funcItem_t;
+extern map_varItem_t localVarTable;
+extern map_funcItem_t funcTable;
+
+char* ID0(TreeNode* rt, TreeNode* fa, int depth);
+# 4 "objUtil.h" 2
+# 1 "../utils/list/list.h" 1
+
+
+# 1 "../utils/list/../map/map.h" 1
+# 4 "../utils/list/list.h" 2
+
+
+
+
+
+
+typedef struct listNodeTemplate{
+    struct listNodeTemplate* pre, *next;
+    void* val;
+    void* property;
+} listNodeTemplate;
+
+typedef struct listHead{
+    void* head, *tail;
+} listHead;
+
+typedef struct listHeadTemplate{
+    listNodeTemplate* head, *tail;
+} listHeadTemplate;
+
+
+
+void push_back_use(void*lst1, size_t node, void* val);
+void createList(void**);
+void push_front(void*, void*);
+void push_back(void*, void*);
+void* get_front(void*);
+void* get_back(void*);
+void pop_front(void*);
+void pop_back(void*);
+void insert(void*, void* pos, void* node);
+void del(void*, void* pos);
+void* find(void*, int(*)(void*));
+void append_list(void* a, void* b);
+void* getIndex_l(void* a, int index);
+typedef listHead* list;
+
+typedef struct intItem_{ struct intItem_* pre, *next; int* val; int* property;} intItem_;
+typedef intItem_* intItem;
+# 5 "objUtil.h" 2
+# 1 "../ir/irUtils.h" 1
+
+
+# 1 "../ir/../sdt/sdt.h" 1
+# 4 "../ir/irUtils.h" 2
+# 1 "../ir/../utils/list/list.h" 1
+# 5 "../ir/irUtils.h" 2
+typedef struct Operand_{
+    enum Otype_ {o_label, o_const, o_var, o_tmpVar, o_func} type;
+    enum Oproperty_ {o_normal, o_address, o_point, o_size, o_offset} property;
+    union {
+        int tmpId;
+        int constInt;
+        int labelId;
+        funcItem funcPoint;
+        varItem varPoint;
+    }u;
+    union{
+        int size;
+        struct offsetInfo_{
+            Type type;
+            int offset;
+        } arrayInfo;
+    }addtion;
+} Operand_;
+
+typedef Operand_ * Operand;
+
+typedef struct TripleExp_{
+    enum Ttype_ {t_label, t_func, t_assign, t_add, t_sub, t_star, t_div, t_goto, t_eq, t_neq, t_g, t_l, t_leq, t_geq, t_return ,t_dec, t_arg, t_call, t_param, t_read, t_write} type;
+    Operand src1, src2, dest;
+} TripleExp_;
+typedef TripleExp_* TripleExp;
+
+typedef struct tripleNode_{ struct tripleNode_* pre, *next; TripleExp_* val; int* property;} tripleNode_;
+typedef struct funcNode_{ struct funcNode_* pre, *next; listHead* val; funcItem_* property;} funcNode_;
+typedef struct OperandNode_{ struct OperandNode_* pre, *next; Operand_* val; int* property;} OperandNode_;
+typedef tripleNode_* tripleNode;
+typedef funcNode_* funcNode;
+typedef OperandNode_* OperandNode;
+typedef unsigned int tmpId;
+typedef unsigned int labelId;
+
+extern listHead* funcBlock;
+extern listHead* tripleList;
+extern tmpId tmpSum;
+extern labelId labelSum;
+
+char* sprintOperand(Operand op);
+void printTripe(listHead* funcBlock);
+void printCode(listHead*);
+void debugCode(TripleExp tri);
+char* sprintOperand(Operand op);
+int isOperandValid(Operand op);
+# 6 "objUtil.h" 2
+
+
+
+
+
+typedef struct blockInfo_{
+    tripleNode head, tail;
+    int id;
+} blockInfo_;
+typedef struct instr_{
+    enum instrType{i_li, i_la, i_move, i_bgt, i_bge, i_blt, i_ble, i_label, i_add, i_addi, i_sub, i_mul, i_div, i_mflo, i_lw, i_sw, i_j, i_jal, i_jr, i_beq, i_bne, i_func, i_syscall, i_null} iType;
+    union oprand
+    {
+        struct R3{
+            int rs, rt, rd;
+        }r3;
+        struct R2I1{
+            int rs, rt, imm;
+        }r2i1;
+        struct L1{
+            int dest;
+        }l1;
+        struct R2L1{
+            int rs, rt;
+            int dest;
+        }r2l1;
+        struct R2{
+            int rs, rt;
+        }r2;
+        struct R1{
+            int rs;
+        }r1;
+        struct R1I1{
+            int rs;
+            int imm;
+        }r1i1;
+        struct Func{
+            char* funcName;
+        }func;
+        struct La{
+            int rs;
+            char* funcName;
+        }la;
+    }iOp;
+
+} instr_;
+typedef enum r_type{
+    zero,at,
+    v0,v1,
+    a0,a1,a2,a3,
+    t0,t1,t2,t3,t4,t5,t6,t7,
+    t8,t9,
+    s0,s1,s2,s3,s4,s5,s6,s7,
+    k0,k1,
+    gp,
+    sp,
+    fp,
+    ra
+} r_type;
+typedef instr_* instr;
+typedef struct instrItem_{ struct instrItem_* pre, *next; instr_* val; int* property;} instrItem_;
+typedef instrItem_* instrItem;
+
+typedef blockInfo_* blockInfo;
+typedef struct blockItem_{ struct blockItem_* pre, *next; blockInfo_* val; int* property;} blockItem_;
+typedef blockItem_* blockItem;
+typedef struct listItem_{ struct listItem_* pre, *next; listHead* val; int* property;} listItem_;
+typedef listItem_* listItem;
+typedef listHead* list;
+void printTriple(TripleExp q);
+# 4 "obj.h" 2
+
+# 1 "../utils/map/map.h" 1
+# 6 "obj.h" 2
+# 1 "../ir/ir.h" 1
+
+
+# 1 "../ir/irUtils.h" 1
+# 4 "../ir/ir.h" 2
+
+typedef listHead* list;
+void printTripe(listHead* funcBlock);
+# 56 "../ir/ir.h"
+listHead* Program0(TreeNode* rt);
+static listHead* Program1(TreeNode* rt);
+static void ExtDefList0(TreeNode* rt);
+static void ExtDefList1(TreeNode* rt);
+static void ExtDefList2(TreeNode* rt);
+static void ExtDef0(TreeNode* rt);
+static void ExtDef1(TreeNode* rt);
+static void ExtDef2(TreeNode* rt);
+static void ExtDef3(TreeNode* rt);
+static void ExtDecList0(TreeNode* rt);
+static void ExtDecList1(TreeNode* rt);
+static void ExtDecList2(TreeNode* rt);
+static void Specifier0(TreeNode* rt);
+static void Specifier1(TreeNode* rt);
+static void Specifier2(TreeNode* rt);
+static void StructSpecifier0(TreeNode* rt);
+static void StructSpecifier1(TreeNode* rt);
+static void StructSpecifier2(TreeNode* rt);
+static void OptTag0(TreeNode* rt);
+static void OptTag1(TreeNode* rt);
+static void OptTag2(TreeNode* rt);
+static void Tag0(TreeNode* rt);
+static void Tag1(TreeNode* rt);
+static char* VarDec0(TreeNode* rt, int isLocalDef, list code);
+static char* VarDec1(TreeNode* rt, int isLocalDef, list code);
+static char* VarDec2(TreeNode* rt, int isLocalDef, list code);
+static char* FunDec0(TreeNode* rt);
+static char* FunDec1(TreeNode* rt);
+static char* FunDec2(TreeNode* rt);
+static void VarList0(TreeNode* rt);
+static void VarList1(TreeNode* rt);
+static void VarList2(TreeNode* rt);
+static void ParamDec0(TreeNode* rt);
+static void ParamDec1(TreeNode* rt);
+static void ParamDec2(TreeNode* rt);
+static list Compst0(TreeNode* rt);
+static list Compst1(TreeNode* rt);
+static list StmtList0(TreeNode* rt);
+static list StmtList1(TreeNode* rt);
+static list StmtList2(TreeNode* rt);
+static list Stmt0(TreeNode* rt);
+static list Stmt1(TreeNode* rt);
+static list Stmt2(TreeNode* rt);
+static list Stmt3(TreeNode* rt);
+static list Stmt4(TreeNode* rt);
+static list Stmt5(TreeNode* rt);
+static list Stmt6(TreeNode* rt);
+static list DefList0(TreeNode* rt);
+static list DefList1(TreeNode* rt);
+static list DefList2(TreeNode* rt);
+static list Def0(TreeNode* rt);
+static list Def1(TreeNode* rt);
+static list DecList0(TreeNode* rt);
+static list DecList1(TreeNode* rt);
+static list DecList2(TreeNode* rt);
+static list Dec0(TreeNode* rt);
+static list Dec1(TreeNode* rt);
+static list Dec2(TreeNode* rt);
+static listHead* Exp0(TreeNode* rt, Operand place);
+static listHead* Exp1(TreeNode* rt, Operand place);
+static listHead* Exp2(TreeNode* rt, Operand place);
+static listHead* Exp3(TreeNode* rt, Operand place);
+static listHead* Exp4(TreeNode* rt, Operand place);
+static listHead* Exp5(TreeNode* rt, Operand place);
+static listHead* Exp6(TreeNode* rt, Operand place);
+static listHead* Exp7(TreeNode* rt, Operand place);
+static listHead* Exp8(TreeNode* rt, Operand place);
+static listHead* Exp9(TreeNode* rt, Operand place);
+static listHead* Exp10(TreeNode* rt, Operand place);
+static listHead* Exp11(TreeNode* rt, Operand place);
+static listHead* Exp12(TreeNode* rt, Operand place);
+static listHead* Exp13(TreeNode* rt, Operand place);
+static listHead* Exp14(TreeNode* rt, Operand place);
+static listHead* Exp15(TreeNode* rt, Operand place);
+static listHead* Exp16(TreeNode* rt, Operand place);
+static listHead* Exp17(TreeNode* rt, Operand place);
+static listHead* Exp18(TreeNode* rt, Operand place);
+static listHead* Exp19(TreeNode* rt, Operand place);
+static list Args0(TreeNode* rt, listHead* paraList);
+static list Args1(TreeNode* rt, listHead* paraList);
+static list Args2(TreeNode* rt, listHead* paraList);
+static listHead* ExpCond0(TreeNode* rt, Operand labelTrue, Operand labelFalse);
+static listHead* ExpCond1(TreeNode* rt, Operand labelTrue, Operand labelFalse);
+static listHead* ExpCond2(TreeNode* rt, Operand labelTrue, Operand labelFalse);
+static listHead* ExpCond3(TreeNode* rt, Operand labelTrue, Operand labelFalse);
+static listHead* ExpCond4(TreeNode* rt, Operand labelTrue, Operand labelFalse);
+static listHead* ExpCond5(TreeNode* rt, Operand labelTrue, Operand labelFalse);
+static listHead* localVal(TreeNode* rt, Operand place);
+static Type ExpAddress(TreeNode* rt, int baseTmp, int offsetTmp, int isInterface, list code);
+static Type ExpArray0(TreeNode* rt, int baseTmp, int offsetTmp, list code);
+static Type ExpArray1(TreeNode* rt, int baseTmp, int offsetTmp, list code);
+static Type ExpStruct(TreeNode* rt, int baseTmp, int offsetTmp, list code);
+static Type ExpAddressID(TreeNode* rt, int baseTmp, int offsetTmp, list code);
+static list genExpAddress(TreeNode* rt, int valTmp, Type* type);
+Operand op_Imm(int val);
+Operand new_tmp();
+# 7 "obj.h" 2
+
+# 1 "../ir/irOptimization.h" 1
+
+
+
+
+# 1 "../ir/ir.h" 1
+# 6 "../ir/irOptimization.h" 2
+void constLiminate(list funcBlock);
+void deadVarLiminate(list funcBlock);
+void getOptIr(list funcBlock);
+# 9 "obj.h" 2
+# 1 "bitmap.h" 1
+
+
+
+typedef struct bitmap_{
+    unsigned int* map;
+    int size;
+} bitmap_;
+typedef bitmap_* bitmap;
+
+void initBitMap(bitmap* bmm, int length);
+void setBitMap(bitmap bm, int index, int val);
+void joinBitMap(bitmap destbm, bitmap bm1);
+void unionBitMap(bitmap destbm, bitmap bm1);
+int getBitMap(bitmap bm, int index);
+void setBitMapOne(bitmap bm);
+void setBitMapZero(bitmap bm);
+bitmap getCopyBitMap(bitmap src);
+void printBitMap(bitmap bm);
+void freeBitMap(bitmap bm);
+# 10 "obj.h" 2
+# 1 "heap.h" 1
+
+
+
+
+
+typedef struct heapNode_{
+    int key;
+    void* val;
+}heapNode_;
+
+typedef heapNode_* heapNode;
+typedef struct heap_
+{
+    int n;
+    heapNode a;
+}heap_;
+typedef heap_* heap;
+
+
+void init_heap(heap* hh, int size);
+void push_h(heap h, int key, void* val);
+void swap(heapNode a, heapNode b);
+void down_h(heap h);
+void up_h(heap h);
+int empty_h(heap h);
+heapNode pop_h(heap h);
+heapNode top_h(heap h);
+# 11 "obj.h" 2
+# 1 "set.h" 1
+
+
+
+
+
+
+char* itoa(int num);
+char* itoa(int num);
+
+typedef struct set_
+{
+    map_int_t h;
+    map_int_t hNum;
+    int next;
+    int num;
+}set_;
+
+typedef set_* set;
+typedef struct strItem_{ struct strItem_* pre, *next; char** val; int* property;} strItem_;
+typedef strItem_* strItem;
+
+void init_s(set* ss);
+void addNum_s(set s, int num);
+void addStr_s(set s, char* st);
+int findStr_s(set s, char* st);
+int findNum_s(set s, int num);
+void delStr_s(set s, char* st);
+void delNum_s(set s, int num);
+list getStr_s(set s);
+int countInt_s(set s, int num);
+int countStr_s(set s, char*st);
+int indexStr_s(set s, char* st);
+int indexInt_s(set s, int num);
+int getNum_s(set s);
+void setCountStr_s(set s, char*st, int num);
+void setCountInt_s(set s, int num1, int num);
+void print_set(set s);
+# 12 "obj.h" 2
+# 1 "vector.h" 1
+# 13 "obj.h" 2
+
+void genProgramOBJ(list func);
+typedef struct vector__int{ int length, pos, size; int* a;}vector__int;typedef vector__int* vector_int;
+typedef struct vector__instr{ int length, pos, size; instr* a;}vector__instr;typedef vector__instr* vector_instr;
+# 2 "obj.c" 2
+
+# 1 "/usr/include/assert.h" 1 3 4
+# 66 "/usr/include/assert.h" 3 4
+
+
+
+
+# 69 "/usr/include/assert.h" 3 4
+extern void __assert_fail (const char *__assertion, const char *__file,
+      unsigned int __line, const char *__function)
+     __attribute__ ((__nothrow__ , __leaf__)) __attribute__ ((__noreturn__));
+
+
+extern void __assert_perror_fail (int __errnum, const char *__file,
+      unsigned int __line, const char *__function)
+     __attribute__ ((__nothrow__ , __leaf__)) __attribute__ ((__noreturn__));
+
+
+
+
+extern void __assert (const char *__assertion, const char *__file, int __line)
+     __attribute__ ((__nothrow__ , __leaf__)) __attribute__ ((__noreturn__));
+
+
+
+# 4 "obj.c" 2
+
+
+
+# 6 "obj.c"
+static void init_v_int(vector_int* vec){ *vec = malloc(sizeof(vector__int)); (*vec)->length = 0; (*vec)->pos = 0; (*vec)->size = 1; (*vec)->a = malloc(sizeof(int) * 1);}static void push_back_v_int(vector_int vec, int val){ if (vec->length + 1> vec->size){ vec->size *= 2; int* b = malloc(sizeof(int) * vec->size); for(int i = 0; i < vec->length; i++){ b[i] = vec->a[i]; } free(vec->a); vec->a = b; } vec->a[vec->length++] = val;}static void resize_v_int(vector_int vec, int size){ for(int i = 0; i < size; i++) push_back_v_int(vec, 0);}static int pop_v_int(vector_int vec){ if (vec->pos >= vec->length) return -1; else return vec->a[vec->pos++];}static int top_v_int(vector_int vec){ return vec->a[vec->pos];}static void del_v_int(vector_int vec, int val){ for(int i = 0; i < vec->length; i++){ if (vec->a[i] == val){ for(int j = i; j < vec->length - 1; j++){ vec->a[j] = vec->a[j + 1]; } vec->length--; break; } }}static void free_v_int(vector_int vec){ free(vec->a); free(vec);}static int isEmpty_v_int(vector_int vec){ return vec->pos >= vec->length;}static void clear_v_int(vector_int vec){ vec->length = 0; vec->pos = 0;}
+static void init_v_instr(vector_instr* vec){ *vec = malloc(sizeof(vector__instr)); (*vec)->length = 0; (*vec)->pos = 0; (*vec)->size = 1; (*vec)->a = malloc(sizeof(instr) * 1);}static void push_back_v_instr(vector_instr vec, instr val){ if (vec->length + 1> vec->size){ vec->size *= 2; instr* b = malloc(sizeof(instr) * vec->size); for(int i = 0; i < vec->length; i++){ b[i] = vec->a[i]; } free(vec->a); vec->a = b; } vec->a[vec->length++] = val;}static void resize_v_instr(vector_instr vec, int size){ for(int i = 0; i < size; i++) push_back_v_instr(vec, 0);}static instr pop_v_instr(vector_instr vec){ if (vec->pos >= vec->length) return -1; else return vec->a[vec->pos++];}static instr top_v_instr(vector_instr vec){ return vec->a[vec->pos];}static void del_v_instr(vector_instr vec, instr val){ for(int i = 0; i < vec->length; i++){ if (vec->a[i] == val){ for(int j = i; j < vec->length - 1; j++){ vec->a[j] = vec->a[j + 1]; } vec->length--; break; } }}static void free_v_instr(vector_instr vec){ free(vec->a); free(vec);}static int isEmpty_v_instr(vector_instr vec){ return vec->pos >= vec->length;}static void clear_v_instr(vector_instr vec){ vec->length = 0; vec->pos = 0;}
+
+static int isVar(Operand o){
+    return o && (o->type == o_var || o->type == o_tmpVar);
+}
+
+static char* getVar(Operand o){
+    if (!o) return 
+# 14 "obj.c" 3 4
+                  ((void *)0)
+# 14 "obj.c"
+                      ;
+    if (o->type == o_var) return o->u.varPoint->name;
+    if (o->type == o_tmpVar) return itoa(o->u.tmpId);
+}
+
+
+
+
+
+vector_instr objCode;
+static void addCode(instr a){
+    push_back_v_instr(objCode, a);
+}
+
+instr getInstr(enum instrType type){
+    instr a = malloc(sizeof(instr_));
+    a->iType = type;
+}
+
+char* getRegisterName(r_type r){
+    char* registerName[] = {"$zero","$at","$v0","$v1","$a0","$a1","$a2","$a3","$t0","$t1","$t2","$t3","$t4","$t5","$t6","$t7","$t8","$t9","$s0","$s1","$s2","$s3","$s4","$s5","$s6","$s7","$k0","$k1","$gp","$sp","$fp","$ra"};
+    return registerName[r];
+}
+
+char* getInstrName(enum instrType type){
+    char* instrName[] = {"li", "la", "move", "bgt", "bge", "blt", "ble", "label", "add", "addi", "sub", "mul", "div", "mflo", "lw", "sw", "j", "jal", "jr", "beq", "bne", "func"};
+    return instrName[type];
+}
+
+
+
+void printObjCode(instr code){
+    switch(code->iType){
+        case i_label:
+            printf("label%d:", code->iOp.l1.dest);
+            break;
+        case i_add:
+        case i_sub:
+        case i_mul:
+            printf("\t");
+            printf("%s %s, %s, %s", getInstrName(code->iType), getRegisterName(code->iOp.r3.rd), getRegisterName(code->iOp.r3.rs), getRegisterName(code->iOp.r3.rt));
+            break;
+        case i_beq:
+        case i_bne:
+        case i_bgt:
+        case i_blt:
+        case i_bge:
+        case i_ble:
+        printf("\t");
+            printf("%s %s, %s, label%d", getInstrName(code->iType), getRegisterName(code->iOp.r2l1.rs), getRegisterName(code->iOp.r2l1.rt), code->iOp.r2l1.dest);
+            break;
+        case i_addi:
+        printf("\t");
+            printf("addi %s, %s, %d", getRegisterName(code->iOp.r2i1.rt), getRegisterName(code->iOp.r2i1.rs), code->iOp.r2i1.imm);
+            break;
+        case i_div:
+        printf("\t");
+            printf("div %s, %s", getRegisterName(code->iOp.r2.rs), getRegisterName(code->iOp.r2.rt));
+            break;
+        case i_move:
+        printf("\t");
+            printf("move %s, %s", getRegisterName(code->iOp.r2.rt), getRegisterName(code->iOp.r2.rs));
+            break;
+        case i_li:
+        printf("\t");
+            printf("li %s, %d", getRegisterName(code->iOp.r1i1.rs), code->iOp.r1i1.imm);
+            break;
+        case i_mflo:
+        printf("\t");
+            printf("mflo %s", getRegisterName(code->iOp.r1.rs));
+            break;
+        case i_j:
+        printf("\t");
+            printf("j label%d", code->iOp.l1.dest);
+            break;
+        case i_jal:
+        printf("\t");
+            printf("jal %s", code->iOp.func.funcName);
+            break;
+        case i_jr:
+        printf("\t");
+            printf("jr $ra");
+            break;
+        case i_lw:
+        printf("\t");
+            printf("lw %s, %d(%s)", getRegisterName(code->iOp.r2i1.rt), code->iOp.r2i1.imm, getRegisterName(code->iOp.r2i1.rs));
+            break;
+        case i_sw:
+        printf("\t");
+            printf("sw %s, %d(%s)", getRegisterName(code->iOp.r2i1.rt), code->iOp.r2i1.imm, getRegisterName(code->iOp.r2i1.rs));
+            break;
+        case i_func:
+            printf("%s:", code->iOp.func.funcName);
+            break;
+        case i_syscall:
+        printf("\t");
+            printf("syscall");
+            break;
+        case i_null:
+            break;
+        case i_la:
+        printf("\t");
+            printf("la %s, %s", getRegisterName(code->iOp.la.rs), code->iOp.la.funcName);
+            break;
+        default:
+            
+# 119 "obj.c" 3 4
+           ((
+# 119 "obj.c"
+           0
+# 119 "obj.c" 3 4
+           ) ? (void) (0) : __assert_fail (
+# 119 "obj.c"
+           "0"
+# 119 "obj.c" 3 4
+           , "obj.c", 119, __PRETTY_FUNCTION__))
+# 119 "obj.c"
+                    ;
+    }
+    printf("\n");
+}
+
+void printObj(){
+    printf(".data\n_prompt: .asciiz \"Enter an integer:\"\n_ret: .asciiz \"\\n\"");
+    printf("\n.globl main\n");
+    printf(".text\n");
+    for(int i = 0; i < objCode->length; i++){
+        instr code = objCode->a[i];
+        printObjCode(code);
+    }
+}
+void emitInstrLoad(int base, int offset, int dest){
+    instr a = getInstr(i_lw);
+    a->iOp.r2i1.rs = base;
+    a->iOp.r2i1.imm = offset;
+    a->iOp.r2i1.rt = dest;
+    addCode(a);
+}
+
+void emitInstrStore(int base, int offset, int dest){
+    instr a = getInstr(i_sw);
+    
+# 143 "obj.c" 3 4
+   ((
+# 143 "obj.c"
+   base > 0
+# 143 "obj.c" 3 4
+   ) ? (void) (0) : __assert_fail (
+# 143 "obj.c"
+   "base > 0"
+# 143 "obj.c" 3 4
+   , "obj.c", 143, __PRETTY_FUNCTION__))
+# 143 "obj.c"
+                   ;
+    
+# 144 "obj.c" 3 4
+   ((
+# 144 "obj.c"
+   dest > 0
+# 144 "obj.c" 3 4
+   ) ? (void) (0) : __assert_fail (
+# 144 "obj.c"
+   "dest > 0"
+# 144 "obj.c" 3 4
+   , "obj.c", 144, __PRETTY_FUNCTION__))
+# 144 "obj.c"
+                   ;
+    a->iOp.r2i1.rs = base;
+    a->iOp.r2i1.imm = offset;
+    a->iOp.r2i1.rt = dest;
+    addCode(a);
+}
+
+void emitInstrLabel(int dest){
+    instr a = getInstr(i_label);
+    a->iOp.l1.dest = dest;
+    addCode(a);
+}
+
+int isPoint(Operand op){
+    return op->property == o_point;
+}
+void emitInstrLi(int r, int imm){
+    instr a = getInstr(i_li);
+    a->iOp.r1i1.rs = r;
+    a->iOp.r1i1.imm = imm;
+    addCode(a);
+}
+
+void emitInstrLa(int r, char* varName){
+    instr a = getInstr(i_la);
+    a->iOp.la.funcName = varName;
+    a->iOp.la.rs = r;
+    addCode(a);
+}
+void emitInstrMove(int rt, int rs){
+    instr a = getInstr(i_move);
+    a->iOp.r2.rs = rs;
+    
+# 176 "obj.c" 3 4
+   ((
+# 176 "obj.c"
+   rs <= 31
+# 176 "obj.c" 3 4
+   ) ? (void) (0) : __assert_fail (
+# 176 "obj.c"
+   "rs <= 31"
+# 176 "obj.c" 3 4
+   , "obj.c", 176, __PRETTY_FUNCTION__))
+# 176 "obj.c"
+                   ;
+    a->iOp.r2.rt = rt;
+    
+# 178 "obj.c" 3 4
+   ((
+# 178 "obj.c"
+   rt <= 31
+# 178 "obj.c" 3 4
+   ) ? (void) (0) : __assert_fail (
+# 178 "obj.c"
+   "rt <= 31"
+# 178 "obj.c" 3 4
+   , "obj.c", 178, __PRETTY_FUNCTION__))
+# 178 "obj.c"
+                   ;
+    addCode(a);
+}
+void emitInstrAdd(int rd, int rs, int rt){
+    instr a = getInstr(i_add);
+    a->iOp.r3.rs = rs;
+    a->iOp.r3.rt = rt;
+    a->iOp.r3.rd = rd;
+    addCode(a);
+}
+void emitInstrAddi(int rd, int rs, int imm){
+    instr a = getInstr(i_addi);
+    a->iOp.r2i1.rs = rs;
+    a->iOp.r2i1.imm = imm;
+    a->iOp.r2i1.rt = rd;
+    addCode(a);
+}
+void emitInstrSub(int rd, int rs, int rt){
+    instr a = getInstr(i_sub);
+    a->iOp.r3.rs = rs;
+    a->iOp.r3.rt = rt;
+    a->iOp.r3.rd = rd;
+    addCode(a);
+}
+void emitInstrStar(int rd, int rs, int rt){
+    instr a = getInstr(i_mul);
+    a->iOp.r3.rs = rs;
+    a->iOp.r3.rt = rt;
+    a->iOp.r3.rd = rd;
+    addCode(a);
+}
+
+void emitInstrDiv(int rs, int rt){
+    instr a = getInstr(i_div);
+    a->iOp.r2.rs = rs;
+    a->iOp.r2.rt = rt;
+    addCode(a);
+}
+
+void emitInstrMflo(int rs){
+    instr a = getInstr(i_mflo);
+    a->iOp.r1.rs = rs;
+    addCode(a);
+}
+void emitInstrGoto(int dest){
+    instr a = getInstr(i_j);
+    a->iOp.l1.dest = dest;
+    addCode(a);
+}
+void emitInstrJr(){
+    instr a = getInstr(i_jr);
+    a->iOp.r1.rs = ra;
+    addCode(a);
+}
+
+void emitInstrSyscall(){
+    instr a = getInstr(i_syscall);
+    addCode(a);
+}
+
+void emitCondGoto(int rs, int rt, int label, enum Ttype_ type){
+    instr a = getInstr(i_bge);
+    a->iOp.r2l1.rs = rs;
+    a->iOp.r2l1.rt = rt;
+    a->iOp.r2l1.dest = label;
+    switch (type){
+        case t_eq:
+            a->iType = i_beq;break;
+        case t_neq:
+            a->iType = i_bne;break;
+        case t_g:
+            a->iType = i_bgt;break;
+        case t_l:
+            a->iType = i_blt;break;
+        case t_geq:
+            a->iType = i_bge;break;
+        case t_leq:
+            a->iType = i_ble;break;
+    }
+    addCode(a);
+}
+void emitInstrJal(char* funcName){
+    instr a = getInstr(i_jal);
+    a->iOp.func.funcName = funcName;
+    addCode(a);
+}
+
+void emitInstrFunc(char* funcName){
+    instr a= getInstr(i_func);
+    a->iOp.func.funcName = funcName;
+    addCode(a);
+}
+void emitInstrNull(){
+    instr a = getInstr(i_null);
+    addCode(a);
+}
+
+
+static int max(int a, int b){
+    return (a >= b) ? a : b;
+}
+# 291 "obj.c"
+int totalIR;
+int funcNum;
+TripleExp* ir;
+typedef struct blockIR{
+    int ir_s, ir_e;
+    enum blockIR_type{bt_normal, bt_func, bt_call} type;
+} blockIR;
+typedef struct funcIR{
+    int ir_s, ir_e;
+    int blockNum;
+    blockIR* blockIRList;
+} funcIR;
+funcIR* funcList;
+
+int min(int a, int b){
+    return a <= b ? a : b;
+}
+
+TripleExp getNewExp(TripleExp q){
+    TripleExp res = malloc(sizeof(TripleExp_));
+    res->type = q->type;
+    res->dest = q->dest;
+    res->src1 = q->src1;
+    res->src2 = q->src2;
+    switch(res->type){
+        case t_return:
+        case t_arg:
+            res->dest = 
+# 318 "obj.c" 3 4
+                       ((void *)0)
+# 318 "obj.c"
+                           ;
+            res->src1 = q->src1;
+        case t_write:
+            res->dest = 
+# 321 "obj.c" 3 4
+                       ((void *)0)
+# 321 "obj.c"
+                           ;
+            res->src1 = q->dest;
+    }
+    return res;
+}
+
+void getIR(funcNode p){
+    totalIR = 0;
+    funcNum = 0;
+    for(funcNode p = (funcNode)funcBlock->head; p; p = p->next){
+        funcNum++;
+        for(tripleNode q = p->val->head; q; q = q->next){
+            totalIR++;
+        }
+    }
+    ir = malloc(sizeof(TripleExp) * totalIR);
+    funcList = malloc(sizeof(funcIR) * funcNum);
+    int s = 0;
+    int funcS = 0;
+     for(funcNode p = (funcNode)funcBlock->head; p; p = p->next){
+        funcList[funcS].ir_s = s;
+        for(tripleNode q = p->val->head; q; q = q->next){
+            ir[s] = getNewExp(q->val);
+            s++;
+        }
+        funcList[funcS].ir_e = s - 1;
+        funcS++;
+    }
+}
+
+static int isBranch(enum Ttype_ type){
+    return (t_goto <= type && type <= t_geq) || type == t_call || type == t_return || type == t_read || type == t_write;
+
+}
+
+void splitIR(){
+    for(int i = 0; i < funcNum; i++){
+        int blockNum = 1;
+        for(int j = funcList[i].ir_s + 1; j <= funcList[i].ir_e; j++){
+            TripleExp q = ir[j], pre = ir[j - 1];
+            if (isBranch(pre->type) || q->type == t_label || (q->type == t_arg && pre->type != t_arg) || (q->type == t_call && pre->type != t_arg) || (q->type != t_param && (pre->type == t_func || pre->type == t_param)) || (q->type == t_read) || (q->type == t_write)){
+                blockNum++;
+            }
+        }
+        funcList[i].blockNum = blockNum;
+        funcList[i].blockIRList = malloc(sizeof(blockIR) * blockNum);
+        blockIR* blocks = funcList[i].blockIRList;
+        blocks[0].type == t_func;
+        blocks[0].ir_s = funcList[i].ir_s;
+        int p = 0;
+        TripleExp pre = 
+# 371 "obj.c" 3 4
+                       ((void *)0)
+# 371 "obj.c"
+                           ;
+        for(int j = funcList[i].ir_s + 1; j <= funcList[i].ir_e; j++){
+            TripleExp q = ir[j], pre = ir[j - 1];
+            if (isBranch(pre->type) || q->type == t_label || (q->type == t_arg && pre->type != t_arg) || (q->type == t_call && pre->type != t_arg) || (q->type != t_param && (pre->type == t_func || pre->type == t_param)) || (q->type == t_read) || (q->type == t_write)){
+                blocks[p].ir_e = j - 1;
+                p++;
+                blocks[p].ir_s = j;
+            }
+            pre = q;
+        }
+        blocks[blockNum - 1].ir_e = funcList[i].ir_e;
+    }
+}
+
+set totalVar;
+int getVarIdByOp(Operand op){
+    return indexStr_s(totalVar, getVar(op));
+}
+int getVarIdByName(char* name){
+    return indexStr_s(totalVar, name);
+}
+int getBlockVarNum(){
+    return getNum_s(totalVar);
+}
+set getVarToInt(funcIR func){
+    set totalVar;
+    init_s(&totalVar);
+    for(int i = func.ir_s; i <= func.ir_e; i++){
+        if (isVar(ir[i]->src1)) addStr_s(totalVar, getVar(ir[i]->src1));
+        if (isVar(ir[i]->src2)) addStr_s(totalVar, getVar(ir[i]->src2));
+        if (isVar(ir[i]->dest)) addStr_s(totalVar, getVar(ir[i]->dest));
+    }
+
+    return totalVar;
+}
+
+bitmap FuncAliveVarAnalyze(funcIR func){
+    bitmap res;
+    initBitMap(&res, getBlockVarNum());
+    set countVar;
+    init_s(&countVar);
+    for(int i = 0; i < func.blockNum; i++){
+        set countVarCurBlock;
+        init_s(&countVarCurBlock);
+        blockIR* block = func.blockIRList + i;
+        for(int j = block->ir_s; j <= block->ir_e; j++){
+            if (isVar(ir[j]->src1)) addStr_s(countVarCurBlock, getVar(ir[j]->src1));
+            if (isVar(ir[j]->src2)) addStr_s(countVarCurBlock, getVar(ir[j]->src2));
+            if (isVar(ir[j]->dest)) addStr_s(countVarCurBlock, getVar(ir[j]->dest));
+        }
+        for(strItem i = (getStr_s(countVarCurBlock))->head; i; i = i->next){
+            addStr_s(countVar, i->val);
+        }
+    }
+    list varList = getStr_s(totalVar);
+    for(strItem q = varList->head; q; q = q->next){
+
+        if (countStr_s(countVar, q->val) > 1){
+
+            setBitMap(res, getVarIdByName(q->val), 1);
+        }
+    }
+    return res;
+}
+
+vector_int* varsUseTime;
+bitmap* varsAliveMap;
+bitmap globalAliveVar;
+int curIR, baseIR;
+int isCalcExp(TripleExp op){
+    if (op->type <= t_func || op->type == t_dec) return 0;
+    return 1;
+}
+
+
+
+void blockAliveVarAnalyze(blockIR block){
+    int irNum = block.ir_e - block.ir_s + 1;
+    varsAliveMap = malloc(sizeof(bitmap) * irNum);
+    varsUseTime = malloc(sizeof(vector_int) * getBlockVarNum());
+    for(int i = 0; i < irNum; i++)
+        initBitMap(&varsAliveMap[i], getBlockVarNum());
+    for(int i = 0; i < getBlockVarNum(); i++){
+        init_v_int(&varsUseTime[i]);
+    }
+    bitmap aliveMap = getCopyBitMap(globalAliveVar);
+    for(int i = block.ir_e; i >= block.ir_s; i--){
+        varsAliveMap[i - baseIR] = getCopyBitMap(aliveMap);
+        TripleExp exp = ir[i];
+        if (isCalcExp(exp)){
+
+
+
+            if (exp->dest && isVar(exp->dest) && !isPoint(exp->dest)){setBitMap(aliveMap, getVarIdByOp(exp->dest), 0);}
+            if (exp->src1 && isVar(exp->src1)){ setBitMap(aliveMap, getVarIdByOp(exp->src1), 1); push_back_v_int(varsUseTime[getVarIdByOp(exp->src1)], i); }
+            if (exp->src2 && isVar(exp->src2)){ setBitMap(aliveMap, getVarIdByOp(exp->src2), 1); push_back_v_int(varsUseTime[getVarIdByOp(exp->src2)], i);}
+            if (exp->dest && isVar(exp->dest) && isPoint(exp->dest)) {setBitMap(aliveMap, getVarIdByOp(exp->dest), 1); push_back_v_int(varsUseTime[getVarIdByOp(exp->dest)], i);}
+        }
+    }
+}
+
+int* varAddress;
+int* varAlloc;
+vector_int rtoVar[32];
+bitmap modifyVar;
+int esp;
+int frameSize;
+int init_mem_alloc(){
+    varAddress = malloc(sizeof(int) * getBlockVarNum());
+    memset(varAddress, 0, sizeof(int) * getBlockVarNum());
+    for(int i = 0; i < totalIR; i++){
+        if (ir[i]->type == t_dec){
+            varAddress[getVarIdByOp(ir[i]->dest)] = ir[i]->dest->addtion.size;
+        }
+    }
+    esp = 2;
+    for(int i = 0; i < getBlockVarNum(); i++){
+        if (varAddress[i] || getBitMap(globalAliveVar, i)){
+            if (varAddress[i]){
+                esp += varAddress[i];
+                varAddress[i] = esp;
+            }else{
+                esp += 1;
+                varAddress[i] = esp;
+            }
+
+        }
+    }
+    return esp;
+}
+
+int init_reg_alloc(){
+    varAlloc = malloc(sizeof(int) * getBlockVarNum());
+    memset(varAlloc, 0, sizeof(int) * getBlockVarNum());
+    initBitMap(&modifyVar, getBlockVarNum());
+    setBitMapZero(modifyVar);
+    for(int i = 0; i < 32; i++){
+        init_v_int(&rtoVar[i]);
+    }
+
+}
+
+void free_reg_alloc(){
+    free(varAlloc);
+    freeBitMap(modifyVar);
+
+
+
+}
+
+int finish_reg_alloc(){
+    for(int i = t0; i <= s7; i++){
+        for(int j = 0; j < rtoVar[i]->length; j++){
+            int var_id = rtoVar[i]->a[j];
+            if (getBitMap(globalAliveVar, var_id) && getBitMap(modifyVar, var_id)){
+                
+# 526 "obj.c" 3 4
+               ((
+# 526 "obj.c"
+               getVarAddr(var_id) <= frameSize
+# 526 "obj.c" 3 4
+               ) ? (void) (0) : __assert_fail (
+# 526 "obj.c"
+               "getVarAddr(var_id) <= frameSize"
+# 526 "obj.c" 3 4
+               , "obj.c", 526, __PRETTY_FUNCTION__))
+# 526 "obj.c"
+                                                      ;
+                emitInstrStore(fp, getVarAddr(var_id), i);
+            }
+        }
+    }
+}
+
+int getVarAddr(int id){
+
+    if (!varAddress[id]) varAddress[id] = ++esp;
+    return -varAddress[id] * 4;
+}
+
+void spill(int result){
+    for(int j = 0; j < rtoVar[result]->length; j++){
+        int var = rtoVar[result]->a[j];
+        emitInstrStore(fp, getVarAddr(var), result);
+        varAlloc[var] = 0;
+    }
+    clear_v_int(rtoVar[result]);
+}
+
+int allocate(){
+    for(int i = t0; i <= s7; i++){
+        if(!rtoVar[i]->length) return i;
+    }
+    int mx = 0, result = 0;
+    for(int i = t0; i <= s7; i++){
+        int mx1 = 1000000;
+        for(int j = 0; j < rtoVar[i]->length; j++){
+            int var = rtoVar[i]->a[j];
+            while(!isEmpty_v_int(varsUseTime[var]) && top_v_int(varsUseTime[var]) < curIR) pop_v_int(varsUseTime[var]);
+            if (!isEmpty_v_int(varsUseTime[var])) mx1 = min(mx1, top_v_int(varsUseTime[var]));
+        }
+        if (mx1 >= mx){
+            mx = mx1;
+            result = i;
+        }
+    }
+    spill(result);
+    return result;
+}
+int alloc(int var_id);
+int ensure(int var_id){
+    if (varAlloc[var_id]) return varAlloc[var_id];
+    int result = alloc(var_id);
+    emitInstrLoad(fp, getVarAddr(var_id), result);
+    return result;
+}
+
+int ensureOp(Operand op){
+    
+# 577 "obj.c" 3 4
+   ((
+# 577 "obj.c"
+   isVar(op)
+# 577 "obj.c" 3 4
+   ) ? (void) (0) : __assert_fail (
+# 577 "obj.c"
+   "isVar(op)"
+# 577 "obj.c" 3 4
+   , "obj.c", 577, __PRETTY_FUNCTION__))
+# 577 "obj.c"
+                    ;
+
+    return ensure(getVarIdByOp(op));
+}
+
+void freeVar(int var_id){
+    if (!getBitMap(varsAliveMap[curIR - baseIR], var_id)){
+        if (varAlloc[var_id]){
+            del_v_int(rtoVar[varAlloc[var_id]], var_id);
+        }
+        varAlloc[var_id] = 0;
+
+    }
+}
+
+void freeOp(Operand op){
+    
+# 593 "obj.c" 3 4
+   ((
+# 593 "obj.c"
+   isVar(op)
+# 593 "obj.c" 3 4
+   ) ? (void) (0) : __assert_fail (
+# 593 "obj.c"
+   "isVar(op)"
+# 593 "obj.c" 3 4
+   , "obj.c", 593, __PRETTY_FUNCTION__))
+# 593 "obj.c"
+                    ;
+
+    freeVar(getVarIdByOp(op));
+}
+
+int alloc(int var_id){
+    int result = allocate();
+    varAlloc[var_id] = result;
+    clear_v_int(rtoVar[result]);
+    push_back_v_int(rtoVar[result], var_id);
+    return result;
+}
+int allocOp(Operand op){
+    
+# 606 "obj.c" 3 4
+   ((
+# 606 "obj.c"
+   isVar(op)
+# 606 "obj.c" 3 4
+   ) ? (void) (0) : __assert_fail (
+# 606 "obj.c"
+   "isVar(op)"
+# 606 "obj.c" 3 4
+   , "obj.c", 606, __PRETTY_FUNCTION__))
+# 606 "obj.c"
+                    ;
+
+    int var_id = getVarIdByOp(op);
+    if (varAlloc[var_id]){
+        del_v_int(rtoVar[varAlloc[var_id]], var_id);
+        varAlloc[var_id] = 0;
+    }
+    setBitMap(modifyVar, getVarIdByOp(op), 1);
+    return alloc(getVarIdByOp(op));
+}
+void genObjCode(TripleExp exp){
+    int canTrans = 0;
+    enum Ttype_ type = exp->type;
+    if (type == t_label){
+            emitInstrLabel(exp->dest->u.labelId);
+            canTrans = 1;
+    }
+    if (type == t_assign){
+            
+# 624 "obj.c" 3 4
+           ((
+# 624 "obj.c"
+           isVar(exp->dest)
+# 624 "obj.c" 3 4
+           ) ? (void) (0) : __assert_fail (
+# 624 "obj.c"
+           "isVar(exp->dest)"
+# 624 "obj.c" 3 4
+           , "obj.c", 624, __PRETTY_FUNCTION__))
+# 624 "obj.c"
+                                   ;
+            if (isPoint(exp->dest)){
+
+                
+# 627 "obj.c" 3 4
+               ((
+# 627 "obj.c"
+               isVar(exp->src1)
+# 627 "obj.c" 3 4
+               ) ? (void) (0) : __assert_fail (
+# 627 "obj.c"
+               "isVar(exp->src1)"
+# 627 "obj.c" 3 4
+               , "obj.c", 627, __PRETTY_FUNCTION__))
+# 627 "obj.c"
+                                       ;
+                emitInstrStore(ensureOp(exp->dest), 0, ensureOp(exp->src1));
+                canTrans = 1;
+            }else{
+                int regx = allocOp(exp->dest);
+                if (exp->src1->type == o_const){
+                        emitInstrLi(regx, exp->src1->u.constInt);
+                        canTrans = 1;
+                }else{
+                    switch(exp->src1->property){
+                        case o_point:
+                            emitInstrLoad(ensureOp(exp->src1), 0, regx);
+                            freeOp(exp->src1);
+                            canTrans = 1;
+                            break;
+                        case o_address:
+                            emitInstrAddi(regx, fp, getVarAddr(getVarIdByOp(exp->src1)));
+                            canTrans = 1;
+                            break;
+                        case o_normal:
+                            emitInstrMove(regx, ensureOp(exp->src1));
+                            freeOp(exp->src1);
+                            canTrans = 1;
+                            break;
+                        default:
+                        
+# 652 "obj.c" 3 4
+                       ((
+# 652 "obj.c"
+                       0
+# 652 "obj.c" 3 4
+                       ) ? (void) (0) : __assert_fail (
+# 652 "obj.c"
+                       "0"
+# 652 "obj.c" 3 4
+                       , "obj.c", 652, __PRETTY_FUNCTION__))
+# 652 "obj.c"
+                                ;
+                    }
+                }
+            }
+    }
+    if (type == t_add){
+
+        emitInstrAdd(allocOp(exp->dest), ensureOp(exp->src1), ensureOp(exp->src2));
+        freeOp(exp->src1);
+        freeOp(exp->src2);
+        canTrans = 1;
+    }
+    if (type == t_sub){
+
+        emitInstrSub(allocOp(exp->dest), ensureOp(exp->src1), ensureOp(exp->src2));
+        freeOp(exp->src1);
+        freeOp(exp->src2);
+        canTrans = 1;
+    }
+    if (type == t_star){
+        emitInstrStar(allocOp(exp->dest), ensureOp(exp->src1), ensureOp(exp->src2));
+        freeOp(exp->src1);
+        freeOp(exp->src2);
+        canTrans = 1;
+    }
+    if (type == t_div){
+
+        emitInstrDiv(ensureOp(exp->src1), ensureOp(exp->src2));
+        emitInstrMflo(allocOp(exp->dest));
+        freeOp(exp->src1);
+        freeOp(exp->src2);
+        canTrans = 1;
+    }
+    if (type == t_goto){
+        
+# 686 "obj.c" 3 4
+       ((
+# 686 "obj.c"
+       exp->dest
+# 686 "obj.c" 3 4
+       ) ? (void) (0) : __assert_fail (
+# 686 "obj.c"
+       "exp->dest"
+# 686 "obj.c" 3 4
+       , "obj.c", 686, __PRETTY_FUNCTION__))
+# 686 "obj.c"
+                        ;
+        emitInstrGoto(exp->dest->u.labelId);
+        canTrans = 1;
+    }
+    if (type == t_return){
+
+        emitInstrMove(v0, ensureOp(exp->src1));
+        emitInstrLoad(sp, frameSize - 4, ra);
+        emitInstrLoad(sp, frameSize - 8, fp);
+        emitInstrAddi(sp, sp, frameSize);
+        emitInstrJr();
+        canTrans = 1;
+    }
+    if (type == t_eq){
+        emitCondGoto(ensureOp(exp->src1), ensureOp(exp->src2), exp->dest->u.labelId, t_eq);
+        freeOp(exp->src1);freeOp(exp->src2);
+        canTrans = 1;
+    }
+    if (type == t_neq){
+        emitCondGoto(ensureOp(exp->src1), ensureOp(exp->src2), exp->dest->u.labelId, t_neq);
+        freeOp(exp->src1);freeOp(exp->src2);
+        canTrans = 1;
+    }
+    if (type == t_g){
+        emitCondGoto(ensureOp(exp->src1), ensureOp(exp->src2), exp->dest->u.labelId, t_g);
+        freeOp(exp->src1);freeOp(exp->src2);
+        canTrans = 1;
+    }
+    if (type == t_geq){
+        emitCondGoto(ensureOp(exp->src1), ensureOp(exp->src2), exp->dest->u.labelId, t_geq);
+        freeOp(exp->src1);freeOp(exp->src2);
+        canTrans = 1;
+    }
+    if (type == t_l){
+        emitCondGoto(ensureOp(exp->src1), ensureOp(exp->src2), exp->dest->u.labelId, t_l);
+        freeOp(exp->src1);freeOp(exp->src2);
+        canTrans = 1;
+    }
+    if (type == t_leq){
+        emitCondGoto(ensureOp(exp->src1), ensureOp(exp->src2), exp->dest->u.labelId, t_leq);
+        freeOp(exp->src1);freeOp(exp->src2);
+        canTrans = 1;
+    }
+    if (type == t_read){
+
+
+
+        emitInstrLi(v0, 5);
+        emitInstrSyscall();
+        emitInstrMove(allocOp(exp->dest), v0);
+        canTrans = 1;
+    }
+    if (type == t_write){
+        emitInstrLi(v0, 1);
+        emitInstrMove(a0, ensureOp(exp->src1));
+        freeOp(exp->src1);
+        emitInstrSyscall();
+        emitInstrLi(v0, 4);
+        emitInstrLa(a0, "_ret");
+        emitInstrSyscall();
+        emitInstrMove(v0, 0);
+        canTrans = 1;
+    }
+    if (type == t_dec){
+        canTrans = 1;
+    }
+    
+# 752 "obj.c" 3 4
+   ((
+# 752 "obj.c"
+   canTrans
+# 752 "obj.c" 3 4
+   ) ? (void) (0) : __assert_fail (
+# 752 "obj.c"
+   "canTrans"
+# 752 "obj.c" 3 4
+   , "obj.c", 752, __PRETTY_FUNCTION__))
+# 752 "obj.c"
+                   ;
+}
+
+
+void genFuncBlock(blockIR block){
+    TripleExp exp = ir[block.ir_s];
+    
+# 758 "obj.c" 3 4
+   ((
+# 758 "obj.c"
+   exp->type == t_func
+# 758 "obj.c" 3 4
+   ) ? (void) (0) : __assert_fail (
+# 758 "obj.c"
+   "exp->type == t_func"
+# 758 "obj.c" 3 4
+   , "obj.c", 758, __PRETTY_FUNCTION__))
+# 758 "obj.c"
+                              ;
+    emitInstrFunc(exp->dest->u.funcPoint->name);
+    emitInstrAddi(sp, sp, -frameSize);
+    emitInstrStore(sp, frameSize -4, ra);
+    emitInstrStore(sp, frameSize - 8, fp);
+    emitInstrAddi(fp, sp, frameSize);
+    int s = 0;
+    for(curIR = block.ir_s + 1; curIR <= block.ir_e; curIR++){
+        
+# 766 "obj.c" 3 4
+       ((
+# 766 "obj.c"
+       ir[curIR]->type == t_param
+# 766 "obj.c" 3 4
+       ) ? (void) (0) : __assert_fail (
+# 766 "obj.c"
+       "ir[curIR]->type == t_param"
+# 766 "obj.c" 3 4
+       , "obj.c", 766, __PRETTY_FUNCTION__))
+# 766 "obj.c"
+                                         ;
+        exp = ir[curIR];
+        
+# 768 "obj.c" 3 4
+       ((
+# 768 "obj.c"
+       exp->dest && isVar(exp->dest)
+# 768 "obj.c" 3 4
+       ) ? (void) (0) : __assert_fail (
+# 768 "obj.c"
+       "exp->dest && isVar(exp->dest)"
+# 768 "obj.c" 3 4
+       , "obj.c", 768, __PRETTY_FUNCTION__))
+# 768 "obj.c"
+                                            ;
+        if (s < 4){
+            emitInstrStore(fp, getVarAddr(getVarIdByOp(exp->dest)), a0 + s);
+        }else{
+            emitInstrLoad(fp, 4 * (s - 4), a0);
+            emitInstrStore(fp, getVarAddr(getVarIdByOp(exp->dest)), a0);
+        }
+        s++;
+    }
+}
+
+int isGoto(enum Ttype_ type){
+    return (t_goto <= type && type <= t_geq) || type == t_return;
+}
+void genNormalBlock(blockIR block){
+    baseIR = block.ir_s;
+    blockAliveVarAnalyze(block);
+    init_reg_alloc();
+    for(curIR = block.ir_s; curIR <= block.ir_e; curIR++){
+
+        if (curIR == block.ir_e && isGoto(ir[curIR]->type)) break;
+        genObjCode(ir[curIR]);
+    }
+    finish_reg_alloc();
+    if (curIR == block.ir_e && isGoto(ir[curIR]->type)){
+        genObjCode(ir[curIR]);
+    }
+    for(int i = 0; i < block.ir_e - block.ir_s + 1; i++)
+        freeBitMap(varsAliveMap[i]);
+    for(int i = 0; i < getBlockVarNum(); i++){
+        free_v_int(varsUseTime[i]);
+        free(varsUseTime[i]->a);
+    }
+    free_reg_alloc();
+}
+
+void genCallBlock(blockIR block){
+    init_reg_alloc();
+    int s = 0;
+    for(curIR = block.ir_s; curIR <= block.ir_e; curIR++){
+        if (ir[curIR]->type == t_call) break;
+        
+# 809 "obj.c" 3 4
+       ((
+# 809 "obj.c"
+       ir[curIR]->type == t_arg
+# 809 "obj.c" 3 4
+       ) ? (void) (0) : __assert_fail (
+# 809 "obj.c"
+       "ir[curIR]->type == t_arg"
+# 809 "obj.c" 3 4
+       , "obj.c", 809, __PRETTY_FUNCTION__))
+# 809 "obj.c"
+                                       ;
+        s++;
+    }
+    emitInstrAddi(sp, sp, -4);
+    emitInstrStore(sp, 0, ra);
+    emitInstrAddi(sp, sp, -4 * max(0, s - 4));
+    int ss = s;
+    for(curIR = block.ir_s; curIR <= block.ir_e; curIR++){
+        if (ir[curIR]->type == t_call) break;
+        
+# 818 "obj.c" 3 4
+       ((
+# 818 "obj.c"
+       ir[curIR]->type == t_arg
+# 818 "obj.c" 3 4
+       ) ? (void) (0) : __assert_fail (
+# 818 "obj.c"
+       "ir[curIR]->type == t_arg"
+# 818 "obj.c" 3 4
+       , "obj.c", 818, __PRETTY_FUNCTION__))
+# 818 "obj.c"
+                                       ;
+        s--;
+        if (s >= 4){
+            
+# 821 "obj.c" 3 4
+           ((
+# 821 "obj.c"
+           isVar(ir[curIR]->src1)
+# 821 "obj.c" 3 4
+           ) ? (void) (0) : __assert_fail (
+# 821 "obj.c"
+           "isVar(ir[curIR]->src1)"
+# 821 "obj.c" 3 4
+           , "obj.c", 821, __PRETTY_FUNCTION__))
+# 821 "obj.c"
+                                         ;
+            emitInstrStore(sp, (s - 4)* 4, ensureOp(ir[curIR]->src1));
+
+        }else{
+            emitInstrMove(a0 + s, ensureOp(ir[curIR]->src1));
+        }
+    }
+    
+# 828 "obj.c" 3 4
+   ((
+# 828 "obj.c"
+   ir[curIR]->type == t_call
+# 828 "obj.c" 3 4
+   ) ? (void) (0) : __assert_fail (
+# 828 "obj.c"
+   "ir[curIR]->type == t_call"
+# 828 "obj.c" 3 4
+   , "obj.c", 828, __PRETTY_FUNCTION__))
+# 828 "obj.c"
+                                    ;
+    emitInstrJal(ir[curIR]->src1->u.funcPoint->name);
+    int tmp = allocOp(ir[curIR]->dest);
+    emitInstrMove(tmp, v0);
+    emitInstrAddi(sp, sp, 4 * max(0, ss - 4));
+    emitInstrLoad(sp, 0, ra);
+    emitInstrAddi(sp, sp, 4);
+    int var_id = getVarIdByOp(ir[curIR]->dest);
+    if (getBitMap(globalAliveVar, var_id) && getBitMap(modifyVar, var_id)){
+        emitInstrStore(fp, getVarAddr(var_id), tmp);
+    }
+
+
+    free_reg_alloc();
+}
+
+void genFuncOBJ(funcIR func){
+    totalVar = getVarToInt(func);
+    globalAliveVar = FuncAliveVarAnalyze(func);
+    frameSize = init_mem_alloc() * 4;
+    genFuncBlock(func.blockIRList[0]);
+    emitInstrNull();
+    for(int i = 1; i < func.blockNum; i++){
+
+
+
+
+        enum Ttype_ type = ir[func.blockIRList[i].ir_s]->type;
+        if (type == t_call || type == t_arg) genCallBlock(func.blockIRList[i]);
+        else genNormalBlock(func.blockIRList[i]);
+        emitInstrNull();
+    }
+}
+
+void genProgramOBJ(list func){
+    getIR(func->head);
+    splitIR();
+    init_v_instr(&objCode);
+    for(int i = 0; i < funcNum; i++){
+        genFuncOBJ(funcList[i]);
+
+
+
+
+
+
+
+    }
+    printObj();
+}

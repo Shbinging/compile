@@ -784,6 +784,11 @@ void genNormalBlock(blockIR block){
     if (curIR == block.ir_e && isGoto(ir[curIR]->type)){
         genObjCode(ir[curIR]);
     }
+    for(int i = 0; i < getBlockVarNum(); i++){
+        free(varsUseTime[i]->a);
+    }
+    free(varsUseTime);
+    free(varsAliveMap);
 }
 
 void genCallBlock(blockIR block){

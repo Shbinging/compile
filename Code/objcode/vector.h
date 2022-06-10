@@ -11,13 +11,13 @@ typedef vector__##x* vector_##x;
     *vec = malloc(sizeof(vector__##x));\
     (*vec)->length = 0;\
     (*vec)->pos = 0;\
-    (*vec)->size = 16;\
-    (*vec)->a = malloc(sizeof(x) * 16);\
+    (*vec)->size = 1;\
+    (*vec)->a = malloc(sizeof(x) * 1);\
 }
 
 #define push_back_v(x) static void push_back_v_##x(vector_##x vec, x val){\
      if (vec->length + 1> vec->size){\
-         vec->size *= 4;\
+         vec->size = vec->size * 1.5 + 1;\
          x* b = malloc(sizeof(x) * vec->size);\
          for(int i = 0; i < vec->length; i++){\
             b[i] = vec->a[i];\
