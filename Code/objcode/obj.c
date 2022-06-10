@@ -789,6 +789,7 @@ void genNormalBlock(blockIR block){
     }
     for(int i = 0; i < getBlockVarNum(); i++){
         free(varsUseTime[i]->a);
+        free(varsUseTime[i]);
     }
     free(varsUseTime);
     free(varsAliveMap);

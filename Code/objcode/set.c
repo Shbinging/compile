@@ -44,6 +44,10 @@ void init_s(set* ss){
     s->num = 0;
 }
 
+void free_s(set ss){
+    map_deinit(&(ss->hNum));
+    map_deinit(&(ss->h));
+}
 void addNum_s(set s, int num){
     char* st = itoa(num);
     addStr_s(s, st);
