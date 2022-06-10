@@ -784,11 +784,19 @@ void genNormalBlock(blockIR block){
     if (curIR == block.ir_e && isGoto(ir[curIR]->type)){
         genObjCode(ir[curIR]);
     }
+    for(int i = 0; i < block.ir_e - block.ir_s + 1; i++){
+        free(varsAliveMap[i]->map);
+    }
     for(int i = 0; i < getBlockVarNum(); i++){
         free(varsUseTime[i]->a);
     }
     free(varsUseTime);
     free(varsAliveMap);
+    free(varAlloc);
+    for(int i = 0; i < maxR; i++){
+        free(rtoVar[i]->a);
+    }
+    //free(rtoVar);
 }
 
 void genCallBlock(blockIR block){
@@ -846,6 +854,7 @@ void genFuncOBJ(funcIR func){
         else genNormalBlock(func.blockIRList[i]);
         emitInstrNull();
     }
+
 }
 
 void genProgramOBJ(list func){
